@@ -1,0 +1,2 @@
+1/16 Began working on project. Rewrote the read_pgm and write_pgm lines in the main method in order to account for command line arguments. Finished sobel filter algorithm.
+1/20 Updated math for accumulators on lines 116 and 117 to account for the clarification on Piazza stating that we don't need to use ceiling functions.

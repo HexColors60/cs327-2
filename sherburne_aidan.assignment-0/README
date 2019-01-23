@@ -1,0 +1,1 @@
+This project applies a sobel filter for edge detection to a PGM image file passed in as an argument. It then writes the edge-detected image to the disk with the filename "sobel.pgm"
