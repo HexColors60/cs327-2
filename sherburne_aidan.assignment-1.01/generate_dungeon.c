@@ -5,12 +5,18 @@
 
 #define ROOM_MIN_X 4
 #define ROOM_MIN_Y 3
-#define ROOM_MAX_X 10
-#define ROOM_MAX_Y 8
+#define ROOM_MAX_X 12
+#define ROOM_MAX_Y 10
+
 #define MIN_DIST 12
 #define MIN_ROOMS 6
 #define NUM_ROWS 21
 #define NUM_COLS 80
+
+#define ROOM_SIZE_X 0
+#define ROOM_SIZE_Y 1
+#define ROOM_POS_X 2
+#define ROOM_POS_Y 3
 
 char ROCK = ' ';
 char FLOOR = '.';
@@ -42,7 +48,8 @@ void draw_corridor(int x0, int y0, int x1, int y1) {
   int err = (dx > dy ? dx : -dy) / 2, e2;
 
   for (;;) {
-    dungeon[x0][y0] = CORRIDOR;
+    if(dungeon[x0][y0] == ROCK)
+       dungeon[x0][y0] = CORRIDOR;
     if (x0 == x1 && y0 == y1) break;
     e2 = err;
     if (e2 > -dx) {
@@ -67,47 +74,64 @@ void print_dungeon(){
 }
 
 int get_num_rooms(int seed){
-  return (seed % MIN_ROOMS) + MIN_ROOMS;
+  srand(seed);
+  return (rand() % (MIN_ROOMS/2)) + MIN_ROOMS;
 }
 
-int draw_room(int seed, int x, int y){
-  srand(seed);
 
-  int w = rand() % ROOM_MAX_X;
-  if(w < ROOM_MIN_X) w = w + ROOM_MIN_X;
+int draw_room(int x, int y, int w, int h){
+  int i,j;
+  if(x+w >= NUM_COLS || y+h >= NUM_ROWS)return -1;
+  int ret = 0;
+  for(i = x; i < x+w; i++){
+    for(j = y; j < y+h; j++){
+      if(dungeon[i][j] != ROCK){
+	return -1;
+      }
+      if((i==x || j==y) && x > 1 && y > 1){
+	if(dungeon[i-1][j] != ROCK || dungeon[i][j-1] != ROCK)
+	  return -1;
+      }
+      if((i==x+w-1 || j==y+h-1) && i<NUM_COLS-1 && j<NUM_ROWS-1){
+	if(dungeon[i+1][j] != ROCK || dungeon[i][j+1] != ROCK)
+	  return -1;
+      }
+    }
+  }
 
-  int h = rand() % ROOM_MAX_Y;
-  if(h < ROOM_MIN_Y) h = h + ROOM_MIN_Y;
+  for(i = x; i < x+w; i++){
+    for(j = y; j < y+h; j++){
+      dungeon[i][j] = FLOOR;
+    }
+  }
 
+  return ret;
 }
 
 int get_dist(int x0, int y0, int x1, int y1){
   return (int)sqrt((x1-x0)*(x1-x0)+(y1-y0)*(y1-y0));
 }
 
-int generate_rooms(int seed, int num_rooms){
-  int r; //rooms generated
-  int last_x = 0, last_y = 0;
+void generate_rooms(int seed, int num_rooms){
+  int rooms[num_rooms][4];
   srand(seed);
+  int r;
   for(r = 0; r < num_rooms; r++){
-    
-
-    int x = 0;
-    while(x >= NUM_COLS - 1 || x < 1){
-      x = rand() % NUM_COLS;
-    }
-    int y = 0;
-    while(y >= NUM_ROWS - 1 || y < 1){
-      y = rand() % NUM_ROWS;
-    }
-    
-    //dungeon[x][y] = 'X';
-    if(last_x != 0 && last_y != 0){
-      draw_corridor(last_x, last_y, x, y);
-    }
-    //draw_room(seed, x, y);
-    last_x = x;
-    last_y = y;
+    rooms[r][ROOM_POS_X] = rand() % (NUM_COLS-2) + 1;
+    rooms[r][ROOM_POS_Y] = rand() % (NUM_ROWS-2) + 1;
+    rooms[r][ROOM_SIZE_X] = rand() % ROOM_MAX_X;
+    if(rooms[r][ROOM_SIZE_X] < ROOM_MIN_X) rooms[r][ROOM_SIZE_X] += ROOM_MIN_X;
+    rooms[r][ROOM_SIZE_Y] = rand() % ROOM_MAX_Y;
+    if(rooms[r][ROOM_SIZE_Y] < ROOM_MIN_Y) rooms[r][ROOM_SIZE_Y] += ROOM_MIN_Y;
+    int valid = draw_room(rooms[r][ROOM_POS_X],rooms[r][ROOM_POS_Y],rooms[r][ROOM_SIZE_X],rooms[r][ROOM_SIZE_Y]);
+    if(valid != 0) r--;
+  }
+  for(r=0; r < num_rooms-1; r++){
+    int start_x = rooms[r][ROOM_POS_X] + (rooms[r][ROOM_SIZE_X]/2);
+    int start_y = rooms[r][ROOM_POS_Y] + (rooms[r][ROOM_SIZE_Y]/2);
+    int target_x = rooms[r+1][ROOM_POS_X] + (rooms[r+1][ROOM_SIZE_X]/2);
+    int target_y = rooms[r+1][ROOM_POS_Y] + (rooms[r+1][ROOM_SIZE_Y]/2);
+    draw_corridor(start_x, start_y, target_x, target_y);
   }
 }
 
@@ -121,10 +145,9 @@ int main(int argc, char * argv[]) {
     seed = rand();
  
   int num_rooms = get_num_rooms(seed);
-  printf("seed: %d, num rooms: %d\n",seed,num_rooms);
+  printf("seed: %d, num_rooms: %d\n",seed,num_rooms);
   init_dungeon();
-  generate_rooms(seed, num_rooms);
-
+  generate_rooms(seed, num_rooms);  
 
   print_dungeon();
   
