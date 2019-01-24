@@ -48,8 +48,7 @@ void draw_corridor(int x0, int y0, int x1, int y1) {
   int err = (dx > dy ? dx : -dy) / 2, e2;
 
   for (;;) {
-    if(dungeon[x0][y0] == ROCK)
-       dungeon[x0][y0] = CORRIDOR;
+    
     if (x0 == x1 && y0 == y1) break;
     e2 = err;
     if (e2 > -dx) {
@@ -59,6 +58,40 @@ void draw_corridor(int x0, int y0, int x1, int y1) {
     if (e2 < dy) {
       err += dx;
       y0 += sy;
+    }
+    if(dungeon[x0][y0] == ROCK)
+     dungeon[x0][y0] = CORRIDOR;
+  }
+
+  int i,j;
+  for (j = 0; j < NUM_ROWS; j++) {
+    for (i = 0; i < NUM_COLS; i++) {
+      if(dungeon[i][j] == CORRIDOR){
+	if(dungeon[i+1][j+1] == CORRIDOR && !(dungeon[i+1][j] == CORRIDOR || dungeon[i][j+1] == CORRIDOR)){
+	  if(dungeon[i+1][j] != FLOOR)
+	    dungeon[i+1][j] = CORRIDOR;
+	  else if(dungeon[i+1][j] != FLOOR)
+	    dungeon[i][j+1] = CORRIDOR;
+	}
+	if(dungeon[i-1][j-1] == CORRIDOR && !(dungeon[i-1][j] == CORRIDOR || dungeon[i][j-1] == CORRIDOR)){
+	  if(dungeon[i-1][j] != FLOOR)
+	    dungeon[i-1][j] = CORRIDOR;
+	  else if(dungeon[i-1][j] != FLOOR)
+	    dungeon[i][j-1] = CORRIDOR;
+	}
+	if(dungeon[i+1][j-1] == CORRIDOR && !(dungeon[i+1][j] == CORRIDOR || dungeon[i][j-1] == CORRIDOR)){
+	  if(dungeon[i+1][j] != FLOOR)
+	    dungeon[i+1][j] = CORRIDOR;
+	  else if(dungeon[i+1][j] != FLOOR)
+	    dungeon[i][j+1] = CORRIDOR;
+	}
+	if(dungeon[i-1][j+1] == CORRIDOR && !(dungeon[i-1][j] == CORRIDOR || dungeon[i][j+1] == CORRIDOR)){
+	  if(dungeon[i-1][j] != FLOOR)
+	    dungeon[i-1][j] = CORRIDOR;
+	  else if(dungeon[i-1][j] != FLOOR)
+	    dungeon[i][j-1] = CORRIDOR;
+	}
+      }
     }
   }
 }
@@ -98,13 +131,11 @@ int draw_room(int x, int y, int w, int h){
       }
     }
   }
-
   for(i = x; i < x+w; i++){
     for(j = y; j < y+h; j++){
       dungeon[i][j] = FLOOR;
     }
   }
-
   return ret;
 }
 
