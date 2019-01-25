@@ -31,11 +31,6 @@ void init_dungeon() {
   int i, j;
   for (i = 0; i < NUM_COLS; i++) {
     for (j = 0; j < NUM_ROWS; j++) {
-      if (j == 0 || j == NUM_ROWS - 1) {
-        dungeon[i][j] = '-';
-      } else if (i == 0 || i == NUM_COLS - 1) {
-        dungeon[i][j] = '|';
-      } else
         dungeon[i][j] = ROCK;
     }
   }
@@ -50,6 +45,7 @@ void draw_corridor(int x0, int y0, int x1, int y1) {
   for (;;) {
     
     if (x0 == x1 && y0 == y1) break;
+
     e2 = err;
     if (e2 > -dx) {
       err -= dy;
@@ -67,25 +63,25 @@ void draw_corridor(int x0, int y0, int x1, int y1) {
   for (j = 0; j < NUM_ROWS; j++) {
     for (i = 0; i < NUM_COLS; i++) {
       if(dungeon[i][j] == CORRIDOR){
-	if(dungeon[i+1][j+1] == CORRIDOR && !(dungeon[i+1][j] == CORRIDOR || dungeon[i][j+1] == CORRIDOR)){
+	if(dungeon[i+1][j+1] == CORRIDOR && !(dungeon[i+1][j] == CORRIDOR || dungeon[i][j+1] == CORRIDOR || dungeon[i-1][j] == FLOOR || dungeon[i][j-1] == FLOOR)){
 	  if(dungeon[i+1][j] != FLOOR)
 	    dungeon[i+1][j] = CORRIDOR;
 	  else if(dungeon[i+1][j] != FLOOR)
 	    dungeon[i][j+1] = CORRIDOR;
 	}
-	if(dungeon[i-1][j-1] == CORRIDOR && !(dungeon[i-1][j] == CORRIDOR || dungeon[i][j-1] == CORRIDOR)){
+	if(dungeon[i-1][j-1] == CORRIDOR && !(dungeon[i-1][j] == CORRIDOR || dungeon[i][j-1] == CORRIDOR || dungeon[i-1][j] == FLOOR || dungeon[i][j-1] == FLOOR)){
 	  if(dungeon[i-1][j] != FLOOR)
 	    dungeon[i-1][j] = CORRIDOR;
 	  else if(dungeon[i-1][j] != FLOOR)
 	    dungeon[i][j-1] = CORRIDOR;
 	}
-	if(dungeon[i+1][j-1] == CORRIDOR && !(dungeon[i+1][j] == CORRIDOR || dungeon[i][j-1] == CORRIDOR)){
+	if(dungeon[i+1][j-1] == CORRIDOR && !(dungeon[i+1][j] == CORRIDOR || dungeon[i][j-1] == CORRIDOR || dungeon[i+1][j] == FLOOR || dungeon[i][j-1] == FLOOR)){
 	  if(dungeon[i+1][j] != FLOOR)
 	    dungeon[i+1][j] = CORRIDOR;
 	  else if(dungeon[i+1][j] != FLOOR)
 	    dungeon[i][j+1] = CORRIDOR;
 	}
-	if(dungeon[i-1][j+1] == CORRIDOR && !(dungeon[i-1][j] == CORRIDOR || dungeon[i][j+1] == CORRIDOR)){
+	if(dungeon[i-1][j+1] == CORRIDOR && !(dungeon[i-1][j] == CORRIDOR || dungeon[i][j+1] == CORRIDOR || dungeon[i-1][j] == FLOOR || dungeon[i][j+1] == FLOOR)){
 	  if(dungeon[i-1][j] != FLOOR)
 	    dungeon[i-1][j] = CORRIDOR;
 	  else if(dungeon[i-1][j] != FLOOR)
@@ -164,6 +160,16 @@ void generate_rooms(int seed, int num_rooms){
     int target_y = rooms[r+1][ROOM_POS_Y] + (rooms[r+1][ROOM_SIZE_Y]/2);
     draw_corridor(start_x, start_y, target_x, target_y);
   }
+  draw_corridor(rooms[num_rooms-1][ROOM_POS_X],rooms[num_rooms-1][ROOM_POS_Y],rooms[0][ROOM_POS_X],rooms[0][ROOM_POS_Y]);
+}
+
+void generate_stairs(){
+  int i,j;
+  for (j = 0; j < NUM_ROWS; j++) {
+    for (i = 0; i < NUM_COLS; i++) {
+      
+    }
+  }
 }
 
 int main(int argc, char * argv[]) {
@@ -179,7 +185,7 @@ int main(int argc, char * argv[]) {
   printf("seed: %d, num_rooms: %d\n",seed,num_rooms);
   init_dungeon();
   generate_rooms(seed, num_rooms);  
-
+  generate_stairs();
   print_dungeon();
   
   return 0;
