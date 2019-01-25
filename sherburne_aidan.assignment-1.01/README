@@ -1,0 +1,19 @@
+@author Aidan Sherburne for CS327 @ Iowa State University, Spring 2019
+
+This program generates dungeons for our roguelike game. 
+Specifications include:
+	-minimum 6 rooms (minimum size 4x3)
+	-fully interconnecting corridors
+	-outer walls immutable
+	-at least one each of up and down stairs
+	-rooms do not overlap and are at least 1 cell apart
+
+Additional features include;
+	-ensure corridors are walkable
+	 (i.e. ensure no two corridor tiles only connect diagonally)
+	-seed-based generation, same seed = same dungeon
+	-seed-based room size generation
+	-seed-based room number generation
+	-print seed and number of rooms generated
+	-accept desired seed from command line argv[1]
+
