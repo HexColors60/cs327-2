@@ -165,9 +165,21 @@ void generate_rooms(int seed, int num_rooms){
 
 void generate_stairs(){
   int i,j;
+  int num_tiles = 0;
   for (j = 0; j < NUM_ROWS; j++) {
     for (i = 0; i < NUM_COLS; i++) {
-      
+      if(dungeon[i][j] == FLOOR){
+	num_tiles++;
+      }
+    }
+  }
+  for (j = 0; j < NUM_ROWS; j++) {
+    for (i = 0; i < NUM_COLS; i++) {
+      if(dungeon[i][j] == FLOOR){
+	num_tiles--;
+	if(num_tiles % 119 == 0) dungeon[i][j] = STAIR_UP;
+	if(num_tiles % 169 == 0) dungeon[i][j] = STAIR_DN;
+      }
     }
   }
 }
