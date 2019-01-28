@@ -1,0 +1,8 @@
+1/24	Began work on dungeon generation
+	Added corridor drawing and room location picking
+	Improved room generation, added room collision prevention
+	Fixed corridor generation, no more diagonal jumps
+1/25	Removed border
+	Added stair generation, other small tweaks
+	Update README
+1/28 	Update CHANGELOG
