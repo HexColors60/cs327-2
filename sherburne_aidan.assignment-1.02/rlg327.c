@@ -728,14 +728,50 @@ int main(int argc, char *argv[])
   dungeon_t d;
   struct timeval tv;
   uint32_t seed;
+  uint32_t should_save=0;
+  uint32_t should_load=0;
+  uint32_t should_use_seed=1;
+  char* save_file;
+  char* load_file;
 
   UNUSED(in_room);
 
-  if (argc == 2) {
-    seed = atoi(argv[1]);
-  } else {
+  char* homedir = getenv("HOME");
+  char* path = strcat(homedir, "/.rlg327/");
+  struct stat st = {0};
+  if(stat(path,&st)==-1)
+    mkdir(path,0777);
+
+  if(argc > 1){
+    int i;
+    for(i = 1; i < argc; i++){
+      if(strcmp(argv[i],"--save")==0){
+	should_save = 1;
+	save_file = argv[i+1];
+	i++;
+      }else if(strcmp(argv[i],"--load")==0){
+        should_load = 1;
+	load_file = argv[i+1];
+	i++;
+      }else{
+	should_use_seed = 0;
+	seed = atoi(argv[i]);
+      }
+    }
+  }  
+  if(should_use_seed == 1) {
     gettimeofday(&tv, NULL);
     seed = (tv.tv_usec ^ (tv.tv_sec << 20)) & 0xffffffff;
+  }
+
+  if(should_load){
+    printf("%s\n",load_file);
+  }
+  if(should_save){
+    printf("%s\n",save_file);
+  }
+  if(!should_use_seed){
+    printf("%d\n",seed);
   }
 
   printf("Using seed: %u\n", seed);
