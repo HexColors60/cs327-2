@@ -1,0 +1,22 @@
+@author Aidan Sherburne for CS327 @ Iowa State University, Spring 2019
+
+This program has all of the functionality of the previous assignment, 1.01.
+Additionally, this program adds the ability to save and load dungeons.
+Program usage is as follows:
+./rlg327 [--save <filename>] [--load <filename>] [seed]
+
+Filenames are relative to the "/HOME/.rlg327/dungeon/" path
+
+Saving a dungeon requires a filename to save to.
+
+Loading a dungeon requires a filename to load from.
+
+Including a seed will generate a dungeon with that specified seed,
+except in the case that --load is called, in which case the seed is ignored.
+
+Load and Save flags can be added at the same time, which will cause the program
+to load the file and promptly overwrite it with the same dungeon.
+
+As per the spec, I included a place_player method that generates a position for
+the player, but I did not display the '@' in the dungeon yet.
+
