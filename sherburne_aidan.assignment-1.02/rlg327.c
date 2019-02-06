@@ -75,7 +75,9 @@ typedef struct room {
 
 typedef struct dungeon {
   uint32_t num_rooms;
-  room_t rooms[MAX_ROOMS];
+  // room_t rooms[MAX_ROOMS];
+  room_t* rooms;
+
   terrain_type_t map[DUNGEON_Y][DUNGEON_X];
   /* Since hardness is usually not used, it would be expensive to pull it *
    * into cache every time we need a map cell, so we store it in a        *
@@ -644,12 +646,13 @@ static void place_stairs(dungeon_t *d)
     mappair(p) = ter_stairs_up;
   } while (rand_under(2, 4));
 }
-
+//todo malloc d->rooms and find where to free
 static int make_rooms(dungeon_t *d)
 {
   uint32_t i;
 
-  memset(d->rooms, 0, sizeof (d->rooms));
+  //memset(d->rooms, 0, sizeof (d->rooms));
+  memset(d->rooms, 0, MAX_ROOMS * sizeof(room_t));
 
   for (i = MIN_ROOMS; i < MAX_ROOMS && rand_under(5, 8); i++)
     ;
@@ -688,7 +691,7 @@ int place_player(dungeon_t *d){
 int gen_dungeon(dungeon_t *d)
 {
   empty_dungeon(d);
-
+  d->rooms = (room_t*)malloc(sizeof(room_t) * MAX_ROOMS);
   do {
     make_rooms(d);
   } while (place_rooms(d));
@@ -845,7 +848,7 @@ int save_dungeon(dungeon_t *d, char* filename){
 int load_dungeon(dungeon_t *d, char* filename){
   uint8_t x;
   uint8_t y;
-  uint8_t z;
+  uint32_t z;
   char semantic[13];
 
   uint16_t stairs_up = 0;
@@ -854,7 +857,7 @@ int load_dungeon(dungeon_t *d, char* filename){
   uint16_t temp_16;
   uint8_t temp_8;
   FILE* f;
-
+  
   if(!(f = fopen(filename, "rb"))){
     fprintf(stderr, "Error opening file");
     return -1;
@@ -875,7 +878,7 @@ int load_dungeon(dungeon_t *d, char* filename){
   //read player position
   fread(&d->player_pos[dim_x], 1, 1, f);
   fread(&d->player_pos[dim_y], 1, 1, f);
-  
+
   //read hardness values and place corridors, walls, and immutable rock
   for(y = 0; y < DUNGEON_Y; y++){
     for(x = 0; x < DUNGEON_X; x++){
@@ -894,10 +897,9 @@ int load_dungeon(dungeon_t *d, char* filename){
   d->num_rooms = be16toh(temp_16);
   
   //malloc space for the rooms
-  room_t* roomarr = (room_t*)malloc(d->num_rooms * sizeof(room_t));
-  *d->rooms = *roomarr;
+  d->rooms = (room_t*)malloc(d->num_rooms * sizeof(room_t));
   //free(roomarr);
-  
+
   //read room positions and add them to the map
   for(z = 0; z < d->num_rooms; z++){
     fread(&temp_8, 1, 1, f);
@@ -913,12 +915,13 @@ int load_dungeon(dungeon_t *d, char* filename){
 	d->map[y][x] = ter_floor_room;
       }
     }
+    printf("z:y,x-%d:%d,%d\n",z,y,x);    
   }
   
   //read number of up stairs
   fread(&stairs_up, sizeof(uint16_t), 1, f);
   stairs_up = be16toh(stairs_up);
-
+  
   //read positions of up stairs and add them to the map
   for(z = 0; z < stairs_up; z++){
     fread(&x, 1, 1, f);
@@ -1002,6 +1005,8 @@ int main(int argc, char *argv[])
   }
 
   delete_dungeon(&d);
-  
+ 
+  free(d.rooms);
+ 
   return 0;
 }
