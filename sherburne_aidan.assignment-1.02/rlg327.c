@@ -87,6 +87,8 @@ typedef struct dungeon {
    * of overhead to the memory system.                                    */
   uint8_t hardness[DUNGEON_Y][DUNGEON_X];
   pair_t player_pos;
+  uint32_t version;
+  uint32_t filesize;
 } dungeon_t;
 
 static uint32_t in_room(dungeon_t *d, int16_t y, int16_t x)
@@ -743,13 +745,14 @@ void delete_dungeon(dungeon_t *d)
 void init_dungeon(dungeon_t *d)
 {
   empty_dungeon(d);
+  d->version = 0;
 }
 
 int save_dungeon(dungeon_t *d, char* filename){
   uint8_t x;
   uint8_t y;
+  uint8_t z;
   char* semantic = "RLG327-S2019";
-  uint32_t version = 0;
   uint16_t stairs_up = 0;
   uint16_t stairs_down = 0;
   uint32_t temp_32;
@@ -763,64 +766,81 @@ int save_dungeon(dungeon_t *d, char* filename){
 
   //write semantic
   fwrite(semantic, 1, 12, f);
+ 
   //write version
-  temp_32 = htobe32(version);
+  temp_32 = htobe32(d->version);
   fwrite(&temp_32, sizeof(uint32_t), 1, f);
+  
   //calculate num up and down stairs
-  for(x = 0; x < DUNGEON_X; x++){
-    for(y = 0; y < DUNGEON_Y; y++){
+  for(y = 0; y < DUNGEON_Y; y++){
+    for(x = 0; x < DUNGEON_X; x++){
       if(d->map[y][x] == ter_stairs_up)stairs_up++;
       if(d->map[y][x] == ter_stairs_down)stairs_down++;
     }
   }
-  uint32_t size = 1708 + (d->num_rooms * 4) + 2 * (stairs_up + stairs_down);
+  
+  d->filesize = 1708 + (d->num_rooms * 4) + 2 * (stairs_up + stairs_down);
+  
   //write file size
-  temp_32 = htobe32(size);
+  temp_32 = htobe32(d->filesize);
   fwrite(&temp_32, sizeof(uint32_t), 1, f);
+  
   //write PC position
   fwrite(&d->player_pos[dim_x], sizeof(uint8_t), 1, f);//x
   fwrite(&d->player_pos[dim_y], sizeof(uint8_t), 1, f);//y
+  
   //write hardness values to file
   for(y = 0; y < DUNGEON_Y; y++){
     for(x = 0; x < DUNGEON_X; x++){
       fwrite(&d->hardness[y][x], 1, 1, f);
     }
   }
+  
   //write num_rooms
-  temp_16 = htobe16(&d->num_rooms);
-  fwrite(&temp_16, sizeof(uint16_t), 1, f);
+  temp_16 = d->num_rooms;
+  temp_16 = htobe16(temp_16);
+  fwrite(&temp_16, sizeof(temp_16), 1, f);
+  
   //write room position and size data to file
-  for(x = 0; x < d->num_rooms; x++){
-    fwrite(&d->rooms[x].position[dim_x],1,1,f); //x pos
-    fwrite(&d->rooms[x].position[dim_y],1,1,f); //y pos
-    fwrite(&d->rooms[x].size[dim_x],1,1,f); //width
-    fwrite(&d->rooms[x].size[dim_y],1,1,f); //height
+  for(z = 0; z < d->num_rooms; z++){
+    fwrite(&d->rooms[z].position[dim_x],1,1,f); //x pos
+    fwrite(&d->rooms[z].position[dim_y],1,1,f); //y pos
+    fwrite(&d->rooms[z].size[dim_x],1,1,f); //width
+    fwrite(&d->rooms[z].size[dim_y],1,1,f); //height
   }
+  
   //write number of up stairs
   temp_16 = htobe16(stairs_up);
-  fwrite(&temp_16, sizeof(uint16_t), 1, f);
+  fwrite(&temp_16, sizeof(temp_16), 1, f);
+  
   //write up stair positions
   for(y = 0; y < DUNGEON_Y; y++){
     for(x = 0; x < DUNGEON_X; x++){
       if(d->map[y][x] == ter_stairs_up){
 	fwrite(&x, 1, 1, f);
 	fwrite(&y, 1, 1, f);
+	printf("Stair_up at: %d,%d\n", x, y);
       }
     }
   }
+  
   //write number of down stairs
   temp_16 = htobe16(stairs_down);
-  fwrite(&temp_16, sizeof(uint16_t), 1, f);
+  fwrite(&temp_16, sizeof(temp_16), 1, f);
+  
   //write down stair positions
   for(y = 0; y < DUNGEON_Y; y++){
     for(x = 0; x < DUNGEON_X; x++){
       if(d->map[y][x] == ter_stairs_down){
 	fwrite(&x, 1, 1, f);
 	fwrite(&y, 1, 1, f);
+	printf("Stair_down at: %d,%d\n", x, y);
       }
     }
   }
+  
   fclose(f);
+  
   return 0;
 }
 
@@ -829,10 +849,11 @@ int load_dungeon(dungeon_t *d, char* filename){
   uint8_t y;
   uint8_t z;
   char semantic[13];
-  uint32_t version;
-  uint32_t size;
+
   uint16_t stairs_up = 0;
   uint16_t stairs_down = 0;
+  uint32_t temp_32;
+  uint16_t temp_16;
   uint8_t temp_8;
   FILE* f;
 
@@ -840,43 +861,45 @@ int load_dungeon(dungeon_t *d, char* filename){
     fprintf(stderr, "Error opening file");
     return -1;
   }
+  
   //read semantic
   fread(semantic, sizeof(semantic)-1, 1, f);
   semantic[12] = '\0'; //append null char
+  
   //read version and convert from big endian
-  fread(&version, sizeof(version), 1, f);
-  version = be32toh(version);
+  fread(&temp_32, sizeof(temp_32), 1, f);
+  d->version = be32toh(temp_32);
+ 
   //read size and convert from big endian
-  fread(&size, sizeof(size), 1, f);
-  size = be32toh(size);
+  fread(&temp_32, sizeof(temp_32), 1, f);
+  d->filesize = be32toh(temp_32);
+
   //read player position
   fread(&d->player_pos[dim_x], 1, 1, f);
   fread(&d->player_pos[dim_y], 1, 1, f);
-  // to this later
-  //d->map[d->player_pos[dim_y]][d->player_pos[dim_x]] = ter_player
+  
   //read hardness values and place corridors, walls, and immutable rock
   for(y = 0; y < DUNGEON_Y; y++){
     for(x = 0; x < DUNGEON_X; x++){
       fread(&d->hardness[y][x], 1, 1, f);
       if(d->hardness[y][x] == 0)
-	{
-	  d->map[y][x] = ter_floor_hall;
-	}
+	d->map[y][x] = ter_floor_hall;
       else if(d->hardness[y][x] == 255)
-	{
-	  d->map[y][x] = ter_wall_immutable;
-	}
+	d->map[y][x] = ter_wall_immutable;
       else
-	{
-	  d->map[y][x] = ter_wall;
-	}
+	d->map[y][x] = ter_wall;
     }
   }
+  
   //read number of rooms
-  fread(&d->num_rooms, sizeof(d->num_rooms), 1, f);
-  d->num_rooms = be16toh(d->num_rooms);
+  fread(&temp_16, sizeof(temp_16), 1, f);
+  d->num_rooms = be16toh(temp_16);
+  
   //malloc space for the rooms
-  d->rooms = malloc(d->num_rooms * sizeof(*d->rooms));
+  room_t* roomarr = (room_t*)malloc(d->num_rooms * sizeof(room_t));
+  *d->rooms = *roomarr;
+  //free(roomarr);
+  
   //read room positions and add them to the map
   for(z = 0; z < d->num_rooms; z++){
     fread(&temp_8, 1, 1, f);
@@ -893,16 +916,30 @@ int load_dungeon(dungeon_t *d, char* filename){
       }
     }
   }
+  
   //read number of up stairs
   fread(&stairs_up, sizeof(uint16_t), 1, f);
   stairs_up = be16toh(stairs_up);
+  
   //read positions of up stairs and add them to the map
+  for(z = 0; z < stairs_up; z++){
+    fread(&x, 1, 1, f);
+    fread(&y, 1, 1, f);
+    d->map[y][x] = ter_stairs_up;
+    printf("Stair_up at: %d,%d\n", x, y);
+  }
   
   //read number of down stairs
   fread(&stairs_down, sizeof(uint16_t), 1, f);
   stairs_up = be16toh(stairs_down);
+  printf("%d\n", stairs_down);
   //read positions of down stairs and add them to the map
-  
+  for(z = 0; z < stairs_down; z++){
+    fread(&x, 1, 1, f);
+    fread(&y, 1, 1, f);
+    d->map[y][x] = ter_stairs_down;
+    printf("Stair_down at: %d,%d\n", x, y);
+  }
 
   return 0;
 }
@@ -914,9 +951,9 @@ int main(int argc, char *argv[])
   uint32_t seed;
   uint32_t should_save=0;
   uint32_t should_load=0;
-  uint32_t should_use_seed=1;
-  char* save_file;
-  char* load_file;
+  uint32_t should_gen_seed=1;
+  char save_file[255];
+  char load_file[255];
 
   UNUSED(in_room);
 
@@ -925,48 +962,52 @@ int main(int argc, char *argv[])
   struct stat st = {0};
   if(stat(path,&st)==-1)
     mkdir(path,0777);
+  strcpy(save_file, path);
+  strcpy(load_file, path);
 
   if(argc > 1){
     int i;
     for(i = 1; i < argc; i++){
       if(strcmp(argv[i],"--save")==0){
 	should_save = 1;
-	strcpy(save_file,path);
 	strcat(save_file, argv[i+1]);
 	i++;
       }else if(strcmp(argv[i],"--load")==0){
         should_load = 1;
-	strcpy(load_file,path);
+	should_gen_seed = 0;
 	strcat(load_file, argv[i+1]);
 	i++;
       }else{
-	should_use_seed = 0;
+	should_gen_seed = 0;
 	seed = atoi(argv[i]);
       }
     }
   }  
-  if(should_use_seed == 1) {
+  if(should_gen_seed == 1) {
     gettimeofday(&tv, NULL);
     seed = (tv.tv_usec ^ (tv.tv_sec << 20)) & 0xffffffff;
   }
 
+  
+  
+  init_dungeon(&d);
+
   if(should_load){
-    printf("%s\n",load_file); //placeholder
+    printf("Loading file: %s\n", load_file);
+    load_dungeon(&d, load_file);
+  }else{
+    printf("Using seed: %u\n", seed);
+    srand(seed);
+    gen_dungeon(&d);
   }
+  
+  render_dungeon(&d);
+
   if(should_save){
     save_dungeon(&d, save_file);
   }
-  if(!should_use_seed){
-    printf("%d\n",seed); //placeholder
-  }
 
-  printf("Using seed: %u\n", seed);
-  srand(seed);
-
-  init_dungeon(&d);
-  gen_dungeon(&d);
-  render_dungeon(&d);
   delete_dungeon(&d);
-
+  
   return 0;
 }
