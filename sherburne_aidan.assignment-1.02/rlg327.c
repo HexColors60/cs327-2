@@ -739,15 +739,19 @@ void init_dungeon(dungeon_t *d)
   empty_dungeon(d);
 }
 
-int save_dungeon(dungeon_t *d, FILE *f){
+int save_dungeon(dungeon_t *d, char* filename){
   uint8_t x;
   uint8_t y;
   char* semantic = "RLG327-S2019";
   uint32_t version = 0;
   uint16_t stairs_up = 0;
   uint16_t staris_down = 0;
- 
-  
+  FILE* f;
+
+  if(!(f = fopen(filename, "wb"))){
+    return -1;
+  }
+
   //write semantic
   fwrite(semantic, 1, 12, f);
   //write version
@@ -776,7 +780,7 @@ int save_dungeon(dungeon_t *d, FILE *f){
   //write room position and size data to file
   for(x = 0; x < d->num_rooms; x++){
     fwrite(&d->rooms[x].position[dim_x],1,1,f); //x pos
-    fwrite(&d->rooms[x].position[dim_y],1,1,f); //ypos
+    fwrite(&d->rooms[x].position[dim_y],1,1,f); //y pos
     fwrite(&d->rooms[x].size[dim_x],1,1,f); //width
     fwrite(&d->rooms[x].size[dim_y],1,1,f); //height
   }
@@ -802,6 +806,8 @@ int save_dungeon(dungeon_t *d, FILE *f){
       }
     }
   }
+  fclose(f);
+  return 0;
 }
 
 int main(int argc, char *argv[])
@@ -818,7 +824,7 @@ int main(int argc, char *argv[])
   UNUSED(in_room);
 
   char* homedir = getenv("HOME");
-  char* path = strcat(homedir, "/.rlg327/");
+  char* path = strcat(homedir, "/.rlg327/dungeon/");
   struct stat st = {0};
   if(stat(path,&st)==-1)
     mkdir(path,0777);
@@ -828,11 +834,13 @@ int main(int argc, char *argv[])
     for(i = 1; i < argc; i++){
       if(strcmp(argv[i],"--save")==0){
 	should_save = 1;
-	save_file = argv[i+1];
+	strcpy(save_file,path);
+	strcat(save_file, argv[i+1]);
 	i++;
       }else if(strcmp(argv[i],"--load")==0){
         should_load = 1;
-	load_file = argv[i+1];
+	strcpy(load_file,path);
+	strcat(load_file, argv[i+1]);
 	i++;
       }else{
 	should_use_seed = 0;
@@ -846,14 +854,13 @@ int main(int argc, char *argv[])
   }
 
   if(should_load){
-    printf("%s\n",load_file);
+    printf("%s\n",load_file); //placeholder
   }
   if(should_save){
-    printf("%s\n",save_file);
-    save_dungeon(FILE *f)
+    save_dungeon(&d, save_file);
   }
   if(!should_use_seed){
-    printf("%d\n",seed);
+    printf("%d\n",seed); //placeholder
   }
 
   printf("Using seed: %u\n", seed);
