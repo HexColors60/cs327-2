@@ -1,2 +1,131 @@
-2/2	Downloaded Dr. Sheaffer's 1.01 solution to base my own 1.02 solution off of
-2/4	
+commit 6b01507920b2d8dee144fd578abf13a7632e4941
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Feb 6 14:20:51 2019 -0600
+
+    Squashed some bugs that prevented hello.rlg327 from working correctly
+
+commit f38383ba7e3f4e5efac92e1205c68088d81f4669
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Feb 6 12:59:18 2019 -0600
+
+    Fixed bugs with load_dungeon, everything seems to be working correctly.
+
+commit 549c2f8a53ec4b5366f8acaeaeab11a8199ea760
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Feb 6 11:52:48 2019 -0600
+
+    Forgot to run make clean before last commit. Fixing that.
+
+commit 375dd7e6158867f76b2e3e35a5d44707945bbb7f
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Feb 6 11:51:59 2019 -0600
+
+    Finished load_dungeon, need to debug positions of down stairs
+
+commit c494e216f4feb499cda0330d9b3816aa5a1a5d1b
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 5 23:42:43 2019 -0600
+
+    Fixed some bugs, continued work on load_dungeon
+
+commit 4ca987bfa81b0120d7629c1a2ae8b08243fcb236
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 5 22:24:23 2019 -0600
+
+    Begin work on load_dungeon, minor changes to save_dungeon
+
+commit 9d1702e53fe22f5921454acdfd344f1baae17a40
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 5 21:48:45 2019 -0600
+
+    Okay now I actually finished the save
+
+commit 785ca151cd4be86f7be048f32f245b603aed3e08
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 5 21:19:01 2019 -0600
+
+    Finished save
+
+commit ee2380d178015d0de2fdfccd621e9559320f38fa
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 5 20:27:03 2019 -0600
+
+    Added semantic, version, size
+
+commit 35b6ba9024ca7ae94c0f3b71d8d957840ba60bef
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 5 19:47:16 2019 -0600
+
+    Started save_dungeon method
+
+commit 01110ad414970d4c1aeb4cb1afa73bf92dc48bc7
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Feb 4 17:12:27 2019 -0600
+
+    Added support for creating /.rlg327/ path, added --save and --load flags
+
+commit c7d9b17546624ee8c6f937e91b515a35771a1993
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Feb 4 15:11:25 2019 -0600
+
+    Added initial 1.02 files
+
+commit 32e32158fffdd16162ed4e182cfa4d69398e6f1c
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Jan 28 08:54:22 2019 -0600
+
+    Update CHANGELOG
+
+commit 2f2a317b45acd976eec9309297f85fe4e22472ff
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Jan 25 15:52:25 2019 -0600
+
+    Update README
+
+commit 4abd6e4a69a4a19e85828b5d2f9ac5c4cde688af
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Jan 24 19:23:05 2019 -0600
+
+    Added stair generation, other small tweaks
+
+commit 52e656ad9c1dbe88dee986276bd3c344fbc6c355
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Jan 24 19:04:45 2019 -0600
+
+    Removed border
+
+commit ea349c3bc5d23f70533525e25a96e4f36dcd315e
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Jan 24 17:46:22 2019 -0600
+
+    Fixed corridor generation, no more diagonal jumps
+
+commit 6c117f71e4ee7b687835f2bfff645c588c71cf63
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Jan 24 16:41:08 2019 -0600
+
+    Improved room generation, added room collision prevention
+
+commit ba2ad6f229661e2aaf88fe6f3cb277319b46cbcf
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Jan 24 12:37:47 2019 -0600
+
+    Added corridor drawing and room location picking
+
+commit 614067875dc39070f4df79e0ba70f3424c97f50d
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Jan 23 22:23:09 2019 -0600
+
+    Begin work on dungeon generation
+
+commit c9d2343fa909cad65385021f7d08c35a6c843fbe
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Jan 23 15:36:37 2019 -0600
+
+    Add existing files for assignment 0
+
+commit 7a92662ee1c153ecd86209c32b6c08a23607c581
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Jan 23 15:33:48 2019 -0600
+
+    Initial commit
