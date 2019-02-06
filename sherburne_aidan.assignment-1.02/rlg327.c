@@ -723,6 +723,44 @@ void init_dungeon(dungeon_t *d)
   empty_dungeon(d);
 }
 
+int save_dungeon(dungeon_t *d, FILE *f){
+  uint32_t x;
+  uint32_t y;
+  char* semantic = "RLG327-S2019";
+  uint32_t version = 0;
+  int stairs_up = 0;
+  int staris_down = 0;
+ 
+  //calculate num up and down stairs
+  for(x = 0; x < DUNGEON_X; x++){
+    for(y = 0; y < DUNGEON_Y; y++){
+      if(d->map[y][x] == ter_stairs_up)stairs_up++;
+      if(d->map[y][x] == ter_stairs_down)stairs_down++;
+    }
+  }
+
+  uint32_t size = 1708 + (d->num_rooms * 4) + 2 * (stairs_up + stairs_down);
+
+  //write hardness values to file
+  for(x = 0; x < DUNGEON_X; x++){
+    for(y = 0; y < DUNGEON_Y; y++){
+      fwrite(&d->hardness[y][x], sizeof(unsigned char), 1, f);
+    }
+  }
+  
+  //write room data to file
+  for(x = 0; x < d->num_rooms; x++){
+    //x pos
+    fwrite(&d->rooms[x].position[dim_x],1,1,f);
+    //y pos
+    fwrite(&d->rooms[x].position[dim_y],1,1,f);
+    //width
+    fwrite(&d->rooms[x].size[dim_x],1,1,f);
+    //height
+    fwrite(&d->rooms[x].size[dim_y],1,1,f);
+  }
+}
+
 int main(int argc, char *argv[])
 {
   dungeon_t d;
@@ -769,6 +807,7 @@ int main(int argc, char *argv[])
   }
   if(should_save){
     printf("%s\n",save_file);
+    save_dungeon(FILE *f)
   }
   if(!should_use_seed){
     printf("%d\n",seed);
