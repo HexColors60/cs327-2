@@ -819,7 +819,6 @@ int save_dungeon(dungeon_t *d, char* filename){
       if(d->map[y][x] == ter_stairs_up){
 	fwrite(&x, 1, 1, f);
 	fwrite(&y, 1, 1, f);
-	printf("Stair_up at: %d,%d\n", x, y);
       }
     }
   }
@@ -834,7 +833,6 @@ int save_dungeon(dungeon_t *d, char* filename){
       if(d->map[y][x] == ter_stairs_down){
 	fwrite(&x, 1, 1, f);
 	fwrite(&y, 1, 1, f);
-	printf("Stair_down at: %d,%d\n", x, y);
       }
     }
   }
@@ -911,7 +909,7 @@ int load_dungeon(dungeon_t *d, char* filename){
     fread(&temp_8, 1, 1, f);
     d->rooms[z].size[dim_y] = temp_8;
     for(y = d->rooms[z].position[dim_y]; y < d->rooms[z].position[dim_y] + d->rooms[z].size[dim_y]; y++){
-      for(y = d->rooms[z].position[dim_y]; y < d->rooms[z].position[dim_y] + d->rooms[z].size[dim_y]; y++){
+      for(x = d->rooms[z].position[dim_x]; x < d->rooms[z].position[dim_x] + d->rooms[z].size[dim_x]; x++){
 	d->map[y][x] = ter_floor_room;
       }
     }
@@ -920,25 +918,23 @@ int load_dungeon(dungeon_t *d, char* filename){
   //read number of up stairs
   fread(&stairs_up, sizeof(uint16_t), 1, f);
   stairs_up = be16toh(stairs_up);
-  
+
   //read positions of up stairs and add them to the map
   for(z = 0; z < stairs_up; z++){
     fread(&x, 1, 1, f);
     fread(&y, 1, 1, f);
     d->map[y][x] = ter_stairs_up;
-    printf("Stair_up at: %d,%d\n", x, y);
   }
   
   //read number of down stairs
   fread(&stairs_down, sizeof(uint16_t), 1, f);
-  stairs_up = be16toh(stairs_down);
-  printf("%d\n", stairs_down);
+  stairs_down = be16toh(stairs_down);
+
   //read positions of down stairs and add them to the map
   for(z = 0; z < stairs_down; z++){
     fread(&x, 1, 1, f);
     fread(&y, 1, 1, f);
     d->map[y][x] = ter_stairs_down;
-    printf("Stair_down at: %d,%d\n", x, y);
   }
 
   return 0;
@@ -988,8 +984,6 @@ int main(int argc, char *argv[])
     seed = (tv.tv_usec ^ (tv.tv_sec << 20)) & 0xffffffff;
   }
 
-  
-  
   init_dungeon(&d);
 
   if(should_load){
