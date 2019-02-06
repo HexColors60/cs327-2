@@ -722,6 +722,9 @@ void render_dungeon(dungeon_t *d)
       case ter_stairs_down:
         putchar('>');
         break;
+      case ter_player:
+	putchar('@');
+	break;
       default:
         break;
       }
@@ -749,6 +752,7 @@ int save_dungeon(dungeon_t *d, char* filename){
   FILE* f;
 
   if(!(f = fopen(filename, "wb"))){
+    fprintf(stderr, "Error opening file");
     return -1;
   }
 
@@ -767,8 +771,8 @@ int save_dungeon(dungeon_t *d, char* filename){
   //write file size
   fwrite(htobe32(size), sizeof(uint32_t), 1, f);
   //write PC position
-  fwrite(&d->player_pos_x, sizeof(uint8_t), 1, f);//x
-  fwrite(&d->player_pos_y, sizeof(uint8_t), 1, f);//y
+  fwrite(&d->player_pos[dim_x], sizeof(uint8_t), 1, f);//x
+  fwrite(&d->player_pos[dim_y], sizeof(uint8_t), 1, f);//y
   //write hardness values to file
   for(y = 0; y < DUNGEON_Y; y++){
     for(x = 0; x < DUNGEON_X; x++){
@@ -807,6 +811,47 @@ int save_dungeon(dungeon_t *d, char* filename){
     }
   }
   fclose(f);
+  return 0;
+}
+
+int load_dungeon(dungeon_t *d, char* filename){
+  uint8_t x;
+  uint8_t y;
+  char semantic[13];
+  uint32_t version;
+  uint32_t size;
+  FILE* f;
+
+  if(!(f = fopen(filename, "rb"))){
+    fprintf(stderr, "Error opening file");
+    return -1;
+  }
+  //read semantic
+  fread(semantic, sizeof(semantic)-1, 1, f);
+  semantic[12] = '\0'; //append null char
+  //read version and convert from big endian
+  fread(&version, sizeof(version), 1, f);
+  be32toh(version);
+  //read size and convert from big endian
+  fread(&size, sizeof(size), 1, f);
+  be32toh(size);
+  //read player position
+  fread(&d->player_pos[dim_x], 1, 1, f);
+  fread(&d->player_pos[dim_y], 1, 1, f);
+  //read hardness values and place corridors, walls, and immutable rock
+  for(y = 0; y < DUNGEON_Y; y++){
+    for(x = 0; x < DUNGEON_X; x++){
+      fread(&d->hardness[y][x], 1, 1, f);
+      if(d->hardness[y][[x] == 0){
+	  d->map[y][x] = ter_floor_hall;
+      } else if(d->hardness[y][[x] == 255){
+	  d->map[y][x] = ter_floor_immutable;
+      } else {
+	  d->map[y][x] = ter_wall;
+      }
+    }
+  }
+
   return 0;
 }
 
