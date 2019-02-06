@@ -39,7 +39,7 @@ typedef enum dim {
   num_dims
 } dim_t;
 
-typedef int16_t pair_t[num_dims];
+typedef uint8_t pair_t[num_dims];
 
 #define DUNGEON_X              80
 #define DUNGEON_Y              21
@@ -64,7 +64,8 @@ typedef enum __attribute__ ((__packed__)) terrain_type {
   ter_floor_hall,
   ter_stairs,
   ter_stairs_up,
-  ter_stairs_down
+  ter_stairs_down,
+  ter_player
 } terrain_type_t;
 
 typedef struct room {
@@ -85,6 +86,7 @@ typedef struct dungeon {
    * and pulling in unnecessary data with each map cell would add a lot   *
    * of overhead to the memory system.                                    */
   uint8_t hardness[DUNGEON_Y][DUNGEON_X];
+  pair player_pos;
 } dungeon_t;
 
 static uint32_t in_room(dungeon_t *d, int16_t y, int16_t x)
@@ -665,6 +667,19 @@ static int make_rooms(dungeon_t *d)
   return 0;
 }
 
+//places player in first available floor tile and breaks
+int place_player(dungeon_t *d){
+   for(x = 0; x < DUNGEON_X; x++){
+    for(y = 0; y < DUNGEON_Y; y++){
+      if(d->map[y][x] == ter_floor_room){
+	d->player_pos[dim_x] = x;
+	d->player_pos[dim_y] = y;
+	break;
+      }
+    }
+  }
+}
+
 int gen_dungeon(dungeon_t *d)
 {
   empty_dungeon(d);
@@ -674,7 +689,8 @@ int gen_dungeon(dungeon_t *d)
   } while (place_rooms(d));
   connect_rooms(d);
   place_stairs(d);
-
+  place_player(d);//added
+  
   return 0;
 }
 
@@ -724,13 +740,18 @@ void init_dungeon(dungeon_t *d)
 }
 
 int save_dungeon(dungeon_t *d, FILE *f){
-  uint32_t x;
-  uint32_t y;
+  uint8_t x;
+  uint8_t y;
   char* semantic = "RLG327-S2019";
   uint32_t version = 0;
-  int stairs_up = 0;
-  int staris_down = 0;
+  uint16_t stairs_up = 0;
+  uint16_t staris_down = 0;
  
+  
+  //write semantic
+  fwrite(semantic, 1, 12, f);
+  //write version
+  fwrite(htobe32(version), sizeof(uint32_t), 1, f);
   //calculate num up and down stairs
   for(x = 0; x < DUNGEON_X; x++){
     for(y = 0; y < DUNGEON_Y; y++){
@@ -738,26 +759,48 @@ int save_dungeon(dungeon_t *d, FILE *f){
       if(d->map[y][x] == ter_stairs_down)stairs_down++;
     }
   }
-
   uint32_t size = 1708 + (d->num_rooms * 4) + 2 * (stairs_up + stairs_down);
-
+  //write file size
+  fwrite(htobe32(size), sizeof(uint32_t), 1, f);
+  //write PC position
+  fwrite(&d->player_pos_x, sizeof(uint8_t), 1, f);//x
+  fwrite(&d->player_pos_y, sizeof(uint8_t), 1, f);//y
   //write hardness values to file
-  for(x = 0; x < DUNGEON_X; x++){
-    for(y = 0; y < DUNGEON_Y; y++){
-      fwrite(&d->hardness[y][x], sizeof(unsigned char), 1, f);
+  for(y = 0; y < DUNGEON_Y; y++){
+    for(x = 0; x < DUNGEON_X; x++){
+      fwrite(&d->hardness[y][x], 1, 1, f);
     }
   }
-  
-  //write room data to file
+  //write num_rooms
+  fwrite(htobe16(&d->num_rooms), sizeof(uint16_t), 1, f);
+  //write room position and size data to file
   for(x = 0; x < d->num_rooms; x++){
-    //x pos
-    fwrite(&d->rooms[x].position[dim_x],1,1,f);
-    //y pos
-    fwrite(&d->rooms[x].position[dim_y],1,1,f);
-    //width
-    fwrite(&d->rooms[x].size[dim_x],1,1,f);
-    //height
-    fwrite(&d->rooms[x].size[dim_y],1,1,f);
+    fwrite(&d->rooms[x].position[dim_x],1,1,f); //x pos
+    fwrite(&d->rooms[x].position[dim_y],1,1,f); //ypos
+    fwrite(&d->rooms[x].size[dim_x],1,1,f); //width
+    fwrite(&d->rooms[x].size[dim_y],1,1,f); //height
+  }
+  //write number of up stairs
+  fwrite(htobe16(stairs_up), sizeof(uint16_t), 1, f);
+  //write up stair positions
+  for(y = 0; y < DUNGEON_Y; y++){
+    for(x = 0; x < DUNGEON_X; x++){
+      if(d->map[y][x] == ter_stairs_up){
+	fwrite(x, 1, 1, f);
+	fwrite(y, 1, 1, f);
+      }
+    }
+  }
+  //write number of down stairs
+  fwrite(htobe16(stairs_down), sizeof(uint16_t), 1, f);
+  //write down stair positions
+  for(y = 0; y < DUNGEON_Y; y++){
+    for(x = 0; x < DUNGEON_X; x++){
+      if(d->map[y][x] == ter_stairs_down){
+	fwrite(x, 1, 1, f);
+	fwrite(y, 1, 1, f);
+      }
+    }
   }
 }
 
