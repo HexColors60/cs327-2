@@ -79,6 +79,13 @@ typedef struct room {
   pair_t size;
 } room_t;
 
+typedef struct tunnel_map{
+  heap_node_t *node;
+  pair_t pos;
+  pair_t from;
+  int32_t cost;
+} tunnel_map_t;
+
 typedef struct dungeon {
   uint16_t num_rooms;
   room_t *rooms;
@@ -93,6 +100,8 @@ typedef struct dungeon {
    * of overhead to the memory system.                                    */
   uint8_t hardness[DUNGEON_Y][DUNGEON_X];
   pair_t pc;
+  tunnel_map_t nt_map[DUNGEON_Y][DUNGEON_X];
+  tunnel_map_t t_map[DUNGEON_Y][DUNGEON_X];
 } dungeon_t;
 
 static uint32_t in_room(dungeon_t *d, int16_t y, int16_t x)
@@ -1231,6 +1240,139 @@ void usage(char *name)
   exit(-1);
 }
 
+static int32_t non_tunneling_cmp(const void *key, const void *with) {
+  return ((tunnel_map_t *) key)->cost - ((tunnel_map_t *) with)->cost;
+}
+
+void non_tunneling_map(dungeon_t *d){
+  static tunnel_map_t *p;
+  static uint32_t initialized = 0;
+  heap_t h;
+  int x;
+  int y;
+
+  if(initialized == 0){
+    for(y=0; y<DUNGEON_Y; y++){
+      for(x=0; x<DUNGEON_X; x++){
+	d->nt_map[y][x].pos[dim_y] = y;
+	d->nt_map[y][x].pos[dim_x] = x;
+      }
+    }
+    initialized = 1;
+  }
+  
+  for(y=0; y<DUNGEON_Y; y++){
+    for(x=0; x<DUNGEON_X; x++){
+      d->nt_map[y][x].cost = INT_MAX;
+    }
+  }
+
+  d->nt_map[d->pc[dim_y]][d->pc[dim_x]].cost = 0;
+  
+  heap_init(&h, non_tunneling_cmp, NULL);
+
+  for(y=0; y<DUNGEON_Y; y++){
+    for(x=0; x<DUNGEON_X; x++){
+      if(d->hardness[y][x] == 0){
+	d->nt_map[y][x].node = heap_insert(&h, &d->nt_map[y][x]);
+      }else{
+	d->nt_map[y][x].node = NULL;
+      }
+    }
+  }
+  
+  while ((p = heap_remove_min(&h))) {
+    p->node = NULL;
+    
+    //[X,_,_]
+    //[_,@,_]
+    //[_,_,_]
+    if ((d->nt_map[p->pos[dim_y] - 1][p->pos[dim_x] - 1].node) && (d->nt_map[p->pos[dim_y] - 1][p->pos[dim_x] - 1].cost > p->cost + 1)) {
+      d->nt_map[p->pos[dim_y] - 1][p->pos[dim_x] - 1].cost = p->cost + 1;
+      d->nt_map[p->pos[dim_y] - 1][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
+      d->nt_map[p->pos[dim_y] - 1][p->pos[dim_x] - 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, d->nt_map[p->pos[dim_y] - 1][p->pos[dim_x] - 1].node);
+    }
+    //[_,X,_]
+    //[_,@,_]
+    //[_,_,_]
+    if ((d->nt_map[p->pos[dim_y] - 1][p->pos[dim_x]].node) && (d->nt_map[p->pos[dim_y] - 1][p->pos[dim_x]].cost > p->cost + 1)) {
+      d->nt_map[p->pos[dim_y] - 1][p->pos[dim_x]].cost = p->cost + 1;
+      d->nt_map[p->pos[dim_y] - 1][p->pos[dim_x]].from[dim_y] = p->pos[dim_y];
+      d->nt_map[p->pos[dim_y] - 1][p->pos[dim_x]].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, d->nt_map[p->pos[dim_y] - 1][p->pos[dim_x]].node);
+    }
+    //[_,_,X]
+    //[_,@,_]
+    //[_,_,_]
+    if ((d->nt_map[p->pos[dim_y] - 1][p->pos[dim_x] + 1].node) && (d->nt_map[p->pos[dim_y] - 1][p->pos[dim_x] + 1].cost > p->cost + 1)) {
+      d->nt_map[p->pos[dim_y] - 1][p->pos[dim_x] + 1].cost = p->cost + 1;
+      d->nt_map[p->pos[dim_y] - 1][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
+      d->nt_map[p->pos[dim_y] - 1][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, d->nt_map[p->pos[dim_y] - 1][p->pos[dim_x] + 1].node);
+    }
+    //[_,_,_]
+    //[X,@,_]
+    //[_,_,_]
+    if ((d->nt_map[p->pos[dim_y]][p->pos[dim_x] - 1].node) && (d->nt_map[p->pos[dim_y]][p->pos[dim_x] - 1].cost > p->cost + 1)) {
+      d->nt_map[p->pos[dim_y]][p->pos[dim_x] - 1].cost = p->cost + 1;
+      d->nt_map[p->pos[dim_y]][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
+      d->nt_map[p->pos[dim_y]][p->pos[dim_x] - 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, d->nt_map[p->pos[dim_y]][p->pos[dim_x] - 1].node);
+    }
+    //[_,_,_]
+    //[_,@,X]
+    //[_,_,_]
+    if ((d->nt_map[p->pos[dim_y]][p->pos[dim_x] + 1].node) && (d->nt_map[p->pos[dim_y]][p->pos[dim_x] + 1].cost > p->cost + 1)) {
+      d->nt_map[p->pos[dim_y]][p->pos[dim_x] + 1].cost = p->cost + 1;
+      d->nt_map[p->pos[dim_y]][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
+      d->nt_map[p->pos[dim_y]][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, d->nt_map[p->pos[dim_y]][p->pos[dim_x] + 1].node);
+    }
+    //[_,_,_]
+    //[_,@,_]
+    //[X,_,_]
+    if ((d->nt_map[p->pos[dim_y] + 1][p->pos[dim_x] - 1].node) && (d->nt_map[p->pos[dim_y] + 1][p->pos[dim_x] - 1].cost > p->cost + 1)) {
+      d->nt_map[p->pos[dim_y] + 1][p->pos[dim_x] - 1].cost = p->cost + 1;
+      d->nt_map[p->pos[dim_y] + 1][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
+      d->nt_map[p->pos[dim_y] + 1][p->pos[dim_x] - 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, d->nt_map[p->pos[dim_y] + 1][p->pos[dim_x] - 1].node);
+    }
+    //[_,_,_]
+    //[_,@,_]
+    //[_,X,_]
+    if ((d->nt_map[p->pos[dim_y] + 1][p->pos[dim_x]].node) && (d->nt_map[p->pos[dim_y] + 1][p->pos[dim_x]].cost > p->cost + 1)) {
+      d->nt_map[p->pos[dim_y] + 1][p->pos[dim_x]].cost = p->cost + 1;
+      d->nt_map[p->pos[dim_y] + 1][p->pos[dim_x]].from[dim_y] = p->pos[dim_y];
+      d->nt_map[p->pos[dim_y] + 1][p->pos[dim_x]].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, d->nt_map[p->pos[dim_y] + 1][p->pos[dim_x]].node);
+    }
+    //[_,_,_]
+    //[_,@,_]
+    //[_,_,X]
+    if ((d->nt_map[p->pos[dim_y] + 1][p->pos[dim_x] + 1].node) && (d->nt_map[p->pos[dim_y] + 1][p->pos[dim_x] + 1].cost > p->cost + 1)) {
+      d->nt_map[p->pos[dim_y] + 1][p->pos[dim_x] + 1].cost = p->cost + 1;
+      d->nt_map[p->pos[dim_y] + 1][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
+      d->nt_map[p->pos[dim_y] + 1][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, d->nt_map[p->pos[dim_y] + 1][p->pos[dim_x] + 1].node);
+    }    
+  }
+  for(y=0; y<DUNGEON_Y; y++){
+    for(x=0; x<DUNGEON_X; x++){
+      if(y == d->pc[dim_y] && x == d->pc[dim_x]){
+	printf("@");
+       }else if(d->nt_map[y][x].cost < 0){
+	printf("X");
+      }else if(d->nt_map[y][x].cost != INT_MAX){
+	printf("%d", d->nt_map[y][x].cost % 10);
+      }else{
+	printf(" ");
+      }
+    }
+    printf("\n");
+  }
+}
+
 int main(int argc, char *argv[])
 {
   dungeon_t d;
@@ -1366,6 +1508,10 @@ int main(int argc, char *argv[])
   }
 
   render_dungeon(&d);
+
+  non_tunneling_map(&d);
+
+  //tunneling_map(&d);
 
   if (do_save) {
     if (do_save_seed) {
