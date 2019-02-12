@@ -1361,10 +1361,10 @@ void non_tunneling_map(dungeon_t *d){
     for(x=0; x<DUNGEON_X; x++){
       if(y == d->pc[dim_y] && x == d->pc[dim_x]){
 	printf("@");
-       }else if(d->nt_map[y][x].cost < 0){
-	printf("X");
-      }else if(d->nt_map[y][x].cost != INT_MAX){
+      }else if(d->nt_map[y][x].cost != INT_MAX && d->nt_map[y][x].cost > 0){
 	printf("%d", d->nt_map[y][x].cost % 10);
+      }else if(d->hardness[y][x] == 0){
+	printf("X");
       }else{
 	printf(" ");
       }
