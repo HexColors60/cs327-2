@@ -1373,6 +1373,138 @@ void non_tunneling_map(dungeon_t *d){
   }
 }
 
+static int32_t tunneling_cmp(const void *key, const void *with) {
+  return ((tunnel_map_t *) key)->cost - ((tunnel_map_t *) with)->cost;
+}
+
+void tunneling_map(dungeon_t *d){
+  static tunnel_map_t *p;
+  static uint32_t initialized = 0;
+  heap_t h;
+  int x;
+  int y;
+
+  if(initialized == 0){
+    for(y=0; y<DUNGEON_Y; y++){
+      for(x=0; x<DUNGEON_X; x++){
+	d->t_map[y][x].pos[dim_y] = y;
+	d->t_map[y][x].pos[dim_x] = x;
+      }
+    }
+    initialized = 1;
+  }
+  
+  for(y=0; y<DUNGEON_Y; y++){
+    for(x=0; x<DUNGEON_X; x++){
+      d->t_map[y][x].cost = INT_MAX;
+    }
+  }
+
+  d->t_map[d->pc[dim_y]][d->pc[dim_x]].cost = 0;
+  
+  heap_init(&h, tunneling_cmp, NULL);
+
+  for(y=0; y<DUNGEON_Y; y++){
+    for(x=0; x<DUNGEON_X; x++){
+      if(d->map[y][x] != ter_wall_immutable){
+	d->t_map[y][x].node = heap_insert(&h, &d->t_map[y][x]);
+      }else{
+	d->t_map[y][x].node = NULL;
+      }
+    }
+  }
+  uint8_t hardness_cost = 0;
+  while ((p = heap_remove_min(&h))) {
+    p->node = NULL;
+    hardness_cost = (d->hardness[y][x] / 85) + 1;
+	
+    //[X,_,_]
+    //[_,@,_]
+    //[_,_,_]
+    if ((d->t_map[p->pos[dim_y] - 1][p->pos[dim_x] - 1].node) && (d->t_map[p->pos[dim_y] - 1][p->pos[dim_x] - 1].cost > p->cost + hardness_cost)) {
+      d->t_map[p->pos[dim_y] - 1][p->pos[dim_x] - 1].cost = p->cost + hardness_cost;
+      d->t_map[p->pos[dim_y] - 1][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
+      d->t_map[p->pos[dim_y] - 1][p->pos[dim_x] - 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, d->t_map[p->pos[dim_y] - 1][p->pos[dim_x] - 1].node);
+    }
+    //[_,X,_]
+    //[_,@,_]
+    //[_,_,_]
+    if ((d->t_map[p->pos[dim_y] - 1][p->pos[dim_x]].node) && (d->t_map[p->pos[dim_y] - 1][p->pos[dim_x]].cost > p->cost + hardness_cost)) {
+      d->t_map[p->pos[dim_y] - 1][p->pos[dim_x]].cost = p->cost + hardness_cost;
+      d->t_map[p->pos[dim_y] - 1][p->pos[dim_x]].from[dim_y] = p->pos[dim_y];
+      d->t_map[p->pos[dim_y] - 1][p->pos[dim_x]].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, d->t_map[p->pos[dim_y] - 1][p->pos[dim_x]].node);
+    }
+    //[_,_,X]
+    //[_,@,_]
+    //[_,_,_]
+    if ((d->t_map[p->pos[dim_y] - 1][p->pos[dim_x] + 1].node) && (d->t_map[p->pos[dim_y] - 1][p->pos[dim_x] + 1].cost > p->cost + hardness_cost)) {
+      d->t_map[p->pos[dim_y] - 1][p->pos[dim_x] + 1].cost = p->cost + hardness_cost;
+      d->t_map[p->pos[dim_y] - 1][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
+      d->t_map[p->pos[dim_y] - 1][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, d->t_map[p->pos[dim_y] - 1][p->pos[dim_x] + 1].node);
+    }
+    //[_,_,_]
+    //[X,@,_]
+    //[_,_,_]
+    if ((d->t_map[p->pos[dim_y]][p->pos[dim_x] - 1].node) && (d->t_map[p->pos[dim_y]][p->pos[dim_x] - 1].cost > p->cost + hardness_cost)) {
+      d->t_map[p->pos[dim_y]][p->pos[dim_x] - 1].cost = p->cost + hardness_cost;
+      d->t_map[p->pos[dim_y]][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
+      d->t_map[p->pos[dim_y]][p->pos[dim_x] - 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, d->t_map[p->pos[dim_y]][p->pos[dim_x] - 1].node);
+    }
+    //[_,_,_]
+    //[_,@,X]
+    //[_,_,_]
+    if ((d->t_map[p->pos[dim_y]][p->pos[dim_x] + 1].node) && (d->t_map[p->pos[dim_y]][p->pos[dim_x] + 1].cost > p->cost + hardness_cost)) {
+      d->t_map[p->pos[dim_y]][p->pos[dim_x] + 1].cost = p->cost + hardness_cost;
+      d->t_map[p->pos[dim_y]][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
+      d->t_map[p->pos[dim_y]][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, d->t_map[p->pos[dim_y]][p->pos[dim_x] + 1].node);
+    }
+    //[_,_,_]
+    //[_,@,_]
+    //[X,_,_]
+    if ((d->t_map[p->pos[dim_y] + 1][p->pos[dim_x] - 1].node) && (d->t_map[p->pos[dim_y] + 1][p->pos[dim_x] - 1].cost > p->cost + hardness_cost)) {
+      d->t_map[p->pos[dim_y] + 1][p->pos[dim_x] - 1].cost = p->cost + hardness_cost;
+      d->t_map[p->pos[dim_y] + 1][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
+      d->t_map[p->pos[dim_y] + 1][p->pos[dim_x] - 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, d->t_map[p->pos[dim_y] + 1][p->pos[dim_x] - 1].node);
+    }
+    //[_,_,_]
+    //[_,@,_]
+    //[_,X,_]
+    if ((d->t_map[p->pos[dim_y] + 1][p->pos[dim_x]].node) && (d->t_map[p->pos[dim_y] + 1][p->pos[dim_x]].cost > p->cost + hardness_cost)) {
+      d->t_map[p->pos[dim_y] + 1][p->pos[dim_x]].cost = p->cost + hardness_cost;
+      d->t_map[p->pos[dim_y] + 1][p->pos[dim_x]].from[dim_y] = p->pos[dim_y];
+      d->t_map[p->pos[dim_y] + 1][p->pos[dim_x]].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, d->t_map[p->pos[dim_y] + 1][p->pos[dim_x]].node);
+    }
+    //[_,_,_]
+    //[_,@,_]
+    //[_,_,X]
+    if ((d->t_map[p->pos[dim_y] + 1][p->pos[dim_x] + 1].node) && (d->t_map[p->pos[dim_y] + 1][p->pos[dim_x] + 1].cost > p->cost + hardness_cost)) {
+      d->t_map[p->pos[dim_y] + 1][p->pos[dim_x] + 1].cost = p->cost + hardness_cost;
+      d->t_map[p->pos[dim_y] + 1][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
+      d->t_map[p->pos[dim_y] + 1][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, d->t_map[p->pos[dim_y] + 1][p->pos[dim_x] + 1].node);
+    }    
+  }
+  for(y=0; y<DUNGEON_Y; y++){
+    for(x=0; x<DUNGEON_X; x++){
+      if(y == d->pc[dim_y] && x == d->pc[dim_x]){
+	printf("@");
+      }else if(d->hardness[y][x] == 255){
+	printf("X");
+      }else{
+	printf("%d", d->t_map[y][x].cost % 10);
+      }
+    }
+    printf("\n");
+  }
+}
+
 int main(int argc, char *argv[])
 {
   dungeon_t d;
@@ -1511,7 +1643,7 @@ int main(int argc, char *argv[])
 
   non_tunneling_map(&d);
 
-  //tunneling_map(&d);
+  tunneling_map(&d);
 
   if (do_save) {
     if (do_save_seed) {
