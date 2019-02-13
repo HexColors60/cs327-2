@@ -1,3 +1,51 @@
+commit 983886fb78b27f042f51da9850bbc02f3088b6d3
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Feb 13 12:27:48 2019 -0600
+
+    Finished tunneling map
+
+commit 932c6de8b408714eac6490dca1514bdf40ef4a97
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 12 20:29:01 2019 -0600
+
+    Begin working on tunneling map, bugs exist
+
+commit 2a3ccd8cb5d294fba1ad78a7c341e1903a5a30ae
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 12 15:41:18 2019 -0600
+
+    Okay now I actually fixed the bugs this time
+
+commit 0f74c8b8a38fcce5fc2ce24dd578d40dedb85c07
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 12 13:16:48 2019 -0600
+
+    squashed non-tunneling bugs
+
+commit 7d21533ac1ac553f7e0ba9d87e1bd3cdb33fe8bc
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 12 12:48:58 2019 -0600
+
+    Completed non-tunneling, bugs present for disconnected rooms/corridors
+
+commit 596fd52a3d8d2bcd604968e6bd1cd8953cab6345
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Feb 11 14:07:36 2019 -0600
+
+    Downloaded Jeremy's solutions for 1.02 to build off of
+
+commit 89cc32ed0eb48296502978a3ae49a21e237f7014
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Feb 6 15:22:04 2019 -0600
+
+    Update README
+
+commit 7df6dd431f9fb4c2a850cff8db903b6930e26e32
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Feb 6 14:36:22 2019 -0600
+
+    Update CHANGELOG
+
 commit 6b01507920b2d8dee144fd578abf13a7632e4941
 Author: aidans <aidans@iastate.edu>
 Date:   Wed Feb 6 14:20:51 2019 -0600

@@ -1,3 +1,12 @@
 @author Aidan Sherburne for CS327 @ Iowa State University, Spring 2019
 
 This program has all of the functionality of the previous assignment, 1.02.
+
+It also generates distance maps fro tunneling and non-tunneling monsters.
+These are added to the dungeon struct as tunnel_map_t types called nt_map and t_map.
+
+The functions non_tunneling_map and tunneling_map are called in the main method and
+they render the distance maps, first the non-tunneling map, and then the tunneling map.
+
+These functions are modifications of Professor Sheaffer's dijkstra's implementation in
+his dijkstra_corridor method.
