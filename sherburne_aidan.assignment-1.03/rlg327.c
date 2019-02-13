@@ -1399,11 +1399,11 @@ void tunneling_map(dungeon_t *d){
       d->t_map[y][x].cost = INT_MAX;
     }
   }
-
+  
   d->t_map[d->pc[dim_y]][d->pc[dim_x]].cost = 0;
   
   heap_init(&h, tunneling_cmp, NULL);
-
+  
   for(y=0; y<DUNGEON_Y; y++){
     for(x=0; x<DUNGEON_X; x++){
       if(d->map[y][x] != ter_wall_immutable){
@@ -1416,7 +1416,9 @@ void tunneling_map(dungeon_t *d){
   uint8_t hardness_cost = 0;
   while ((p = heap_remove_min(&h))) {
     p->node = NULL;
-    hardness_cost = (d->hardness[y][x] / 85) + 1;
+    
+    hardness_cost = (d->hardness[p->pos[dim_y]][p->pos[dim_x]] / 85) + 1;
+
 	
     //[X,_,_]
     //[_,@,_]
@@ -1489,7 +1491,7 @@ void tunneling_map(dungeon_t *d){
       d->t_map[p->pos[dim_y] + 1][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
       d->t_map[p->pos[dim_y] + 1][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
       heap_decrease_key_no_replace(&h, d->t_map[p->pos[dim_y] + 1][p->pos[dim_x] + 1].node);
-    }    
+    }
   }
   for(y=0; y<DUNGEON_Y; y++){
     for(x=0; x<DUNGEON_X; x++){
