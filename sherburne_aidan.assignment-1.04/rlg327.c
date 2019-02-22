@@ -22,6 +22,15 @@ void gen_monsters(dungeon_t *d){
   uint16_t i, x, y;
   
   srand(time(NULL));
+  
+  //set up our pc 'monster'
+  monster_t *pc = malloc(sizeof(monster_t));
+  pc->position[dim_y] = d->pc.position[dim_y];
+  pc->position[dim_x] = d->pc.position[dim_x];
+  pc->speed = 10;
+  pc->disp = '@';
+  pc->attributes = 1; // our pc will only be erratic for now
+  d-> mons[d->pc.position[dim_y]][d->pc.position[dim_x]] = *pc;
 
   for(i = 0; i < d->num_mon; i++){
     monster_t *mon = malloc(sizeof(monster_t));//Malloc our new monster
@@ -37,9 +46,12 @@ void gen_monsters(dungeon_t *d){
     mon->position[dim_x] = x;
     mon->speed = rand() % 15 + 5;
     uint8_t at = 0;
-    at += (rand() % 2) * 1 + (rand() % 2) * 2 + (rand() % 2) * 4 + (rand() % 2) * 8;
+    at += (rand() % 2) * 1; // erratic binary bit
+    at += (rand() % 2) * 2; // tunneling binary bit
+    at += (rand() % 2) * 4; // telepathy binary bit
+    at += (rand() % 2) * 8; // intelligent binary bit
     mon->attributes = at;
-
+    mon->disp = rand() % 10 + 48;
     d->mons[y][x] = *mon;
   }
 }

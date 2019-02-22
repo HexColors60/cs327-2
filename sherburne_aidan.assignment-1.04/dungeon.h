@@ -48,6 +48,7 @@ typedef struct monster{
   pair_t position;
   uint8_t speed;
   uint8_t attributes;
+  char disp;
 } monster_t;
 
 typedef struct dungeon {
