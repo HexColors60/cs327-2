@@ -3,6 +3,7 @@
 #include <sys/time.h>
 #include <time.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "dungeon.h"
 #include "path.h"
@@ -18,6 +19,66 @@ void usage(char *name)
   exit(-1);
 }
 
+void kill_monster(monster_t *m){
+  if(m) // if m is not null
+    free(m); // send the monster back to hell
+}
+
+void move_mon(monster_t *m){
+  switch(m->attributes){
+  case 0: //plain old boring monster
+    break;
+  
+  case 1: //erratic
+    break;
+  
+  case 2: //tunneling
+    break;
+  
+  case 3: //erratic & tunneling
+    break;
+  
+  case 4: //telepathic
+    break;
+  
+  case 5: //erratic & telepathic
+    break;
+  
+  case 6: //tunneling & telepathic
+    break;
+  
+  case 7: //erratic & tunneling & telepathic
+    break;
+  
+  case 8: //intelligent
+    break;
+  
+  case 9: //erratic & intelligent
+    break;
+  
+  case 10://tunneling & intelligent
+    break;
+  
+  case 11://erratic & tunneling & intelligent
+    break;
+  
+  case 12://telepathic & intelligent
+    break;
+  
+  case 13://erratic & elepathic & intelligent
+    break;
+  
+  case 14://tunneling & telepathic & intelligent
+    break;
+  
+  case 15://erraatic & tunneling & telepathic & intelligent
+    break;
+  
+  default:
+    break;
+  }
+}
+
 void gen_monsters(dungeon_t *d){
   uint16_t i, x, y;
   
@@ -30,7 +91,8 @@ void gen_monsters(dungeon_t *d){
   pc->speed = 10;
   pc->disp = '@';
   pc->attributes = 1; // our pc will only be erratic for now
-  d-> mons[d->pc.position[dim_y]][d->pc.position[dim_x]] = *pc;
+  d->mons[d->pc.position[dim_y]][d->pc.position[dim_x]] = *pc;
+  d->pc_alive = 1;
 
   for(i = 0; i < d->num_mon; i++){
     monster_t *mon = malloc(sizeof(monster_t));//Malloc our new monster
@@ -216,6 +278,23 @@ int main(int argc, char *argv[])
          d.pc.position[dim_y], d.pc.position[dim_x]);
 
   gen_monsters(&d);
+
+  uint32_t turn = 0;
+  uint32_t j,k;
+  while(d.pc_alive == 1){
+    for(j = 0; j < DUNGEON_Y; j++){
+      for(k = 0; k < DUNGEON_X; k++){
+	if(d.pc_alive == 0)break;
+	if(&d.mons[j][k]){
+	  if(turn % 1000 == floor(1000/d.mons[j][k].speed)){
+	    move_mon(&d.mons[j][k]);
+	  }
+	}
+      }
+    }
+    render_dungeon(&d);
+  }
+
 
   render_dungeon(&d);
 

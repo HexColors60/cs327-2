@@ -70,6 +70,7 @@ typedef struct dungeon {
   uint16_t num_mon; //number of monsters in this dungeon
   uint16_t max_mon; //Max number of monsters in this dungeon
   monster_t mons[DUNGEON_Y][DUNGEON_X]; // Array to store our monster positions
+  uint8_t pc_alive;
 } dungeon_t;
 
 void init_dungeon(dungeon_t *d);
