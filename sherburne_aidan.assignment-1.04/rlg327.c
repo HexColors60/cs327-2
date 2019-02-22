@@ -81,9 +81,7 @@ void move_mon(monster_t *m){
 
 void gen_monsters(dungeon_t *d){
   uint16_t i, x, y;
-  
   srand(time(NULL));
-  
   //set up our pc 'monster'
   monster_t *pc = malloc(sizeof(monster_t));
   pc->position[dim_y] = d->pc.position[dim_y];
@@ -91,12 +89,11 @@ void gen_monsters(dungeon_t *d){
   pc->speed = 10;
   pc->disp = '@';
   pc->attributes = 1; // our pc will only be erratic for now
-  d->mons[d->pc.position[dim_y]][d->pc.position[dim_x]] = *pc;
+  d->mons[0] = *pc;
   d->pc_alive = 1;
-
-  for(i = 0; i < d->num_mon; i++){
+  for(i = 1; i <= d->num_mon; i++){
     monster_t *mon = malloc(sizeof(monster_t));//Malloc our new monster
-    memset(&mon, 0, sizeof(monster_t));//quiet a false positive from valgrind
+    //memset(&mon, 0, sizeof(monster_t));//quiet a false positive from valgrind
     y = rand() % 20;
     x = rand() % 80;
     //on next line may need to change pc.pos to pc->pos
@@ -113,8 +110,8 @@ void gen_monsters(dungeon_t *d){
     at += (rand() % 2) * 4; // telepathy binary bit
     at += (rand() % 2) * 8; // intelligent binary bit
     mon->attributes = at;
-    mon->disp = rand() % 10 + 48;
-    d->mons[y][x] = *mon;
+    mon->disp = rand() % 9 + 49;
+    d->mons[i] = *mon;
   }
 }
 
@@ -139,6 +136,7 @@ int main(int argc, char *argv[])
   do_seed = 1;
   save_file = load_file = NULL;
   d.max_mon = MAX_MONSTERS;
+  d.num_mon = 10;
 
   /* The project spec requires '--load' and '--save'.  It's common  *
    * to have short and long forms of most switches (assuming you    *
@@ -229,8 +227,8 @@ int main(int argc, char *argv[])
 	    if(sscanf(argv[++i], "%hu", &num_mon) != 1){ // use %hu because num_mon is an unsigned short
 	      usage(argv[0]);
 	    }
-	    if(num_mon > MAX_MONSTERS){
-	      d.num_mon = MAX_MONSTERS;
+	    if(num_mon >= MAX_MONSTERS){
+	      d.num_mon = MAX_MONSTERS-1;
 	    }else{
 	      d.num_mon = num_mon;
 	    }
@@ -279,31 +277,27 @@ int main(int argc, char *argv[])
 
   gen_monsters(&d);
 
-  uint32_t turn = 0;
-  uint32_t j,k;
+  /* uint32_t turn = 0;
+  uint32_t j;
   while(d.pc_alive == 1){
-    for(j = 0; j < DUNGEON_Y; j++){
-      for(k = 0; k < DUNGEON_X; k++){
-	if(d.pc_alive == 0)break;
-	if(&d.mons[j][k]){
-	  if(turn % 1000 == floor(1000/d.mons[j][k].speed)){
-	    move_mon(&d.mons[j][k]);
-	  }
-	}
+    for(j = 0; j <= d.num_mon; j++){
+      if(d.pc_alive == 0)break;
+      if(turn % 1000 == floor(1000/d.mons[j].speed)){
+	move_mon(&d.mons[j]);
       }
     }
     render_dungeon(&d);
-  }
+    }*/
 
 
   render_dungeon(&d);
 
   dijkstra(&d);
   dijkstra_tunnel(&d);
-  render_distance_map(&d);
-  render_tunnel_distance_map(&d);
-  render_hardness_map(&d);
-  render_movement_cost_map(&d);
+  //render_distance_map(&d);
+  //render_tunnel_distance_map(&d);
+  //render_hardness_map(&d);
+  //render_movement_cost_map(&d);
 
   if (do_save) {
     if (do_save_seed) {

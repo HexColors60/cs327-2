@@ -626,8 +626,16 @@ void render_dungeon(dungeon_t *d)
 
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
-      if (&d->mons[p[dim_y]][p[dim_x]]) {
-        putchar((uint8_t)d->mons[p[dim_y]][p[dim_x]].disp);
+      int i = INT_MAX;
+      int j;
+      for(j = 0; j <= d->num_mon; j++){
+	if(d->mons[j].position[dim_y] == p[dim_y] && d->mons[j].position[dim_x] == p[dim_x]){
+	  i=j;
+	  break;
+	}
+      }
+      if(i != INT_MAX){
+	putchar((uint8_t)d->mons[i].disp);
       } else {
         switch (mappair(p)) {
         case ter_wall:
@@ -653,7 +661,7 @@ void render_dungeon(dungeon_t *d)
           break;
         default:
           break;
-        }
+	}
       }
     }
     putchar('\n');
