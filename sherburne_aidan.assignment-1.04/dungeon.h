@@ -48,6 +48,7 @@ typedef struct monster{
   pair_t position;
   uint8_t speed;
   uint8_t attributes;
+  uint8_t alive;
   char disp;
 } monster_t;
 
@@ -71,6 +72,7 @@ typedef struct dungeon {
   uint16_t max_mon; //Max number of monsters in this dungeon
   monster_t mons[MAX_MONSTERS]; // Array to store our monsters
   uint8_t pc_alive;
+  uint16_t mons_alive;
 } dungeon_t;
 
 void init_dungeon(dungeon_t *d);

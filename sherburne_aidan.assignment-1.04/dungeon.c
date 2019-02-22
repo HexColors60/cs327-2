@@ -634,7 +634,7 @@ void render_dungeon(dungeon_t *d)
 	  break;
 	}
       }
-      if(i != INT_MAX){
+      if(i != INT_MAX && d->mons[i].alive != 0){
 	putchar((uint8_t)d->mons[i].disp);
       } else {
         switch (mappair(p)) {
