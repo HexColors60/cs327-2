@@ -23,24 +23,16 @@ void usage(char *name)
 void move_mon(dungeon_t *d, monster_t *m){
   pair_t new_pos;
   uint32_t i;
+  int x, y;
+  int min_val = INT_MAX;
   switch(m->attributes){
   case 0: //plain old boring monster
-    //do nothing until we can see the pc
-    //if there is a monster in the new pos, kill it.
-    /*for(i = 0; i <= d->num_mon; i++){
-      if((new_pos[dim_y] == d->mons[i].position[dim_y] && new_pos[dim_x] == d->mons[i].position[dim_x])){
-	if(i==0)d->pc_alive = 0;
-	d->mons[i].alive = 0;
-	d->mons_alive--;
-      }
-    }
-    m->position[dim_y] = new_pos[dim_y];
-    m->position[dim_x] = new_pos[dim_x];*/
+    //TODO move line of sight
     break;
   
   case 1: //erratic
     //50% chance to move randomly
-    if(rand() % 2 == 1){
+    if(rand() % 2 == 1){//move erratically
       new_pos[dim_y] = (m->position[dim_y] - 1 + (rand() % 3));
       new_pos[dim_x] = (m->position[dim_x] - 1 + (rand() % 3));
       //find open position
@@ -49,38 +41,18 @@ void move_mon(dungeon_t *d, monster_t *m){
 	new_pos[dim_y] = (m->position[dim_y] - 1 + (rand() % 3));
 	new_pos[dim_x] = (m->position[dim_x] - 1 + (rand() % 3));
       }
-    }else{
+    }/*else{//move line of sight
       new_pos[dim_y] = 0;
       new_pos[dim_x] = 0;
-    }
-    //if there is a monster in the new pos, kill it.
-    for(i = 0; i <= d->num_mon; i++){
-      if((new_pos[dim_y] == d->mons[i].position[dim_y] && new_pos[dim_x] == d->mons[i].position[dim_x])){
-	if(i==0)d->pc_alive = 0;
-	d->mons[i].alive = 0;
-	d->mons_alive--;
-      }
-    }
-    m->position[dim_y] = new_pos[dim_y];
-    m->position[dim_x] = new_pos[dim_x];
+      }*/
     break;
   
   case 2: //tunneling
-    
-    //if there is a monster in the new pos, kill it.
-    /*for(i = 0; i <= d->num_mon; i++){
-      if((new_pos[dim_y] == d->mons[i].position[dim_y] && new_pos[dim_x] == d->mons[i].position[dim_x])){
-	if(i==0)d->pc_alive = 0;
-	d->mons[i].alive = 0;
-	d->mons_alive--;
-      }
-    }
-    m->position[dim_y] = new_pos[dim_y];
-    m->position[dim_x] = new_pos[dim_x];*/
+    //TODO move line of sight tunneling
     break;
   
   case 3: //erratic & tunneling
-    if(rand() % 2 == 1){
+    if(rand() % 2 == 1){//move erratically
       new_pos[dim_y] = (m->position[dim_y] - 1 + (rand() % 3));
       new_pos[dim_x] = (m->position[dim_x] - 1 + (rand() % 3));
       //find open position
@@ -92,52 +64,47 @@ void move_mon(dungeon_t *d, monster_t *m){
       //if we need to create a tunnel
       if(d->hardness[new_pos[dim_y]][new_pos[dim_x]] > 85){
 	d->hardness[new_pos[dim_y]][new_pos[dim_x]] -= 85;
+	new_pos[dim_y] = m->position[dim_y];
+	new_pos[dim_x] = m->position[dim_x];
       }
       else if(d->hardness[new_pos[dim_y]][new_pos[dim_x]]  <= 85){
 	d->hardness[new_pos[dim_y]][new_pos[dim_x]] = 0;
 	d->map[new_pos[dim_y]][new_pos[dim_x]] = ter_floor_hall;
       }
-    }else{
+    }/*else{//TODO move line of sight
       new_pos[dim_y] = 0;
       new_pos[dim_x] = 0;
-    }
-    //if there is a monster in the new pos, kill it.
-    for(i = 0; i <= d->num_mon; i++){
-      if((new_pos[dim_y] == d->mons[i].position[dim_y] && new_pos[dim_x] == d->mons[i].position[dim_x])){
-	if(i==0)d->pc_alive = 0;
-	d->mons[i].alive = 0;
-	d->mons_alive--;
-      }
-    }
-    m->position[dim_y] = new_pos[dim_y];
-    m->position[dim_x] = new_pos[dim_x];
+      }*/
     break;
   
   case 4: //telepathic
-    dijkstra(d);
-    int x, y;
-    int min_val = INT_MAX;
-    for(y = -1; y <= 1; i++){
-      for(x = -1; x <= 1; i++){
-	if(d->pc_distance[m->position[dim_y]+y][m->position[dim_x]+x] < min_val){
-	  min_val = d->pc_distance[m->position[dim_y]+y][m->position[dim_x]+x];
-	  new_pos[dim_y] = m->position[dim_y]+y;
-	  new_pos[dim_x] = m->position[dim_x]+x;
-	}
-      }
-    }
+    //TODO move telepathically
     break;
   
   case 5: //erratic & telepathic
+    /*if(rand() % 2 == 1){//move erratically
+      new_pos[dim_y] = (m->position[dim_y] - 1 + (rand() % 3));
+      new_pos[dim_x] = (m->position[dim_x] - 1 + (rand() % 3));
+      //find open position
+      while(d->hardness[new_pos[dim_y]][new_pos[dim_x]] != 0 ||
+	    (new_pos[dim_y] == m->position[dim_y] && new_pos[dim_x] == m->position[dim_x])){
+	new_pos[dim_y] = (m->position[dim_y] - 1 + (rand() % 3));
+	new_pos[dim_x] = (m->position[dim_x] - 1 + (rand() % 3));
+      }
+    }else{//move telepathically
+      
+    }*/
     break;
   
   case 6: //tunneling & telepathic
+    //TODO move telepathically
     break;
   
   case 7: //erratic & tunneling & telepathic
     break;
   
   case 8: //intelligent
+    
     break;
   
   case 9: //erratic & intelligent
@@ -150,20 +117,91 @@ void move_mon(dungeon_t *d, monster_t *m){
     break;
   
   case 12://telepathic & intelligent
+    dijkstra(d);
+    for(y = -1; y <= 1; y++){
+      for(x = -1; x <= 1; x++){
+	if(d->pc_distance[m->position[dim_y]+y][m->position[dim_x]+x] < min_val){
+	  min_val = d->pc_distance[m->position[dim_y]+y][m->position[dim_x]+x];
+	  new_pos[dim_y] = m->position[dim_y]+y;
+	  new_pos[dim_x] = m->position[dim_x]+x;
+	}
+      }
+    }
     break;
   
   case 13://erratic & elepathic & intelligent
     break;
   
   case 14://tunneling & telepathic & intelligent
+    dijkstra_tunnel(d);
+    for(y = -1; y <= 1; y++){
+      for(x = -1; x <= 1; x++){
+	if(d->pc_tunnel[m->position[dim_y]+y][m->position[dim_x]+x] < min_val){
+	  min_val = d->pc_tunnel[m->position[dim_y]+y][m->position[dim_x]+x];
+	  new_pos[dim_y] = m->position[dim_y]+y;
+	  new_pos[dim_x] = m->position[dim_x]+x;
+	}
+      }
+    }
+    //if we need to create a tunnel
+    if(d->hardness[new_pos[dim_y]][new_pos[dim_x]] > 85){
+      d->hardness[new_pos[dim_y]][new_pos[dim_x]] -= 85;
+      new_pos[dim_y] = m->position[dim_y];
+      new_pos[dim_x] = m->position[dim_x];
+    }
+    else if(d->hardness[new_pos[dim_y]][new_pos[dim_x]]  <= 85){
+      d->hardness[new_pos[dim_y]][new_pos[dim_x]] = 0;
+      d->map[new_pos[dim_y]][new_pos[dim_x]] = ter_floor_hall;
+    }
     break;
   
-  case 15://erraatic & tunneling & telepathic & intelligent
+  case 15://erratic & tunneling & telepathic & intelligent
+    if(rand() % 2 == 1){//move erratically
+      new_pos[dim_y] = (m->position[dim_y] - 1 + (rand() % 3));
+      new_pos[dim_x] = (m->position[dim_x] - 1 + (rand() % 3));
+      //find open position
+      while(d->hardness[new_pos[dim_y]][new_pos[dim_x]] != 0 ||
+	    (new_pos[dim_y] == m->position[dim_y] && new_pos[dim_x] == m->position[dim_x])){
+	new_pos[dim_y] = (m->position[dim_y] - 1 + (rand() % 3));
+	new_pos[dim_x] = (m->position[dim_x] - 1 + (rand() % 3));
+      }
+    }else{//move tunneling & telepathic & intelligent
+      dijkstra_tunnel(d);
+      for(y = -1; y <= 1; y++){
+	for(x = -1; x <= 1; x++){
+	  if(d->pc_tunnel[m->position[dim_y]+y][m->position[dim_x]+x] < min_val){
+	    min_val = d->pc_tunnel[m->position[dim_y]+y][m->position[dim_x]+x];
+	    new_pos[dim_y] = m->position[dim_y]+y;
+	    new_pos[dim_x] = m->position[dim_x]+x;
+	  }
+	}
+      }
+      //if we need to create a tunnel
+      if(d->hardness[new_pos[dim_y]][new_pos[dim_x]] > 85){
+	d->hardness[new_pos[dim_y]][new_pos[dim_x]] -= 85;
+	new_pos[dim_y] = m->position[dim_y];
+	new_pos[dim_x] = m->position[dim_x];
+      }
+      else if(d->hardness[new_pos[dim_y]][new_pos[dim_x]]  <= 85){
+	d->hardness[new_pos[dim_y]][new_pos[dim_x]] = 0;
+	d->map[new_pos[dim_y]][new_pos[dim_x]] = ter_floor_hall;
+      }
+    }
     break;
-  
+    
   default:
     break;
   }
+  //if there is a monster in the new pos, kill it.
+  for(i = 0; i <= d->num_mon; i++){
+    if((new_pos[dim_y] == d->mons[i].position[dim_y] && new_pos[dim_x] == d->mons[i].position[dim_x])){
+      if(i==0)d->pc_alive = 0;
+      d->mons[i].alive = 0;
+      d->mons_alive--;
+    }
+  }
+  m->position[dim_y] = new_pos[dim_y];
+  m->position[dim_x] = new_pos[dim_x];
 }
 
 void gen_monsters(dungeon_t *d){
@@ -185,10 +223,8 @@ void gen_monsters(dungeon_t *d){
   d->pc_alive = 1;
   for(i = 1; i <= d->num_mon; i++){
     monster_t *mon = malloc(sizeof(monster_t));//Malloc our new monster
-    //memset(&mon, 0, sizeof(monster_t));//quiet a false positive from valgrind
     y = rand() % 20;
     x = rand() % 80;
-    //on next line may need to change pc.pos to pc->pos
     while((x == d->pc.position[dim_x] && y == d->pc.position[dim_y]) || d->hardness[y][x] != 0){
       y = rand() % 20;
       x = rand() % 80;
@@ -379,6 +415,12 @@ int main(int argc, char *argv[])
       }
     }
     turn += 10;
+  }
+
+  if(d.pc_alive == 0){
+    printf("PC has died\n");
+  } else if(d.mons_alive == 0){
+    printf("PC has killed all other monsters\n");
   }
   //dijkstra(&d);
   //dijkstra_tunnel(&d);
