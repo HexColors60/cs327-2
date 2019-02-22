@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
+#include <time.h>
 #include <stdlib.h>
 
 #include "dungeon.h"
@@ -10,10 +11,37 @@ void usage(char *name)
 {
   fprintf(stderr,
           "Usage: %s [-r|--rand <seed>] [-l|--load [<file>]]\n"
-          "          [-s|--save [<file>]] [-i|--image <pgm file>]\n",
+          "          [-s|--save [<file>]] [-i|--image <pgm file>]\n"
+	  "[-n|--nummon <num monsters>]\n",
           name);
 
   exit(-1);
+}
+
+void gen_monsters(dungeon_t *d){
+  uint16_t i, x, y;
+  
+  srand(time(NULL));
+
+  for(i = 0; i < d->num_mon; i++){
+    monster_t *mon = malloc(sizeof(monster_t));//Malloc our new monster
+    memset(&mon, 0, sizeof(monster_t));//quiet a false positive from valgrind
+    y = rand() % 20;
+    x = rand() % 80;
+    //on next line may need to change pc.pos to pc->pos
+    while((x == d->pc.position[dim_x] && y == d->pc.position[dim_y]) || d->hardness[y][x] != 0){
+      y = rand() % 20;
+      x = rand() % 80;
+    }
+    mon->position[dim_y] = y;
+    mon->position[dim_x] = x;
+    mon->speed = rand() % 15 + 5;
+    uint8_t at = 0;
+    at += (rand() % 2) * 1 + (rand() % 2) * 2 + (rand() % 2) * 4 + (rand() % 2) * 8;
+    mon->attributes = at;
+
+    d->mons[y][x] = *mon;
+  }
 }
 
 int main(int argc, char *argv[])
@@ -36,6 +64,7 @@ int main(int argc, char *argv[])
   do_load = do_save = do_image = do_save_seed = do_save_image = 0;
   do_seed = 1;
   save_file = load_file = NULL;
+  d.max_mon = MAX_MONSTERS;
 
   /* The project spec requires '--load' and '--save'.  It's common  *
    * to have short and long forms of most switches (assuming you    *
@@ -114,6 +143,26 @@ int main(int argc, char *argv[])
             pgm_file = argv[++i];
           }
           break;
+	case 'n':
+          if ((!long_arg && argv[i][2]) ||
+              (long_arg && strcmp(argv[i], "-nummon"))) {
+            usage(argv[0]);
+          }
+          if ((argc > i + 1) && argv[i + 1][0] != '-') {
+            /* There is another argument, and it's not a switch, so *
+             * we'll treat it as the number of monsters to generate.    */
+            uint16_t num_mon = 0;
+	    if(sscanf(argv[++i], "%hu", &num_mon) != 1){ // use %hu because num_mon is an unsigned short
+	      usage(argv[0]);
+	    }
+	    if(num_mon > MAX_MONSTERS){
+	      d.num_mon = MAX_MONSTERS;
+	    }else{
+	      d.num_mon = num_mon;
+	    }
+          }
+          break;
+
         default:
           usage(argv[0]);
         }
@@ -153,6 +202,8 @@ int main(int argc, char *argv[])
 
   printf("PC is at (y, x): %d, %d\n",
          d.pc.position[dim_y], d.pc.position[dim_x]);
+
+  gen_monsters(&d);
 
   render_dungeon(&d);
 

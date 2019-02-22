@@ -16,6 +16,7 @@
 #define DUNGEON_SAVE_FILE      "dungeon"
 #define DUNGEON_SAVE_SEMANTIC  "RLG327-" TERM
 #define DUNGEON_SAVE_VERSION   0U
+#define MAX_MONSTERS           50
 
 #define mappair(pair) (d->map[pair[dim_y]][pair[dim_x]])
 #define mapxy(x, y) (d->map[y][x])
@@ -43,6 +44,12 @@ typedef struct pc {
   pair_t position;
 } pc_t;
 
+typedef struct monster{
+  pair_t position;
+  uint8_t speed;
+  uint8_t attributes;
+} monster_t;
+
 typedef struct dungeon {
   uint32_t num_rooms;
   room_t *rooms;
@@ -52,13 +59,16 @@ typedef struct dungeon {
    * parallel array, rather than using a structure to represent the       *
    * cells.  We may want a cell structure later, but from a performanace  *
    * perspective, it would be a bad idea to ever have the map be part of  *
-   * that structure.  Pathfinding will require efficient use of the map,  *
+.   * that structure.  Pathfinding will require efficient use of the map,  *
    * and pulling in unnecessary data with each map cell would add a lot   *
    * of overhead to the memory system.                                    */
   uint8_t hardness[DUNGEON_Y][DUNGEON_X];
   uint8_t pc_distance[DUNGEON_Y][DUNGEON_X];
   uint8_t pc_tunnel[DUNGEON_Y][DUNGEON_X];
   pc_t pc;
+  uint16_t num_mon; //number of monsters in this dungeon
+  uint16_t max_mon; //Max number of monsters in this dungeon
+  monster_t mons[DUNGEON_Y][DUNGEON_X]; // Array to store our monster positions
 } dungeon_t;
 
 void init_dungeon(dungeon_t *d);
