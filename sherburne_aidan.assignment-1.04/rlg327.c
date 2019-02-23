@@ -114,191 +114,207 @@ int line_of_sight(dungeon_t *d, character_t *c1, character_t *c2){
 
 void move_character(dungeon_t *d, character_t *c){
   pair_t new_pos;
+  new_pos[dim_y] = c->pos[dim_y];
+  new_pos[dim_x] = c->pos[dim_x];
+
   //uint32_t i;
-  int x, y;
-  int min_val = INT_MAX;
-  switch(c->at){//switch based on the attributes
-  case 0: //plain old boring monster
-    //TODO move line of sight
-    break;
+  //int x, y;
+  //int min_val = INT_MAX;
 
-  case 1: //erratic
-    //50% chance to move randomly
-    if(rand() % 2 == 1){//move erratically
-      new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
-      new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
-      //find open position
-      while(hardnesspair(new_pos) != 0 ||
-	    (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])){
-	new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
-	new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
-      }
-    }/*else{//move line of sight
-       new_pos[dim_y] = 0;
-       new_pos[dim_x] = 0;
-       }*/
-    break;
-
-  case 2: //tunneling
-    //TODO move line of sight tunneling
-    break;
-
-  case 3: //erratic & tunneling
-    if(rand() % 2 == 1){//move erratically
-      new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
-      new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
-      //find open position
-      while(mappair(new_pos) != ter_wall_immutable ||
-	    (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])){
-	new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
-	new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
-      }
-      //if we need to create a tunnel
-      if(hardnesspair(new_pos) > 85){
-	hardnesspair(new_pos) -= 85;
-	new_pos[dim_y] = c->pos[dim_y];
-	new_pos[dim_x] = c->pos[dim_x];
-      }
-      else if(hardnesspair(new_pos) <= 85){
-	hardnesspair(new_pos) = 0;
-	mappair(new_pos) = ter_floor_hall;
-      }
-    }/*else{//TODO move line of sight
-       new_pos[dim_y] = 0;
-       new_pos[dim_x] = 0;
-       }*/
-    break;
-
-  case 4: //telepathic
-    //TODO move telepathically
-    break;
-
-  case 5: //erratic & telepathic
-    /*if(rand() % 2 == 1){//move erratically
-      new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
-      new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
-      //find open position
-      while(hardnesspair(new_pos) != 0 ||
-      (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])){
-      new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
-      new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
-      }
-      }else{//move telepathically
-
-      }*/
-    break;
-
-  case 6: //tunneling & telepathic
-    //TODO move telepathically
-    break;
-
-  case 7: //erratic & tunneling & telepathic
-    break;
-
-  case 8: //intelligent
-
-    break;
-
-  case 9: //erratic & intelligent
-    break;
-
-  case 10://tunneling & intelligent
-    break;
-
-  case 11://erratic & tunneling & intelligent
-    break;
-
-  case 12://telepathic & intelligent
-    dijkstra(d);
-    for(y = -1; y <= 1; y++){
-      for(x = -1; x <= 1; x++){
-	if(d->pc_distance[c->pos[dim_y]+y][c->pos[dim_x]+x] < min_val){
-	  min_val = d->pc_distance[c->pos[dim_y]+y][c->pos[dim_x]+x];
-	  new_pos[dim_y] = c->pos[dim_y]+y;
-	  new_pos[dim_x] = c->pos[dim_x]+x;
-	}
-      }
-    }
-    break;
-
-  case 13://erratic & elepathic & intelligent
-    break;
-
-  case 14://tunneling & telepathic & intelligent
-    dijkstra_tunnel(d);
-    for(y = -1; y <= 1; y++){
-      for(x = -1; x <= 1; x++){
-	if(d->pc_tunnel[c->pos[dim_y]+y][c->pos[dim_x]+x] < min_val){
-	  min_val = d->pc_tunnel[c->pos[dim_y]+y][c->pos[dim_x]+x];
-	  new_pos[dim_y] = c->pos[dim_y]+y;
-	  new_pos[dim_x] = c->pos[dim_x]+x;
-	}
-      }
-    }
-    //if we need to create a tunnel
-    if(hardnesspair(new_pos) > 85){
-      hardnesspair(new_pos) -= 85;
-      new_pos[dim_y] = c->pos[dim_y];
-      new_pos[dim_x] = c->pos[dim_x];
-    }
-    else if(hardnesspair(new_pos) <= 85){
-      hardnesspair(new_pos) = 0;
-      mappair(new_pos) = ter_floor_hall;
-    }
-    break;
-
-  case 15://erratic & tunneling & telepathic & intelligent
-    if(rand() % 2 == 1){//move erratically
-      new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
-      new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
-      //find open position
-      while(d->hardness[new_pos[dim_y]][new_pos[dim_x]] != 0 ||
-	    (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])){
-	new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
-	new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
-      }
-    }else{//move tunneling & telepathic & intelligent
-      dijkstra_tunnel(d);
-      for(y = -1; y <= 1; y++){
-	for(x = -1; x <= 1; x++){
-	  if(d->pc_tunnel[c->pos[dim_y]+y][c->pos[dim_x]+x] < min_val){
-	    min_val = d->pc_tunnel[c->pos[dim_y]+y][c->pos[dim_x]+x];
-	    new_pos[dim_y] = c->pos[dim_y]+y;
-	    new_pos[dim_x] = c->pos[dim_x]+x;
-	  }
-	}
-      }
-      //if we need to create a tunnel
-      if(hardnesspair(new_pos) > 85){
-	hardnesspair(new_pos) -= 85;
-	new_pos[dim_y] = c->pos[dim_y];
-	new_pos[dim_x] = c->pos[dim_x];
-      }
-      else if(hardnesspair(new_pos) <= 85){
-	hardnesspair(new_pos) = 0;
-	mappair(new_pos) = ter_floor_hall;
-      }
-    }
-    break;
-
-  default:
-    break;
+  // switch(c->at){//switch based on the attributes
+  // case 0: //plain old boring monster
+  //   if(line_of_sight(d, c, &d->pc) == 1){
+  //     //TODO move in straight line
+  //     break;
+  //   }
+  //   break;
+  //
+  // case 1: //erratic
+  //   //50% chance to move randomly
+  //   if(rand() % 2 == 1){//move erratically
+  //     new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
+  //     new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
+  //     //find open position
+  //     while(hardnesspair(new_pos) != 0 ||
+	//     (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])){
+	//        new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
+	//        new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
+  //     }
+  //   }/*else{//move line of sight
+  //      new_pos[dim_y] = 0;
+  //      new_pos[dim_x] = 0;
+  //      }*/
+  //   break;
+  //
+  // case 2: //tunneling
+  //   //TODO move line of sight tunneling
+  //   break;
+  //
+  // case 3: //erratic & tunneling
+  //   if(rand() % 2 == 1){//move erratically
+  //     new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
+  //     new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
+  //     //find open position
+  //     while(mappair(new_pos) != ter_wall_immutable ||
+	//     (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])){
+	// new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
+	// new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
+  //     }
+  //     //if we need to create a tunnel
+  //     if(hardnesspair(new_pos) > 85){
+	// hardnesspair(new_pos) -= 85;
+	// new_pos[dim_y] = c->pos[dim_y];
+	// new_pos[dim_x] = c->pos[dim_x];
+  //     }
+  //     else if(hardnesspair(new_pos) <= 85){
+	// hardnesspair(new_pos) = 0;
+	// mappair(new_pos) = ter_floor_hall;
+  //     }
+  //   }/*else{//TODO move line of sight
+  //      new_pos[dim_y] = 0;
+  //      new_pos[dim_x] = 0;
+  //      }*/
+  //   break;
+  //
+  // case 4: //telepathic
+  //   //TODO move telepathically
+  //   break;
+  //
+  // case 5: //erratic & telepathic
+  //   /*if(rand() % 2 == 1){//move erratically
+  //     new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
+  //     new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
+  //     //find open position
+  //     while(hardnesspair(new_pos) != 0 ||
+  //     (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])){
+  //     new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
+  //     new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
+  //     }
+  //     }else{//move telepathically
+  //
+  //     }*/
+  //   break;
+  //
+  // case 6: //tunneling & telepathic
+  //   //TODO move telepathically
+  //   break;
+  //
+  // case 7: //erratic & tunneling & telepathic
+  //   break;
+  //
+  // case 8: //intelligent
+  //
+  //   break;
+  //
+  // case 9: //erratic & intelligent
+  //   break;
+  //
+  // case 10://tunneling & intelligent
+  //   break;
+  //
+  // case 11://erratic & tunneling & intelligent
+  //   break;
+  //
+  // case 12://telepathic & intelligent
+  //   dijkstra(d);
+  //   for(y = -1; y <= 1; y++){
+  //     for(x = -1; x <= 1; x++){
+	// if(d->pc_distance[c->pos[dim_y]+y][c->pos[dim_x]+x] < min_val){
+	//   min_val = d->pc_distance[c->pos[dim_y]+y][c->pos[dim_x]+x];
+	//   new_pos[dim_y] = c->pos[dim_y]+y;
+	//   new_pos[dim_x] = c->pos[dim_x]+x;
+	// }
+  //     }
+  //   }
+  //   break;
+  //
+  // case 13://erratic & elepathic & intelligent
+  //   break;
+  //
+  // case 14://tunneling & telepathic & intelligent
+  //   dijkstra_tunnel(d);
+  //   for(y = -1; y <= 1; y++){
+  //     for(x = -1; x <= 1; x++){
+	// if(d->pc_tunnel[c->pos[dim_y]+y][c->pos[dim_x]+x] < min_val){
+	//   min_val = d->pc_tunnel[c->pos[dim_y]+y][c->pos[dim_x]+x];
+	//   new_pos[dim_y] = c->pos[dim_y]+y;
+	//   new_pos[dim_x] = c->pos[dim_x]+x;
+	// }
+  //     }
+  //   }
+  //   //if we need to create a tunnel
+  //   if(hardnesspair(new_pos) > 85){
+  //     hardnesspair(new_pos) -= 85;
+  //     new_pos[dim_y] = c->pos[dim_y];
+  //     new_pos[dim_x] = c->pos[dim_x];
+  //   }
+  //   else if(hardnesspair(new_pos) <= 85){
+  //     hardnesspair(new_pos) = 0;
+  //     mappair(new_pos) = ter_floor_hall;
+  //   }
+  //   break;
+  //
+  // case 15://erratic & tunneling & telepathic & intelligent
+  //   if(rand() % 2 == 1){//move erratically
+  //     new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
+  //     new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
+  //     //find open position
+  //     while(d->hardness[new_pos[dim_y]][new_pos[dim_x]] != 0 ||
+	//     (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])){
+	// new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
+	// new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
+  //     }
+  //   }else{//move tunneling & telepathic & intelligent
+  //     dijkstra_tunnel(d);
+  //     for(y = -1; y <= 1; y++){
+	// for(x = -1; x <= 1; x++){
+	//   if(d->pc_tunnel[c->pos[dim_y]+y][c->pos[dim_x]+x] < min_val){
+	//     min_val = d->pc_tunnel[c->pos[dim_y]+y][c->pos[dim_x]+x];
+	//     new_pos[dim_y] = c->pos[dim_y]+y;
+	//     new_pos[dim_x] = c->pos[dim_x]+x;
+	//   }
+	// }
+  //     }
+  //     //if we need to create a tunnel
+  //     if(hardnesspair(new_pos) > 85){
+	// hardnesspair(new_pos) -= 85;
+	// new_pos[dim_y] = c->pos[dim_y];
+	// new_pos[dim_x] = c->pos[dim_x];
+  //     }
+  //     else if(hardnesspair(new_pos) <= 85){
+	// hardnesspair(new_pos) = 0;
+	// mappair(new_pos) = ter_floor_hall;
+  //     }
+  //   }
+  //   break;
+  //
+  // default:
+  //   break;
+  // }
+  if(c->pos[dim_y]+1 < DUNGEON_Y-1 && c->pos[dim_x]+1 < DUNGEON_X-1){
+    new_pos[dim_y] = c->pos[dim_y]+1;
+    new_pos[dim_x] = c->pos[dim_x]+1;
   }
-  //if there is a monster in the new pos, kill it.
-  if(cpair(new_pos)){
+  printf("trying %c from %d,%d to %d,%d\n",c->disp,c->pos[dim_y],c->pos[dim_x],new_pos[dim_y],new_pos[dim_x]);
+
+  //if we need to move and there is a different monster in the new pos, kill it
+  if(cpair(new_pos) != NULL && cpair(new_pos)->tie_breaker != c->tie_breaker){
+      printf("***%c was killed by %c***\n", cpair(new_pos)->disp, c->disp);
+      printf("monsters alive: %d\n",d->alive_monsters);
       cpair(new_pos)->alive = 0;
       d->alive_monsters--;
     }
-
+  cpair(c->pos) = NULL;
   c->pos[dim_y] = new_pos[dim_y];
   c->pos[dim_x] = new_pos[dim_x];
+  cpair(c->pos) = c;
+  //printf("moved %c to %d,%d\n",c->disp,c->pos[dim_y],c->pos[dim_x]);
 }
 
 void turn_handler(dungeon_t *d){
   character_t *c = heap_remove_min(d->h);
   if(c->alive == 1){ //only need to move if the character was alive
-    printf("Moving monster at %d,%d\n", c->pos[dim_y], c->pos[dim_x]);
-    //move_character(d, c); //perform our move action
+    move_character(d, c); //perform our move action
     c->next_turn += (1000/c->speed); //update this character's next turns
     c->hn = heap_insert(d->h, c); //reinsert our character into the heap
   }
