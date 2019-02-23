@@ -54,6 +54,8 @@ typedef struct character{
   // uint8_t isnpc; //1 if npc, 0 if pc
   char disp;
   heap_node_t *hn;
+  int32_t next_turn;
+  int32_t tie_breaker;
 } character_t;
 
 typedef struct dungeon {
@@ -76,7 +78,7 @@ typedef struct dungeon {
   uint16_t num_monsters; //number of monsters in this dungeon
   uint16_t max_monsters; //Max number of monsters in this dungeon
   uint16_t alive_monsters; //number of alive monsters in our dungeon
-  heap_t h; //heap for our events
+  heap_t *h; //heap for our events
 } dungeon_t;
 
 void init_dungeon(dungeon_t *d);

@@ -20,10 +20,13 @@ void usage(char *name)
   exit(-1);
 }
 
-/*static int32_t event_cmp(const void *key, const void *with){
-  //TODO
-  return 0;
-  }*/
+static int32_t event_cmp(const void *key, const void *with){
+  int32_t ret = ((int32_t)((character_t *) key)->next_turn - (int32_t)((character_t *) with)->next_turn);
+  if(ret == 0){
+    ret = ((int32_t)((character_t *) key)->tie_breaker - (int32_t)((character_t *) with)->tie_breaker);
+  }
+  return ret;
+}
 
 //returns positive if c1 can see c2, 0 if not
 //modified from http://www.roguebasin.com/index.php?title=Another_version_of_BLA
@@ -36,12 +39,12 @@ int line_of_sight(dungeon_t *d, character_t *c1, character_t *c2){
   p1[dim_y] = c1->pos[dim_y];
   p2[dim_x] = c2->pos[dim_x];
   p2[dim_y] = c2->pos[dim_y];
-  
+
   //Calculate deltas
   delta[dim_y] = abs(p2[dim_y] - p1[dim_y]) << 1;
   delta[dim_x] = abs(p2[dim_x] - p1[dim_x]) << 1;
   //Calculate signs
-  move[dim_y] = p2[dim_y] >= p1[dim_y] ? 1 : -1; 
+  move[dim_y] = p2[dim_y] >= p1[dim_y] ? 1 : -1;
   move[dim_x] = p2[dim_x] >= p1[dim_x] ? 1 : -1;
 
   /* There is an automatic line of sight, of course, between a
@@ -50,19 +53,19 @@ int line_of_sight(dungeon_t *d, character_t *c1, character_t *c2){
   if(abs(p2[dim_x] - p1[dim_x]) < 2 && abs(p2[dim_y] - p1[dim_y]) < 2) {
     return 1;
   }
-  
+
   /* Ensure that the line will not extend too long. */
-  if (((p2[dim_x] - p1[dim_x]) * (p2[dim_x] - p1[dim_x])) + 
-      ((p2[dim_y] - p1[dim_y]) * (p2[dim_y] - p1[dim_y])) > 
+  if (((p2[dim_x] - p1[dim_x]) * (p2[dim_x] - p1[dim_x])) +
+      ((p2[dim_y] - p1[dim_y]) * (p2[dim_y] - p1[dim_y])) >
       view_dist * view_dist) {
     return 0;
   }
-  
+
   /* "Draw" the line, checking for obstructions. */
   if (delta[dim_x] >= delta[dim_y]) {
     /* Calculate the error factor, which may go below zero. */
     error = delta[dim_y] - (delta[dim_x] >> 1);
-    
+
     /* Search the line. */
     while (p2[dim_x] != p1[dim_x]) {
       /* Check for an obstruction. If the obstruction can be "moved
@@ -70,7 +73,7 @@ int line_of_sight(dungeon_t *d, character_t *c1, character_t *c2){
       if ((hardnesspair(p1) > 0 && (((p1[dim_y] - move[dim_y] >= 1) && (p1[dim_y] - move[dim_y] <= DUNGEON_Y)) && (hardnessxy(p1[dim_x], p1[dim_y] - move[dim_y]) > 0))) || (p1[dim_y] != p2[dim_y] || !(delta[dim_y]))) {
 	return 0;
       }
-      
+
       /* Update values. */
       if (error > 0) {
 	if (error || (move[dim_x] > 0)) {
@@ -85,7 +88,7 @@ int line_of_sight(dungeon_t *d, character_t *c1, character_t *c2){
   else {
       /* Calculate the error factor, which may go below zero. */
     error = delta[dim_x] - (delta[dim_y] >> 1);
-    
+
     /* Search the line. */
     while (p1[dim_y] != p2[dim_y]) {
       /* Check for an obstruction. If the obstruction can be "moved
@@ -93,7 +96,7 @@ int line_of_sight(dungeon_t *d, character_t *c1, character_t *c2){
       if (((hardnesspair(p1) > 0) && (((p1[dim_x] - move[dim_x] >= 1) && (p1[dim_x] - move[dim_x] <= DUNGEON_X)) && (hardnessxy(p1[dim_x] - move[dim_x], p1[dim_y]) > 0))) || (p1[dim_x] != p2[dim_x] || !(delta[dim_x]))) {
 	return 0;
       }
-      
+
       /* Update values. */
       if (error > 0) {
 	if (error || (move[dim_y] > 0)) {
@@ -117,7 +120,7 @@ void move_character(dungeon_t *d, character_t *c){
   case 0: //plain old boring monster
     //TODO move line of sight
     break;
-  
+
   case 1: //erratic
     //50% chance to move randomly
     if(rand() % 2 == 1){//move erratically
@@ -134,11 +137,11 @@ void move_character(dungeon_t *d, character_t *c){
        new_pos[dim_x] = 0;
        }*/
     break;
-    
+
   case 2: //tunneling
     //TODO move line of sight tunneling
     break;
-    
+
   case 3: //erratic & tunneling
     if(rand() % 2 == 1){//move erratically
       new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
@@ -164,11 +167,11 @@ void move_character(dungeon_t *d, character_t *c){
        new_pos[dim_x] = 0;
        }*/
     break;
-    
+
   case 4: //telepathic
     //TODO move telepathically
     break;
-    
+
   case 5: //erratic & telepathic
     /*if(rand() % 2 == 1){//move erratically
       new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
@@ -180,30 +183,30 @@ void move_character(dungeon_t *d, character_t *c){
       new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
       }
       }else{//move telepathically
-      
+
       }*/
     break;
-    
+
   case 6: //tunneling & telepathic
     //TODO move telepathically
     break;
-    
+
   case 7: //erratic & tunneling & telepathic
     break;
-    
+
   case 8: //intelligent
-    
+
     break;
-    
+
   case 9: //erratic & intelligent
     break;
-    
+
   case 10://tunneling & intelligent
     break;
-    
+
   case 11://erratic & tunneling & intelligent
     break;
-    
+
   case 12://telepathic & intelligent
     dijkstra(d);
     for(y = -1; y <= 1; y++){
@@ -216,10 +219,10 @@ void move_character(dungeon_t *d, character_t *c){
       }
     }
     break;
-    
+
   case 13://erratic & elepathic & intelligent
     break;
-    
+
   case 14://tunneling & telepathic & intelligent
     dijkstra_tunnel(d);
     for(y = -1; y <= 1; y++){
@@ -242,7 +245,7 @@ void move_character(dungeon_t *d, character_t *c){
       mappair(new_pos) = ter_floor_hall;
     }
     break;
-  
+
   case 15://erratic & tunneling & telepathic & intelligent
     if(rand() % 2 == 1){//move erratically
       new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
@@ -276,7 +279,7 @@ void move_character(dungeon_t *d, character_t *c){
       }
     }
     break;
-    
+
   default:
     break;
   }
@@ -296,12 +299,15 @@ void gen_monsters(dungeon_t *d){
   srand(time(NULL));
 
   d->alive_monsters = 0;
-  
+
   //set up our pc character
   d->pc.speed = 10;
   d->pc.disp = '@';
   d->pc.alive = 1;
+  d->pc.next_turn = 0;
+  d->pc.tie_breaker = 0;
   d->pc.at = 1; // our pc will only be erratic for now
+  d->pc.hn = heap_insert(d->h, &(d->pc));
   cpair(d->pc.pos) = &(d->pc);
   for(i = 0; i < d->num_monsters; i++){
     character_t *mon = malloc(sizeof(character_t));//Malloc our new monster
@@ -322,6 +328,9 @@ void gen_monsters(dungeon_t *d){
     at += (rand() % 2) * 8; // intelligent binary bit
     mon->at = at;
     mon->disp = disps[at];
+    mon->next_turn = 0;
+    mon->tie_breaker = i+1;
+    mon->hn = heap_insert(d->h, mon) ;
     cpair(mon->pos) = mon;
     d->alive_monsters++;
   }
@@ -341,7 +350,7 @@ int main(int argc, char *argv[])
 
   /* Quiet a false positive from valgrind. */
   memset(&d, 0, sizeof (d));
-  
+
   /* Default behavior: Seed with the time, generate a new dungeon, *
    * and don't write to disk.                                      */
   do_load = do_save = do_image = do_save_seed = do_save_image = 0;
@@ -363,7 +372,7 @@ int main(int argc, char *argv[])
    * And the final switch, '--image', allows me to create a dungeon *
    * from a PGM image, so that I was able to create those more      *
    * interesting test dungeons for you.                             */
- 
+
  if (argc > 1) {
     for (i = 1, long_arg = 0; i < argc; i++, long_arg = 0) {
       if (argv[i][0] == '-') { /* All switches start with a dash */
@@ -488,6 +497,8 @@ int main(int argc, char *argv[])
 
   printf("PC is at (y, x): %d, %d\n",
          d.pc.pos[dim_y], d.pc.pos[dim_x]);
+
+  heap_init(d.h, event_cmp, NULL);
   gen_monsters(&d);
   render_dungeon(&d);
   while(d.pc.alive == 1 && d.alive_monsters > 1){
