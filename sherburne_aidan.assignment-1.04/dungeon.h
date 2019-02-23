@@ -18,6 +18,8 @@
 #define DUNGEON_SAVE_VERSION   0U
 #define MAX_MONSTERS           50
 
+#define cpair(pair) (d->character[pair[dim_y]][pair[dim_x]])
+#define cxy(x, y) (d->character[y][x])
 #define mappair(pair) (d->map[pair[dim_y]][pair[dim_x]])
 #define mapxy(x, y) (d->map[y][x])
 #define hardnesspair(pair) (d->hardness[pair[dim_y]][pair[dim_x]])
@@ -44,13 +46,14 @@ typedef struct pc {
   pair_t position;
 } pc_t;
 
-typedef struct monster{
-  pair_t position;
-  uint8_t speed;
-  uint8_t attributes;
-  uint8_t alive;
+typedef struct character{
+  pair_t pos; //position
+  uint8_t speed; //speed
+  uint8_t at; //attributes
+  uint8_t alive; //alive
+  // uint8_t isnpc; //1 if npc, 0 if pc
   char disp;
-} monster_t;
+} character_t;
 
 typedef struct dungeon {
   uint32_t num_rooms;
@@ -67,12 +70,12 @@ typedef struct dungeon {
   uint8_t hardness[DUNGEON_Y][DUNGEON_X];
   uint8_t pc_distance[DUNGEON_Y][DUNGEON_X];
   uint8_t pc_tunnel[DUNGEON_Y][DUNGEON_X];
-  pc_t pc;
-  uint16_t num_mon; //number of monsters in this dungeon
-  uint16_t max_mon; //Max number of monsters in this dungeon
-  monster_t mons[MAX_MONSTERS]; // Array to store our monsters
-  uint8_t pc_alive;
-  uint16_t mons_alive;
+  character_t pc;
+  character_t *character[DUNGEON_Y][DUNGEON_X]; // Array to store our monsters
+  uint16_t num_monsters; //number of monsters in this dungeon
+  uint16_t max_monsters; //Max number of monsters in this dungeon
+  uint16_t alive_monsters; //number of alive monsters in our dungeon
+  heap_t move_events; //heap for our events
 } dungeon_t;
 
 void init_dungeon(dungeon_t *d);

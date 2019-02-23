@@ -519,6 +519,7 @@ static int empty_dungeon(dungeon_t *d)
         mapxy(x, y) = ter_wall_immutable;
         hardnessxy(x, y) = 255;
       }
+      cxy(x, y) = NULL;
     }
   }
 
@@ -626,16 +627,8 @@ void render_dungeon(dungeon_t *d)
 
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
-      int i = INT_MAX;
-      int j;
-      for(j = 0; j <= d->num_mon; j++){
-	if(d->mons[j].position[dim_y] == p[dim_y] && d->mons[j].position[dim_x] == p[dim_x]){
-	  i=j;
-	  break;
-	}
-      }
-      if(i != INT_MAX && d->mons[i].alive != 0){
-	putchar((uint8_t)d->mons[i].disp);
+      if(cpair(p) != NULL){
+	putchar(cpair(p)->disp);
       } else {
         switch (mappair(p)) {
         case ter_wall:
@@ -837,8 +830,8 @@ int write_dungeon(dungeon_t *d, char *file)
   fwrite(&be32, sizeof (be32), 1, f);
 
   /* The PC position, 2 bytes, 20-21 */
-  fwrite(&d->pc.position[dim_x], 1, 1, f);
-  fwrite(&d->pc.position[dim_y], 1, 1, f);
+  fwrite(&d->pc.pos[dim_x], 1, 1, f);
+  fwrite(&d->pc.pos[dim_y], 1, 1, f);
 
   /* The dungeon map, 1680 bytes, 22-1702 */
   write_dungeon_map(d, f);
@@ -1024,8 +1017,8 @@ int read_dungeon(dungeon_t *d, char *file)
     exit(-1);
   }
 
-  fread(&d->pc.position[dim_x], 1, 1, f);
-  fread(&d->pc.position[dim_y], 1, 1, f);
+  fread(&d->pc.pos[dim_x], 1, 1, f);
+  fread(&d->pc.pos[dim_y], 1, 1, f);
   
   read_dungeon_map(d, f);
 
@@ -1154,8 +1147,8 @@ void render_movement_cost_map(dungeon_t *d)
   putchar('\n');
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
-      if (p[dim_x] ==  d->pc.position[dim_x] &&
-          p[dim_y] ==  d->pc.position[dim_y]) {
+      if (p[dim_x] ==  d->pc.pos[dim_x] &&
+          p[dim_y] ==  d->pc.pos[dim_y]) {
         putchar('@');
       } else {
         if (hardnesspair(p) == 255) {
@@ -1175,8 +1168,8 @@ void render_distance_map(dungeon_t *d)
 
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
-      if (p[dim_x] ==  d->pc.position[dim_x] &&
-          p[dim_y] ==  d->pc.position[dim_y]) {
+      if (p[dim_x] ==  d->pc.pos[dim_x] &&
+          p[dim_y] ==  d->pc.pos[dim_y]) {
         putchar('@');
       } else {
         switch (mappair(p)) {
@@ -1214,8 +1207,8 @@ void render_tunnel_distance_map(dungeon_t *d)
 
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
-      if (p[dim_x] ==  d->pc.position[dim_x] &&
-          p[dim_y] ==  d->pc.position[dim_y]) {
+      if (p[dim_x] ==  d->pc.pos[dim_x] &&
+          p[dim_y] ==  d->pc.pos[dim_y]) {
         putchar('@');
       } else {
         switch (mappair(p)) {
