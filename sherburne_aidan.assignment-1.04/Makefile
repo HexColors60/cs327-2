@@ -5,10 +5,10 @@ RM = rm -f
 
 TERM = "\"S2019\""
 
-CFLAGS = -Wall -Werror -ggdb -funroll-loops -DTERM=$(TERM) -pg
-CXXFLAGS = -Wall -Werror -ggdb -funroll-loops -DTERM=$(TERM)
+CFLAGS = -Wall -Werror -ggdb -funroll-loops -DTERM=$(TERM) -pg -lm
+CXXFLAGS = -Wall -Werror -ggdb -funroll-loops -DTERM=$(TERM) -lm
 
-LDFLAGS = -pg
+LDFLAGS = -pg -lm
 
 BIN = rlg327
 OBJS = rlg327.o heap.o dungeon.o path.o utils.o
