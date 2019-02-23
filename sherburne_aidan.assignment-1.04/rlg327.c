@@ -518,6 +518,16 @@ int main(int argc, char *argv[])
   d.h = malloc(sizeof(heap_t));
   heap_init(d.h, event_cmp, NULL);
   gen_monsters(&d);
+
+  /*uint32_t p,q;
+  for(p=0;p<DUNGEON_Y;p++){
+    for(q=0;q<DUNGEON_X;q++){
+      if(d.character[p][q]){
+        printf("%c starts at %d,%d\n",d.character[p][q]->disp,p,q);
+      }
+    }
+  }*/
+
   render_dungeon(&d);
   while(d.pc.alive == 1 && d.alive_monsters > 1){
     turn_handler(&d);
