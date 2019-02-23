@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <limits.h>
+#include <unistd.h>
 
 #include "dungeon.h"
 #include "path.h"
@@ -296,7 +297,8 @@ void move_character(dungeon_t *d, character_t *c){
 void turn_handler(dungeon_t *d){
   character_t *c = heap_remove_min(d->h);
   if(c->alive == 1){ //only need to move if the character was alive
-    move_character(d, c); //perform our move action
+    printf("Moving monster at %d,%d\n", c->pos[dim_y], c->pos[dim_x]);
+    //move_character(d, c); //perform our move action
     c->next_turn += (1000/c->speed); //update this character's next turns
     c->hn = heap_insert(d->h, c); //reinsert our character into the heap
   }
@@ -344,7 +346,7 @@ void gen_monsters(dungeon_t *d){
     mon->disp = disps[at];
     mon->next_turn = 0;
     mon->tie_breaker = i+1;
-    mon->in_pc = 0;
+    mon->is_pc = 0;
     mon->hn = heap_insert(d->h, mon) ;
     cpair(mon->pos) = mon;
     d->alive_monsters++;
@@ -513,6 +515,7 @@ int main(int argc, char *argv[])
   printf("PC is at (y, x): %d, %d\n",
          d.pc.pos[dim_y], d.pc.pos[dim_x]);
 
+  d.h = malloc(sizeof(heap_t));
   heap_init(d.h, event_cmp, NULL);
   gen_monsters(&d);
   render_dungeon(&d);
