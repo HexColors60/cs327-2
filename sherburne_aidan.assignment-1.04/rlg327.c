@@ -295,13 +295,14 @@ void move_character(dungeon_t *d, character_t *c){
 
 void turn_handler(dungeon_t *d){
   character_t *c = heap_remove_min(d->h);
-  if(c->alive == 1){
-    move_character(d, c);
-    c->next_turn += (1000/c->speed);
-    c->hn = heap_insert(d->h, c);
+  if(c->alive == 1){ //only need to move if the character was alive
+    move_character(d, c); //perform our move action
+    c->next_turn += (1000/c->speed); //update this character's next turns
+    c->hn = heap_insert(d->h, c); //reinsert our character into the heap
   }
-  if(c->is_pc == 1){
+  if(c->is_pc == 1){ //redraw the dungeon after each pc move
     render_dungeon(d);
+    usleep(250000); //pause o that an observer can see the updates
   }
 }
 
