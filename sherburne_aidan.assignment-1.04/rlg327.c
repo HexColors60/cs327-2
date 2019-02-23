@@ -20,9 +20,10 @@ void usage(char *name)
   exit(-1);
 }
 
-int compare_characters(const void *c1, const void *c2){
+/*static int32_t event_cmp(const void *key, const void *with){
+  //TODO
   return 0;
-}
+  }*/
 
 //returns positive if c1 can see c2, 0 if not
 //modified from http://www.roguebasin.com/index.php?title=Another_version_of_BLA
@@ -489,17 +490,9 @@ int main(int argc, char *argv[])
          d.pc.pos[dim_y], d.pc.pos[dim_x]);
   gen_monsters(&d);
   render_dungeon(&d);
-  /*uint32_t turn = 0;
-  uint32_t j;
-  while(d.pc_alive == 1 && d.mons_alive > 1){
-    for(j = 0; j <= d.num_monsters j++){
-      if(turn % 1000 == floor(1000/d.mons[j].speed)){
-	move_mon(&d, &d.mons[j]);
-	render_dungeon(&d);
-      }
-    }
-    turn += 10;
-    }*/
+  while(d.pc.alive == 1 && d.alive_monsters > 1){
+    break;
+  }
 
   if(d.pc.alive == 0){
     printf("PC has died\n");
