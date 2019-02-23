@@ -669,6 +669,7 @@ void delete_dungeon(dungeon_t *d)
 void init_dungeon(dungeon_t *d)
 {
   empty_dungeon(d);
+  heap_init(&d->h, compare_characters)
 }
 
 int write_dungeon_map(dungeon_t *d, FILE *f)
