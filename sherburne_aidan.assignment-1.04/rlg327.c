@@ -293,6 +293,18 @@ void move_character(dungeon_t *d, character_t *c){
   c->pos[dim_x] = new_pos[dim_x];
 }
 
+void turn_handler(dungeon_t *d){
+  character_t *c = heap_remove_min(d->h);
+  if(c->alive == 1){
+    move_character(d, c);
+    c->next_turn += (1000/c->speed);
+    c->hn = heap_insert(d->h, c);
+  }
+  if(c->is_pc == 1){
+    render_dungeon(d);
+  }
+}
+
 void gen_monsters(dungeon_t *d){
   uint16_t i, x, y;
   const static char disps[] = "0123456789abcdef";
@@ -306,6 +318,7 @@ void gen_monsters(dungeon_t *d){
   d->pc.alive = 1;
   d->pc.next_turn = 0;
   d->pc.tie_breaker = 0;
+  d->pc.is_pc = 1;
   d->pc.at = 1; // our pc will only be erratic for now
   d->pc.hn = heap_insert(d->h, &(d->pc));
   cpair(d->pc.pos) = &(d->pc);
@@ -330,6 +343,7 @@ void gen_monsters(dungeon_t *d){
     mon->disp = disps[at];
     mon->next_turn = 0;
     mon->tie_breaker = i+1;
+    mon->in_pc = 0;
     mon->hn = heap_insert(d->h, mon) ;
     cpair(mon->pos) = mon;
     d->alive_monsters++;
@@ -502,7 +516,7 @@ int main(int argc, char *argv[])
   gen_monsters(&d);
   render_dungeon(&d);
   while(d.pc.alive == 1 && d.alive_monsters > 1){
-    break;
+    turn_handler(&d);
   }
 
   if(d.pc.alive == 0){
