@@ -20,8 +20,7 @@ void usage(char * name) {
   exit(-1);
 }
 
-static int32_t event_cmp(const void * key,
-  const void * with) {
+static int32_t event_cmp(const void * key, const void * with) {
   int32_t ret = ((int32_t)((character_t * ) key)->next_turn - (int32_t)((character_t * ) with)->next_turn);
   if (ret == 0) {
     ret = ((int32_t)((character_t * ) key)->tie_breaker - (int32_t)((character_t * ) with)->tie_breaker);
@@ -126,10 +125,10 @@ void move_character(dungeon_t * d, character_t * c) {
       //move in straight line towards pc
       for (y = -1; y <= 1; y++) {
         for (x = -1; x <= 1; x++) {
-          int dist = (int) sqrt(((c->pos[dim_x] - d->pc.pos[dim_x]) *
-              (c->pos[dim_x] - d->pc.pos[dim_x])) +
-            ((c->pos[dim_y] - d->pc.pos[dim_y]) *
-              (c->pos[dim_y] - d->pc.pos[dim_y])));
+          int dist = (int) sqrt(((c->pos[dim_x] + x - d->pc.pos[dim_x]) *
+              (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
+            ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
+              (c->pos[dim_y] + y - d->pc.pos[dim_y])));
           if (dist < min_val && hardnessxy(x, y) == 0) {
             min_val = dist;
             new_pos[dim_x] = x;
@@ -156,10 +155,10 @@ void move_character(dungeon_t * d, character_t * c) {
         //move in straight line towards pc
         for (y = -1; y <= 1; y++) {
           for (x = -1; x <= 1; x++) {
-            int dist = (int) sqrt(((c->pos[dim_x] - d->pc.pos[dim_x]) *
-                (c->pos[dim_x] - d->pc.pos[dim_x])) +
-              ((c->pos[dim_y] - d->pc.pos[dim_y]) *
-                (c->pos[dim_y] - d->pc.pos[dim_y])));
+            int dist = (int) sqrt(((c->pos[dim_x] + x - d->pc.pos[dim_x]) *
+                (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
+              ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
+                (c->pos[dim_y] + y - d->pc.pos[dim_y])));
             if (dist < min_val && hardnessxy(x, y) == 0) {
               min_val = dist;
               new_pos[dim_x] = x;
@@ -177,10 +176,10 @@ void move_character(dungeon_t * d, character_t * c) {
       //move in straight line towards pc
       for (y = -1; y <= 1; y++) {
         for (x = -1; x <= 1; x++) {
-          int dist = (int) sqrt(((c->pos[dim_x] - d->pc.pos[dim_x]) *
-              (c->pos[dim_x] - d->pc.pos[dim_x])) +
-            ((c->pos[dim_y] - d->pc.pos[dim_y]) *
-              (c->pos[dim_y] - d->pc.pos[dim_y])));
+          int dist = (int) sqrt(((c->pos[dim_x] + x - d->pc.pos[dim_x]) *
+              (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
+            ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
+              (c->pos[dim_y] + y - d->pc.pos[dim_y])));
           if (dist < min_val && mapxy(x, y) != ter_wall_immutable) {
             min_val = dist;
             new_pos[dim_x] = x;
@@ -215,10 +214,10 @@ void move_character(dungeon_t * d, character_t * c) {
         //move in straight line towards pc
         for (y = -1; y <= 1; y++) {
           for (x = -1; x <= 1; x++) {
-            int dist = (int) sqrt(((c->pos[dim_x] - d->pc.pos[dim_x]) *
-                (c->pos[dim_x] - d->pc.pos[dim_x])) +
-              ((c->pos[dim_y] - d->pc.pos[dim_y]) *
-                (c->pos[dim_y] - d->pc.pos[dim_y])));
+            int dist = (int) sqrt(((c->pos[dim_x] + x - d->pc.pos[dim_x]) *
+                (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
+              ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
+                (c->pos[dim_y] + y - d->pc.pos[dim_y])));
             if (dist < min_val && mapxy(x, y) != ter_wall_immutable) {
               min_val = dist;
               new_pos[dim_x] = x;
@@ -243,10 +242,10 @@ void move_character(dungeon_t * d, character_t * c) {
     //move telepathically
     for (y = -1; y <= 1; y++) {
       for (x = -1; x <= 1; x++) {
-        int dist = (int) sqrt(((c->pos[dim_x] - d->pc.pos[dim_x]) *
-            (c->pos[dim_x] - d->pc.pos[dim_x])) +
-          ((c->pos[dim_y] - d->pc.pos[dim_y]) *
-            (c->pos[dim_y] - d->pc.pos[dim_y])));
+        int dist = (int) sqrt(((c->pos[dim_x] + x - d->pc.pos[dim_x]) *
+            (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
+          ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
+            (c->pos[dim_y] + y - d->pc.pos[dim_y])));
         if (dist < min_val && hardnessxy(c->pos[dim_x] + x, c->pos[dim_y] + y) == 0) {
           min_val = dist;
           new_pos[dim_x] = x;
@@ -269,10 +268,10 @@ void move_character(dungeon_t * d, character_t * c) {
     } else { //move telepathically
       for (y = -1; y <= 1; y++) {
         for (x = -1; x <= 1; x++) {
-          int dist = (int) sqrt(((c->pos[dim_x] - d->pc.pos[dim_x]) *
-              (c->pos[dim_x] - d->pc.pos[dim_x])) +
-            ((c->pos[dim_y] - d->pc.pos[dim_y]) *
-              (c->pos[dim_y] - d->pc.pos[dim_y])));
+          int dist = (int) sqrt(((c->pos[dim_x] + x - d->pc.pos[dim_x]) *
+              (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
+            ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
+              (c->pos[dim_y] + y - d->pc.pos[dim_y])));
           if (dist < min_val && hardnessxy(c->pos[dim_x] + x, c->pos[dim_y] + y) == 0) {
             min_val = dist;
             new_pos[dim_x] = x;
@@ -287,10 +286,10 @@ void move_character(dungeon_t * d, character_t * c) {
     //move telepathically
     for (y = -1; y <= 1; y++) {
       for (x = -1; x <= 1; x++) {
-        int dist = (int) sqrt(((c->pos[dim_x] - d->pc.pos[dim_x]) *
-            (c->pos[dim_x] - d->pc.pos[dim_x])) +
-          ((c->pos[dim_y] - d->pc.pos[dim_y]) *
-            (c->pos[dim_y] - d->pc.pos[dim_y])));
+        int dist = (int) sqrt(((c->pos[dim_x] + x - d->pc.pos[dim_x]) *
+            (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
+          ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
+            (c->pos[dim_y] + y - d->pc.pos[dim_y])));
         if (dist < min_val && mapxy(c->pos[dim_x] + x, c->pos[dim_y] + y) != ter_wall_immutable) {
           min_val = dist;
           new_pos[dim_x] = x;
@@ -322,10 +321,10 @@ void move_character(dungeon_t * d, character_t * c) {
     } else { //move telepathically
       for (y = -1; y <= 1; y++) {
         for (x = -1; x <= 1; x++) {
-          int dist = (int) sqrt(((c->pos[dim_x] - d->pc.pos[dim_x]) *
-              (c->pos[dim_x] - d->pc.pos[dim_x])) +
-            ((c->pos[dim_y] - d->pc.pos[dim_y]) *
-              (c->pos[dim_y] - d->pc.pos[dim_y])));
+          int dist = (int) sqrt(((c->pos[dim_x] + x - d->pc.pos[dim_x]) *
+              (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
+            ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
+              (c->pos[dim_y] + y - d->pc.pos[dim_y])));
           if (dist < min_val && mapxy(c->pos[dim_x] + x, c->pos[dim_y] + y) != ter_wall_immutable) {
             min_val = dist;
             new_pos[dim_x] = x;
@@ -458,7 +457,28 @@ void move_character(dungeon_t * d, character_t * c) {
     }
     break;
 
-  case 13: //erratic & elepathic & intelligent
+  case 13: //erratic & telepathic & intelligent
+  if (rand() % 2 == 1) { //move erratically
+    new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
+    new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
+    //find open position
+    while (hardnesspair(new_pos) != 0 ||
+      (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])) {
+      new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
+      new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
+    }
+  } else { //move telepathically
+    dijkstra(d);
+    for (y = -1; y <= 1; y++) {
+      for (x = -1; x <= 1; x++) {
+        if (d->pc_distance[c->pos[dim_y] + y][c->pos[dim_x] + x] < min_val) {
+          min_val = d->pc_distance[c->pos[dim_y] + y][c->pos[dim_x] + x];
+          new_pos[dim_y] = c->pos[dim_y] + y;
+          new_pos[dim_x] = c->pos[dim_x] + x;
+        }
+      }
+    }
+  }
     break;
 
   case 14: //tunneling & telepathic & intelligent
@@ -755,8 +775,7 @@ int main(int argc, char * argv[]) {
       (rand() % d.rooms[0].size[dim_y]));
   }
 
-  printf("PC is at (y, x): %d, %d\n",
-    d.pc.pos[dim_y], d.pc.pos[dim_x]);
+  printf("PC is at (y, x): %d, %d\n", d.pc.pos[dim_y], d.pc.pos[dim_x]);
 
   d.h = malloc(sizeof(heap_t));
   heap_init(d.h, event_cmp, NULL);
