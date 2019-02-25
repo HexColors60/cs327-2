@@ -115,12 +115,14 @@ void move_character(dungeon_t * d, character_t * c) {
   new_pos[dim_y] = c->pos[dim_y];
   new_pos[dim_x] = c->pos[dim_x];
 
+  //printf("moving %c from %d,%d\n", c->disp, c->pos[dim_y], c->pos[dim_x]);
+
   int x, y;
   int min_val = INT_MAX;
 
   switch (c->at) { //switch based on the attributes
   case 0: //plain old boring monster
-    if (line_of_sight(d, c, & (d->pc)) == 1) {
+    if (line_of_sight(d, c, &(d->pc)) == 1) {
       //move in straight line towards pc
       for (y = -1; y <= 1; y++) {
         for (x = -1; x <= 1; x++) {
@@ -128,7 +130,7 @@ void move_character(dungeon_t * d, character_t * c) {
               (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
             ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
               (c->pos[dim_y] + y - d->pc.pos[dim_y])));
-          if (dist < min_val && hardnessxy(c->pos[dim_x] + x, c->pos[dim_y] + y) == 0) {
+          if (dist <= min_val && hardnessxy(c->pos[dim_x] + x, c->pos[dim_y] + y) == 0) {
             min_val = dist;
             new_pos[dim_x] = c->pos[dim_x] + x;
             new_pos[dim_y] = c->pos[dim_y] + y;
@@ -145,12 +147,12 @@ void move_character(dungeon_t * d, character_t * c) {
       new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
       //find open position
       while (hardnesspair(new_pos) != 0 ||
-        (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])) {
+        (new_pos == c->pos)) {
         new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
         new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
       }
     } else { //move line of sight
-      if (line_of_sight(d, c, & (d->pc)) == 1) {
+      if (line_of_sight(d, c, &(d->pc)) == 1) {
         //move in straight line towards pc
         for (y = -1; y <= 1; y++) {
           for (x = -1; x <= 1; x++) {
@@ -158,7 +160,7 @@ void move_character(dungeon_t * d, character_t * c) {
                 (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
               ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
                 (c->pos[dim_y] + y - d->pc.pos[dim_y])));
-            if (dist < min_val && hardnessxy(c->pos[dim_x] + x, c->pos[dim_y] + y) == 0) {
+            if (dist <= min_val && hardnessxy(c->pos[dim_x] + x, c->pos[dim_y] + y) == 0) {
               min_val = dist;
               new_pos[dim_x] = c->pos[dim_x] + x;
               new_pos[dim_y] = c->pos[dim_y] + y;
@@ -171,7 +173,7 @@ void move_character(dungeon_t * d, character_t * c) {
 
   case 2: //tunneling
     // move line of sight tunneling
-    if (line_of_sight(d, c, & (d->pc)) == 1) {
+    if (line_of_sight(d, c, &(d->pc)) == 1) {
       //move in straight line towards pc
       for (y = -1; y <= 1; y++) {
         for (x = -1; x <= 1; x++) {
@@ -179,7 +181,7 @@ void move_character(dungeon_t * d, character_t * c) {
               (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
             ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
               (c->pos[dim_y] + y - d->pc.pos[dim_y])));
-          if (dist < min_val && mapxy(c->pos[dim_x] + x, c->pos[dim_y] + y) != ter_wall_immutable) {
+          if (dist <= min_val && mapxy(c->pos[dim_x] + x, c->pos[dim_y] + y) != ter_wall_immutable) {
             min_val = dist;
             new_pos[dim_x] = c->pos[dim_x] + x;
             new_pos[dim_y] = c->pos[dim_y] + y;
@@ -194,13 +196,13 @@ void move_character(dungeon_t * d, character_t * c) {
       new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
       new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
       //find open position
-      while (mappair(new_pos) != ter_wall_immutable ||
-        (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])) {
+      while (mappair(new_pos) == ter_wall_immutable ||
+        (new_pos == c->pos)) {
         new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
         new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
       }
     } else {
-      if (line_of_sight(d, c, & (d->pc)) == 1) {
+      if (line_of_sight(d, c, &(d->pc)) == 1) {
         //move in straight line towards pc
         for (y = -1; y <= 1; y++) {
           for (x = -1; x <= 1; x++) {
@@ -208,7 +210,7 @@ void move_character(dungeon_t * d, character_t * c) {
                 (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
               ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
                 (c->pos[dim_y] + y - d->pc.pos[dim_y])));
-            if (dist < min_val && mapxy(c->pos[dim_x] + x, c->pos[dim_y] + y) != ter_wall_immutable) {
+            if (dist <= min_val && mapxy(c->pos[dim_x] + x, c->pos[dim_y] + y) != ter_wall_immutable) {
               min_val = dist;
               new_pos[dim_x] = c->pos[dim_x] + x;
               new_pos[dim_y] = c->pos[dim_y] + y;
@@ -227,7 +229,7 @@ void move_character(dungeon_t * d, character_t * c) {
             (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
           ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
             (c->pos[dim_y] + y - d->pc.pos[dim_y])));
-        if (dist < min_val && hardnessxy(c->pos[dim_x] + x, c->pos[dim_y] + y) == 0) {
+        if (dist <= min_val && hardnessxy(c->pos[dim_x] + x, c->pos[dim_y] + y) == 0) {
           min_val = dist;
           new_pos[dim_x] = c->pos[dim_x] + x;
           new_pos[dim_y] = c->pos[dim_y] + y;
@@ -242,7 +244,7 @@ void move_character(dungeon_t * d, character_t * c) {
       new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
       //find open position
       while (hardnesspair(new_pos) != 0 ||
-        (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])) {
+        (new_pos == c->pos)) {
         new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
         new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
       }
@@ -253,7 +255,7 @@ void move_character(dungeon_t * d, character_t * c) {
               (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
             ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
               (c->pos[dim_y] + y - d->pc.pos[dim_y])));
-          if (dist < min_val && hardnessxy(c->pos[dim_x] + x, c->pos[dim_y] + y) == 0) {
+          if (dist <= min_val && hardnessxy(c->pos[dim_x] + x, c->pos[dim_y] + y) == 0) {
             min_val = dist;
             new_pos[dim_x] = c->pos[dim_x] + x;
             new_pos[dim_y] = c->pos[dim_y] + y;
@@ -271,7 +273,7 @@ void move_character(dungeon_t * d, character_t * c) {
             (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
           ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
             (c->pos[dim_y] + y - d->pc.pos[dim_y])));
-        if (dist < min_val && mapxy(c->pos[dim_x] + x, c->pos[dim_y] + y) != ter_wall_immutable) {
+        if (dist <= min_val && mapxy(c->pos[dim_x] + x, c->pos[dim_y] + y) != ter_wall_immutable) {
           min_val = dist;
           new_pos[dim_x] = c->pos[dim_x] + x;
           new_pos[dim_y] = c->pos[dim_y] + y;
@@ -285,8 +287,8 @@ void move_character(dungeon_t * d, character_t * c) {
       new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
       new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
       //find open position
-      while (mappair(new_pos) != ter_wall_immutable ||
-        (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])) {
+      while (mappair(new_pos) == ter_wall_immutable ||
+        (new_pos == c->pos)) {
         new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
         new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
       }
@@ -297,7 +299,7 @@ void move_character(dungeon_t * d, character_t * c) {
               (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
             ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
               (c->pos[dim_y] + y - d->pc.pos[dim_y])));
-          if (dist < min_val && mapxy(c->pos[dim_x] + x, c->pos[dim_y] + y) != ter_wall_immutable) {
+          if (dist <= min_val && mapxy(c->pos[dim_x] + x, c->pos[dim_y] + y) != ter_wall_immutable) {
             min_val = dist;
             new_pos[dim_x] = c->pos[dim_x] + x;
             new_pos[dim_y] = c->pos[dim_y] + y;
@@ -308,7 +310,7 @@ void move_character(dungeon_t * d, character_t * c) {
     break;
 
   case 8: //intelligent
-    if (line_of_sight(d, c, & (d->pc)) == 1) {
+    if (line_of_sight(d, c, &(d->pc)) == 1) {
       dijkstra(d);
       for (y = -1; y <= 1; y++) {
         for (x = -1; x <= 1; x++) {
@@ -328,12 +330,12 @@ void move_character(dungeon_t * d, character_t * c) {
       new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
       //find open position
       while (hardnesspair(new_pos) != 0 ||
-        (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])) {
+        (new_pos == c->pos)) {
         new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
         new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
       }
     } else {
-      if (line_of_sight(d, c, & (d->pc)) == 1) {
+      if (line_of_sight(d, c, &(d->pc)) == 1) {
         dijkstra(d);
         for (y = -1; y <= 1; y++) {
           for (x = -1; x <= 1; x++) {
@@ -349,7 +351,7 @@ void move_character(dungeon_t * d, character_t * c) {
     break;
 
   case 10: //tunneling & intelligent
-    if (line_of_sight(d, c, & (d->pc)) == 1) {
+    if (line_of_sight(d, c, &(d->pc)) == 1) {
       dijkstra_tunnel(d);
       for (y = -1; y <= 1; y++) {
         for (x = -1; x <= 1; x++) {
@@ -368,13 +370,13 @@ void move_character(dungeon_t * d, character_t * c) {
       new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
       new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
       //find open position
-      while (mappair(new_pos) != ter_wall_immutable ||
-        (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])) {
+      while (mappair(new_pos) == ter_wall_immutable ||
+        (new_pos == c->pos)) {
         new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
         new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
       }
     } else {
-      if (line_of_sight(d, c, & (d->pc)) == 1) {
+      if (line_of_sight(d, c, &(d->pc)) == 1) {
         dijkstra_tunnel(d);
         for (y = -1; y <= 1; y++) {
           for (x = -1; x <= 1; x++) {
@@ -408,7 +410,7 @@ void move_character(dungeon_t * d, character_t * c) {
     new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
     //find open position
     while (hardnesspair(new_pos) != 0 ||
-      (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])) {
+      (new_pos == c->pos)) {
       new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
       new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
     }
@@ -444,8 +446,8 @@ void move_character(dungeon_t * d, character_t * c) {
       new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
       new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
       //find open position
-      while (mappair(new_pos) != ter_wall_immutable ||
-        (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])) {
+      while (mappair(new_pos) == ter_wall_immutable ||
+        (new_pos == c->pos)) {
         new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
         new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
       }
@@ -467,13 +469,15 @@ void move_character(dungeon_t * d, character_t * c) {
     break;
   }
   //if we need to create a tunnel
-  if (hardnesspair(new_pos) > 85) {
-    hardnesspair(new_pos) -= 85;
-    new_pos[dim_y] = c->pos[dim_y];
-    new_pos[dim_x] = c->pos[dim_x];
-  } else if (hardnesspair(new_pos) <= 85 && mappair(new_pos) == ter_wall) {
-    hardnesspair(new_pos) = 0;
-    mappair(new_pos) = ter_floor_hall;
+  if(new_pos != c->pos){
+    if (hardnesspair(new_pos) > 85) {
+      hardnesspair(new_pos) -= 85;
+      new_pos[dim_y] = c->pos[dim_y];
+      new_pos[dim_x] = c->pos[dim_x];
+    } else if (hardnesspair(new_pos) <= 85 && mappair(new_pos) == ter_wall) {
+      hardnesspair(new_pos) = 0;
+      mappair(new_pos) = ter_floor_hall;
+    }
   }
   //printf("trying %c from %d,%d to %d,%d\n", c->disp, c->pos[dim_y], c->pos[dim_x], new_pos[dim_y], new_pos[dim_x]);
 
@@ -518,8 +522,8 @@ void gen_monsters(dungeon_t * d) {
   d->pc.tie_breaker = 0;
   d->pc.is_pc = 1;
   d->pc.at = 1; // our pc will only be erratic for now
-  d->pc.hn = heap_insert(d->h, & (d->pc));
-  cpair(d->pc.pos) = & (d->pc);
+  d->pc.hn = heap_insert(d->h, &(d->pc));
+  cpair(d->pc.pos) = &(d->pc);
   for (i = 0; i < d->num_monsters; i++) {
     character_t * mon = malloc(sizeof(character_t)); //Malloc our new monster
     y = rand() % 20;
@@ -560,7 +564,7 @@ int main(int argc, char * argv[]) {
   char * pgm_file;
 
   /* Quiet a false positive from valgrind. */
-  memset( & d, 0, sizeof(d));
+  memset( &d, 0, sizeof(d));
 
   /* Default behavior: Seed with the time, generate a new dungeon, *
    * and don't write to disk.                                      */
@@ -596,7 +600,7 @@ int main(int argc, char * argv[]) {
           if ((!long_arg && argv[i][2]) ||
             (long_arg && strcmp(argv[i], "-rand")) ||
             argc < ++i + 1 /* No more arguments */ ||
-            !sscanf(argv[i], "%lu", & seed) /* Argument is not an integer */ ) {
+            !sscanf(argv[i], "%lu", &seed) /* Argument is not an integer */ ) {
             usage(argv[0]);
           }
           do_seed = 0;
@@ -656,7 +660,7 @@ int main(int argc, char * argv[]) {
             /* There is another argument, and it's not a switch, so *
              * we'll treat it as the number of monsters to generate.    */
             uint16_t num_monsters = 0;
-            if (sscanf(argv[++i], "%hu", & num_monsters) != 1) { // use %hu because num_mon is an unsigned short
+            if (sscanf(argv[++i], "%hu", &num_monsters) != 1) { // use %hu because num_mon is an unsigned short
               usage(argv[0]);
             }
             if (num_monsters >= MAX_MONSTERS) {
@@ -681,21 +685,21 @@ int main(int argc, char * argv[]) {
   if (do_seed) {
     /* Allows me to generate more than one dungeon *
      * per second, as opposed to time().           */
-    gettimeofday( & tv, NULL);
-    seed = (tv.tv_usec ^ (tv.tv_sec << 20)) & 0xffffffff;
+    gettimeofday( &tv, NULL);
+    seed = (tv.tv_usec ^ (tv.tv_sec << 20)) &0xffffffff;
   }
 
   printf("Seed is %ld.\n", seed);
   srand(seed);
 
-  init_dungeon( & d);
+  init_dungeon( &d);
 
   if (do_load) {
-    read_dungeon( & d, load_file);
+    read_dungeon( &d, load_file);
   } else if (do_image) {
-    read_pgm( & d, pgm_file);
+    read_pgm( &d, pgm_file);
   } else {
-    gen_dungeon( & d);
+    gen_dungeon( &d);
   }
 
   if (!do_load) {
@@ -710,7 +714,7 @@ int main(int argc, char * argv[]) {
 
   d.h = malloc(sizeof(heap_t));
   heap_init(d.h, event_cmp, NULL);
-  gen_monsters( & d);
+  gen_monsters( &d);
 
   /*uint32_t p,q;
   for(p=0;p<DUNGEON_Y;p++){
@@ -721,9 +725,9 @@ int main(int argc, char * argv[]) {
     }
   }*/
 
-  render_dungeon( & d);
+  render_dungeon( &d);
   while (d.pc.alive == 1 && d.alive_monsters > 0) {
-    turn_handler( & d);
+    turn_handler( &d);
   }
 
   if (d.pc.alive == 0) {
@@ -797,14 +801,14 @@ int main(int argc, char * argv[]) {
         strcpy(strchr(save_file, '.') + 1, "rlg327");
       }
     }
-    write_dungeon( & d, save_file);
+    write_dungeon( &d, save_file);
 
     if (do_save_seed || do_save_image) {
       free(save_file);
     }
   }
 
-  delete_dungeon( & d);
+  delete_dungeon( &d);
 
   return 0;
 }
