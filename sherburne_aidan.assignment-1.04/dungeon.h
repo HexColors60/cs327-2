@@ -56,6 +56,7 @@ typedef struct character{
   int32_t next_turn; // next turn value for move events
   int32_t tie_breaker; //tie breaker for comparison of move turns
   int8_t is_pc; //identifier for whether or not this character is the pc
+  pair_t seen;
 } character_t;
 
 typedef struct dungeon {

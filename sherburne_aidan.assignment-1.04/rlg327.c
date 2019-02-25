@@ -321,6 +321,23 @@ void move_character(dungeon_t * d, character_t * c) {
           }
         }
       }
+      c->seen[dim_y] = d->pc.pos[dim_y];
+      c->seen[dim_x] = d->pc.pos[dim_x];
+    } else {
+      //move in straight line towards last known position
+      for (y = -1; y <= 1; y++) {
+        for (x = -1; x <= 1; x++) {
+          int dist = (int) sqrt(((c->pos[dim_x] + x - d->pc.pos[dim_x]) *
+              (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
+            ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
+              (c->pos[dim_y] + y - d->pc.pos[dim_y])));
+          if (dist <= min_val && hardnessxy(c->pos[dim_x] + x, c->pos[dim_y] + y) == 0) {
+            min_val = dist;
+            new_pos[dim_x] = c->pos[dim_x] + x;
+            new_pos[dim_y] = c->pos[dim_y] + y;
+          }
+        }
+      }
     }
     break;
 
@@ -346,6 +363,23 @@ void move_character(dungeon_t * d, character_t * c) {
             }
           }
         }
+        c->seen[dim_y] = d->pc.pos[dim_y];
+        c->seen[dim_x] = d->pc.pos[dim_x];
+      } else {
+        //move in straight line towards last known position
+        for (y = -1; y <= 1; y++) {
+          for (x = -1; x <= 1; x++) {
+            int dist = (int) sqrt(((c->pos[dim_x] + x - d->pc.pos[dim_x]) *
+                (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
+              ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
+                (c->pos[dim_y] + y - d->pc.pos[dim_y])));
+            if (dist <= min_val && hardnessxy(c->pos[dim_x] + x, c->pos[dim_y] + y) == 0) {
+              min_val = dist;
+              new_pos[dim_x] = c->pos[dim_x] + x;
+              new_pos[dim_y] = c->pos[dim_y] + y;
+            }
+          }
+        }
       }
     }
     break;
@@ -359,6 +393,23 @@ void move_character(dungeon_t * d, character_t * c) {
             min_val = d->pc_tunnel[c->pos[dim_y] + y][c->pos[dim_x] + x];
             new_pos[dim_y] = c->pos[dim_y] + y;
             new_pos[dim_x] = c->pos[dim_x] + x;
+          }
+        }
+      }
+      c->seen[dim_y] = d->pc.pos[dim_y];
+      c->seen[dim_x] = d->pc.pos[dim_x];
+    } else {
+      //move in straight line towards last known position
+      for (y = -1; y <= 1; y++) {
+        for (x = -1; x <= 1; x++) {
+          int dist = (int) sqrt(((c->pos[dim_x] + x - d->pc.pos[dim_x]) *
+              (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
+            ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
+              (c->pos[dim_y] + y - d->pc.pos[dim_y])));
+          if (dist <= min_val && hardnessxy(c->pos[dim_x] + x, c->pos[dim_y] + y) == 0) {
+            min_val = dist;
+            new_pos[dim_x] = c->pos[dim_x] + x;
+            new_pos[dim_y] = c->pos[dim_y] + y;
           }
         }
       }
@@ -384,6 +435,23 @@ void move_character(dungeon_t * d, character_t * c) {
               min_val = d->pc_tunnel[c->pos[dim_y] + y][c->pos[dim_x] + x];
               new_pos[dim_y] = c->pos[dim_y] + y;
               new_pos[dim_x] = c->pos[dim_x] + x;
+            }
+          }
+        }
+        c->seen[dim_y] = d->pc.pos[dim_y];
+        c->seen[dim_x] = d->pc.pos[dim_x];
+      }else{
+        //move in straight line towards last known position
+        for (y = -1; y <= 1; y++) {
+          for (x = -1; x <= 1; x++) {
+            int dist = (int) sqrt(((c->pos[dim_x] + x - d->pc.pos[dim_x]) *
+                (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
+              ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
+                (c->pos[dim_y] + y - d->pc.pos[dim_y])));
+            if (dist <= min_val && hardnessxy(c->pos[dim_x] + x, c->pos[dim_y] + y) == 0) {
+              min_val = dist;
+              new_pos[dim_x] = c->pos[dim_x] + x;
+              new_pos[dim_y] = c->pos[dim_y] + y;
             }
           }
         }
@@ -521,6 +589,8 @@ void gen_monsters(dungeon_t * d) {
   d->pc.next_turn = 0;
   d->pc.tie_breaker = 0;
   d->pc.is_pc = 1;
+  d->pc.seen[dim_y] = d->pc.pos[dim_y];
+  d->pc.seen[dim_x] = d->pc.pos[dim_x];
   d->pc.at = 1; // our pc will only be erratic for now
   d->pc.hn = heap_insert(d->h, &(d->pc));
   cpair(d->pc.pos) = &(d->pc);
@@ -546,6 +616,8 @@ void gen_monsters(dungeon_t * d) {
     mon->next_turn = 0;
     mon->tie_breaker = i + 1;
     mon->is_pc = 0;
+    mon->seen[dim_y] = mon->pos[dim_y];
+    mon->seen[dim_x] = mon->pos[dim_x];
     mon->hn = heap_insert(d->h, mon);
     cpair(mon->pos) = mon;
     d->alive_monsters++;
