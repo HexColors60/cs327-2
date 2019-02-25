@@ -1,0 +1,12 @@
+@author Aidan Sherburne for CS327 @ Iowa State University, Spring 2019
+
+This program has all of the functionality of the previous assignment, 1.03.
+
+This program adds monsters to the dungeons. There are four different types of
+attributes that the monsters can have, described in the assignment spec.
+
+This program also adds a --nummon flag to allow the user to specify a desired
+number of monster to add to the dungeon. By default, without the --nummon flag,
+ten monsters will be added to the dungeon. I have also implemented a
+MAX_MONSTERS value, currently set to 50, to limit the amount of monsters that
+can spawn in a dungeon.
