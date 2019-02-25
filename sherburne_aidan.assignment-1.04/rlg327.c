@@ -115,7 +115,6 @@ void move_character(dungeon_t * d, character_t * c) {
   new_pos[dim_y] = c->pos[dim_y];
   new_pos[dim_x] = c->pos[dim_x];
 
-  //uint32_t i;
   int x, y;
   int min_val = INT_MAX;
 
@@ -129,10 +128,10 @@ void move_character(dungeon_t * d, character_t * c) {
               (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
             ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
               (c->pos[dim_y] + y - d->pc.pos[dim_y])));
-          if (dist < min_val && hardnessxy(x, y) == 0) {
+          if (dist < min_val && hardnessxy(c->pos[dim_x] + x, c->pos[dim_y] + y) == 0) {
             min_val = dist;
-            new_pos[dim_x] = x;
-            new_pos[dim_y] = y;
+            new_pos[dim_x] = c->pos[dim_x] + x;
+            new_pos[dim_y] = c->pos[dim_y] + y;
           }
         }
       }
@@ -159,10 +158,10 @@ void move_character(dungeon_t * d, character_t * c) {
                 (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
               ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
                 (c->pos[dim_y] + y - d->pc.pos[dim_y])));
-            if (dist < min_val && hardnessxy(x, y) == 0) {
+            if (dist < min_val && hardnessxy(c->pos[dim_x] + x, c->pos[dim_y] + y) == 0) {
               min_val = dist;
-              new_pos[dim_x] = x;
-              new_pos[dim_y] = y;
+              new_pos[dim_x] = c->pos[dim_x] + x;
+              new_pos[dim_y] = c->pos[dim_y] + y;
             }
           }
         }
@@ -180,22 +179,13 @@ void move_character(dungeon_t * d, character_t * c) {
               (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
             ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
               (c->pos[dim_y] + y - d->pc.pos[dim_y])));
-          if (dist < min_val && mapxy(x, y) != ter_wall_immutable) {
+          if (dist < min_val && mapxy(c->pos[dim_x] + x, c->pos[dim_y] + y) != ter_wall_immutable) {
             min_val = dist;
-            new_pos[dim_x] = x;
-            new_pos[dim_y] = y;
+            new_pos[dim_x] = c->pos[dim_x] + x;
+            new_pos[dim_y] = c->pos[dim_y] + y;
           }
         }
       }
-    }
-    //if we need to create a tunnel
-    if (hardnesspair(new_pos) > 85) {
-      hardnesspair(new_pos) -= 85;
-      new_pos[dim_y] = c->pos[dim_y];
-      new_pos[dim_x] = c->pos[dim_x];
-    } else if (hardnesspair(new_pos) <= 85 && mappair(new_pos) == ter_wall) {
-      hardnesspair(new_pos) = 0;
-      mappair(new_pos) = ter_floor_hall;
     }
     break;
 
@@ -218,23 +208,14 @@ void move_character(dungeon_t * d, character_t * c) {
                 (c->pos[dim_x] + x - d->pc.pos[dim_x])) +
               ((c->pos[dim_y] + y - d->pc.pos[dim_y]) *
                 (c->pos[dim_y] + y - d->pc.pos[dim_y])));
-            if (dist < min_val && mapxy(x, y) != ter_wall_immutable) {
+            if (dist < min_val && mapxy(c->pos[dim_x] + x, c->pos[dim_y] + y) != ter_wall_immutable) {
               min_val = dist;
-              new_pos[dim_x] = x;
-              new_pos[dim_y] = y;
+              new_pos[dim_x] = c->pos[dim_x] + x;
+              new_pos[dim_y] = c->pos[dim_y] + y;
             }
           }
         }
       }
-    }
-    //if we need to create a tunnel
-    if (hardnesspair(new_pos) > 85) {
-      hardnesspair(new_pos) -= 85;
-      new_pos[dim_y] = c->pos[dim_y];
-      new_pos[dim_x] = c->pos[dim_x];
-    } else if (hardnesspair(new_pos) <= 85 && mappair(new_pos) == ter_wall) {
-      hardnesspair(new_pos) = 0;
-      mappair(new_pos) = ter_floor_hall;
     }
     break;
 
@@ -248,8 +229,8 @@ void move_character(dungeon_t * d, character_t * c) {
             (c->pos[dim_y] + y - d->pc.pos[dim_y])));
         if (dist < min_val && hardnessxy(c->pos[dim_x] + x, c->pos[dim_y] + y) == 0) {
           min_val = dist;
-          new_pos[dim_x] = x;
-          new_pos[dim_y] = y;
+          new_pos[dim_x] = c->pos[dim_x] + x;
+          new_pos[dim_y] = c->pos[dim_y] + y;
         }
       }
     }
@@ -274,8 +255,8 @@ void move_character(dungeon_t * d, character_t * c) {
               (c->pos[dim_y] + y - d->pc.pos[dim_y])));
           if (dist < min_val && hardnessxy(c->pos[dim_x] + x, c->pos[dim_y] + y) == 0) {
             min_val = dist;
-            new_pos[dim_x] = x;
-            new_pos[dim_y] = y;
+            new_pos[dim_x] = c->pos[dim_x] + x;
+            new_pos[dim_y] = c->pos[dim_y] + y;
           }
         }
       }
@@ -292,19 +273,10 @@ void move_character(dungeon_t * d, character_t * c) {
             (c->pos[dim_y] + y - d->pc.pos[dim_y])));
         if (dist < min_val && mapxy(c->pos[dim_x] + x, c->pos[dim_y] + y) != ter_wall_immutable) {
           min_val = dist;
-          new_pos[dim_x] = x;
-          new_pos[dim_y] = y;
+          new_pos[dim_x] = c->pos[dim_x] + x;
+          new_pos[dim_y] = c->pos[dim_y] + y;
         }
       }
-    }
-    //if we need to create a tunnel
-    if (hardnesspair(new_pos) > 85) {
-      hardnesspair(new_pos) -= 85;
-      new_pos[dim_y] = c->pos[dim_y];
-      new_pos[dim_x] = c->pos[dim_x];
-    } else if (hardnesspair(new_pos) <= 85 && mappair(new_pos) == ter_wall) {
-      hardnesspair(new_pos) = 0;
-      mappair(new_pos) = ter_floor_hall;
     }
     break;
 
@@ -313,7 +285,7 @@ void move_character(dungeon_t * d, character_t * c) {
       new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
       new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
       //find open position
-      while (hardnesspair(new_pos) != 0 ||
+      while (mappair(new_pos) != ter_wall_immutable ||
         (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])) {
         new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
         new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
@@ -327,20 +299,11 @@ void move_character(dungeon_t * d, character_t * c) {
               (c->pos[dim_y] + y - d->pc.pos[dim_y])));
           if (dist < min_val && mapxy(c->pos[dim_x] + x, c->pos[dim_y] + y) != ter_wall_immutable) {
             min_val = dist;
-            new_pos[dim_x] = x;
-            new_pos[dim_y] = y;
+            new_pos[dim_x] = c->pos[dim_x] + x;
+            new_pos[dim_y] = c->pos[dim_y] + y;
           }
         }
       }
-    }
-    //if we need to create a tunnel
-    if (hardnesspair(new_pos) > 85) {
-      hardnesspair(new_pos) -= 85;
-      new_pos[dim_y] = c->pos[dim_y];
-      new_pos[dim_x] = c->pos[dim_x];
-    } else if (hardnesspair(new_pos) <= 85 && mappair(new_pos) == ter_wall) {
-      hardnesspair(new_pos) = 0;
-      mappair(new_pos) = ter_floor_hall;
     }
     break;
 
@@ -398,15 +361,6 @@ void move_character(dungeon_t * d, character_t * c) {
         }
       }
     }
-    //if we need to create a tunnel
-    if (hardnesspair(new_pos) > 85) {
-      hardnesspair(new_pos) -= 85;
-      new_pos[dim_y] = c->pos[dim_y];
-      new_pos[dim_x] = c->pos[dim_x];
-    } else if (hardnesspair(new_pos) <= 85 && mappair(new_pos) == ter_wall) {
-      hardnesspair(new_pos) = 0;
-      mappair(new_pos) = ter_floor_hall;
-    }
     break;
 
   case 11: //erratic & tunneling & intelligent
@@ -414,7 +368,7 @@ void move_character(dungeon_t * d, character_t * c) {
       new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
       new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
       //find open position
-      while (hardnesspair(new_pos) != 0 ||
+      while (mappair(new_pos) != ter_wall_immutable ||
         (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])) {
         new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
         new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
@@ -432,15 +386,6 @@ void move_character(dungeon_t * d, character_t * c) {
           }
         }
       }
-    }
-    //if we need to create a tunnel
-    if (hardnesspair(new_pos) > 85) {
-      hardnesspair(new_pos) -= 85;
-      new_pos[dim_y] = c->pos[dim_y];
-      new_pos[dim_x] = c->pos[dim_x];
-    } else if (hardnesspair(new_pos) <= 85 && mappair(new_pos) == ter_wall) {
-      hardnesspair(new_pos) = 0;
-      mappair(new_pos) = ter_floor_hall;
     }
     break;
 
@@ -492,15 +437,6 @@ void move_character(dungeon_t * d, character_t * c) {
         }
       }
     }
-    //if we need to create a tunnel
-    if (hardnesspair(new_pos) > 85) {
-      hardnesspair(new_pos) -= 85;
-      new_pos[dim_y] = c->pos[dim_y];
-      new_pos[dim_x] = c->pos[dim_x];
-    } else if (hardnesspair(new_pos) <= 85 && mappair(new_pos) == ter_wall) {
-      hardnesspair(new_pos) = 0;
-      mappair(new_pos) = ter_floor_hall;
-    }
     break;
 
   case 15: //erratic & tunneling & telepathic & intelligent
@@ -508,7 +444,7 @@ void move_character(dungeon_t * d, character_t * c) {
       new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
       new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
       //find open position
-      while (d->hardness[new_pos[dim_y]][new_pos[dim_x]] != 0 ||
+      while (mappair(new_pos) != ter_wall_immutable ||
         (new_pos[dim_y] == c->pos[dim_y] && new_pos[dim_x] == c->pos[dim_x])) {
         new_pos[dim_y] = (c->pos[dim_y] - 1 + (rand() % 3));
         new_pos[dim_x] = (c->pos[dim_x] - 1 + (rand() % 3));
@@ -524,29 +460,25 @@ void move_character(dungeon_t * d, character_t * c) {
           }
         }
       }
-      //if we need to create a tunnel
-      if (hardnesspair(new_pos) > 85) {
-        hardnesspair(new_pos) -= 85;
-        new_pos[dim_y] = c->pos[dim_y];
-        new_pos[dim_x] = c->pos[dim_x];
-      } else if (hardnesspair(new_pos) <= 85 && mappair(new_pos) == ter_wall) {
-        hardnesspair(new_pos) = 0;
-        mappair(new_pos) = ter_floor_hall;
-      }
     }
     break;
 
   default:
     break;
   }
-  /*if (c->pos[dim_y] + 1 < DUNGEON_Y - 1 && c->pos[dim_x] + 1 < DUNGEON_X - 1) {
-    new_pos[dim_y] = c->pos[dim_y] + 1;
-    new_pos[dim_x] = c->pos[dim_x] + 1;
-  }*/
-  printf("trying %c from %d,%d to %d,%d\n", c->disp, c->pos[dim_y], c->pos[dim_x], new_pos[dim_y], new_pos[dim_x]);
+  //if we need to create a tunnel
+  if (hardnesspair(new_pos) > 85) {
+    hardnesspair(new_pos) -= 85;
+    new_pos[dim_y] = c->pos[dim_y];
+    new_pos[dim_x] = c->pos[dim_x];
+  } else if (hardnesspair(new_pos) <= 85 && mappair(new_pos) == ter_wall) {
+    hardnesspair(new_pos) = 0;
+    mappair(new_pos) = ter_floor_hall;
+  }
+  //printf("trying %c from %d,%d to %d,%d\n", c->disp, c->pos[dim_y], c->pos[dim_x], new_pos[dim_y], new_pos[dim_x]);
 
   //if we need to move and there is a different monster in the new pos, kill it
-  if (cpair(new_pos) != NULL && cpair(new_pos)->tie_breaker != c->tie_breaker) {
+  if (c->pos != new_pos && cpair(new_pos) != NULL && cpair(new_pos)->tie_breaker != c->tie_breaker) {
     printf("***%c was killed by %c***\n", cpair(new_pos)->disp, c->disp);
     printf("monsters alive: %d\n", d->alive_monsters);
     cpair(new_pos)->alive = 0;
@@ -556,7 +488,6 @@ void move_character(dungeon_t * d, character_t * c) {
   c->pos[dim_y] = new_pos[dim_y];
   c->pos[dim_x] = new_pos[dim_x];
   cpair(c->pos) = c;
-  //printf("moved %c to %d,%d\n",c->disp,c->pos[dim_y],c->pos[dim_x]);
 }
 
 void turn_handler(dungeon_t * d) {
@@ -791,14 +722,56 @@ int main(int argc, char * argv[]) {
   }*/
 
   render_dungeon( & d);
-  while (d.pc.alive == 1 && d.alive_monsters > 1) {
+  while (d.pc.alive == 1 && d.alive_monsters > 0) {
     turn_handler( & d);
   }
 
   if (d.pc.alive == 0) {
-    printf("PC has died\n");
+      printf("                                              ,--,  ,.-.\n");
+      printf("                ,                   \\,       '-,-`,'-.' | ._\n");
+      printf("               /|           \\    ,   |\\         }  )/  / `-,',\n");
+      printf("               [ '          |\\  /|   | |        /  \\|  |/`  ,`\n");
+      printf("               | |       ,.`  `,` `, | |  _,...(   (      _',\n");
+      printf("               \\  \\  __ ,-` `  ,  , `/ |,'      }     (   \\__\\ \n");
+      printf("    YOU         \\  \\_\\,``,   ` , ,  /  |         )         _,/\n");
+      printf("    HAVE         \\  '  `  ,_ _`_,-,<._.<        /         /\n");
+      printf("    BEEN          ', `>.,`  `  `   ,., |_      |         /\n");
+      printf("    SLAIN           \\/`  `,   `   ,`  | /__,.-`    _,   `\\ \n");
+      printf("                -,-..\\  _  \\  `  /  ,  / `._) _,-\\`       \\ \n");
+      printf("                 \\_,,.) /\\    ` /  / ) (-,, ``    ,        |\n");
+      printf("                ,` )  | \\_\\       '-`  |  `(               \\ \n");
+      printf("               /  /```(   , --, ,' \\   |`<`    ,            |\n");
+      printf("              /  /_,--`\\   <\\  V /> ,` )<_/)  | \\      _____)\n");
+      printf("        ,-, ,`   `   (_,\\ \\    |   /) / __/  /   `----` \n");
+      printf("       (-, \\           ) \\ ('_.-._)/ /,`    /\n");
+      printf("       | /  `          `/ \\ V   V, /`     /\n");
+      printf("    ,--\\(        ,     <_/`\\     ||      /\n");
+      printf("   (   ,``-     \\/|         \\-A.A-`|     /\n");
+      printf("  ,>,_ )_,..(    )\\          -,,_-`  _--`\n");
+      printf(" (_ \\|`   _,/_  /  \\_            ,--`\n");
+      printf("  \\( `   <.,../`     `-.._   _,-`\n");
+      printf("   `                      ```\n");
   } else if (d.alive_monsters == 0) {
-    printf("PC has killed all other monsters\n");
+      printf("   ,   A           {} \n");
+      printf("  / \\, | ,        .--.      VICTORY!\n");
+      printf(" |    =|= >      /.--.\\     YOU HAVE\n");
+      printf("  \\ /` | `       |====|     SLAIN ALL\n");
+      printf("   `   |         |`::`|     THE MONSTERS!\n");
+      printf("       |     .-;`\\..../`;_.-^-._ \n");
+      printf("      /\\\\/  /  |...::..|`   :   `| \n");
+      printf("      |:'\\ |   /'''::''|   .:.   | \n");
+      printf("       \\ /\\;-,/\\   ::  |..::3::..| \n");
+      printf("       |\\ <` >  >._::_.| '::2::' | \n");
+      printf("       | `""`  /   ^^  |   '7'   | \n");
+      printf("       |       |       \\    :    / \n");
+      printf("       |       |        \\   :   /  \n");
+      printf("       |       |___/\\___|`-.:.-` \n");
+      printf("       |        \\_ || _/    ` \n");
+      printf("       |        <_ >< _> \n");
+      printf("       |        |  ||  | \n");
+      printf("       |        |  ||  | \n");
+      printf("       |       _\\.:||:./_ \n");
+      printf("       |      /____/\\____\\ \n");
   }
   //dijkstra(&d);
   //dijkstra_tunnel(&d);
