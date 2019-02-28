@@ -3,6 +3,7 @@
 #include <sys/time.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <ncurses.h>
 
 #include "dungeon.h"
 #include "pc.h"
@@ -62,6 +63,14 @@ const char *tombstone =
   "..\"\"\"\"\"....\"\"\"\"\"..\"\"...\"\"\".\n\n"
   "            You're dead.  Better luck in the next life.\n\n\n";
 
+void init_curses(){
+  initscr();
+  raw();
+  noecho();
+  curs_set(0);
+  keypad(stdscr, TRUE);
+}
+
 void usage(char *name)
 {
   fprintf(stderr,
@@ -85,10 +94,10 @@ int main(int argc, char *argv[])
   char *load_file;
   char *pgm_file;
   uint32_t delay = 33000;
-  
+
   /* Quiet a false positive from valgrind. */
   memset(&d, 0, sizeof (d));
-  
+
   /* Default behavior: Seed with the time, generate a new dungeon, *
    * and don't write to disk.                                      */
   do_load = do_save = do_image = do_save_seed = do_save_image = 0;
@@ -109,7 +118,7 @@ int main(int argc, char *argv[])
    * And the final switch, '--image', allows me to create a dungeon *
    * from a PGM image, so that I was able to create those more      *
    * interesting test dungeons for you.                             */
- 
+
  if (argc > 1) {
     for (i = 1, long_arg = 0; i < argc; i++, long_arg = 0) {
       if (argv[i][0] == '-') { /* All switches start with a dash */
@@ -226,15 +235,20 @@ int main(int argc, char *argv[])
   config_pc(&d);
   gen_monsters(&d);
 
+  init_curses();
+
   while (pc_is_alive(&d) && dungeon_has_npcs(&d)) {
     render_dungeon(&d);
     do_moves(&d);
+    refresh();
     if (delay) {
       usleep(delay);
     }
   }
 
   render_dungeon(&d);
+  refresh();
+  endwin();
 
   if (do_save) {
     if (do_save_seed) {
