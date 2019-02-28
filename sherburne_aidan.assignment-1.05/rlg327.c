@@ -238,12 +238,14 @@ int main(int argc, char *argv[])
   init_curses();
 
   while (pc_is_alive(&d) && dungeon_has_npcs(&d)) {
+    clear();
     render_dungeon(&d);
     do_moves(&d);
     refresh();
     if (delay) {
       usleep(delay);
     }
+
   }
 
   render_dungeon(&d);

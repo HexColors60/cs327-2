@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <ncurses.h>
 
 #include "string.h"
 
@@ -52,8 +53,8 @@ void config_pc(dungeon_t *d)
 
 uint32_t pc_next_pos(dungeon_t *d, pair_t dir)
 {
-  static uint32_t have_seen_corner = 0;
-  static uint32_t count = 0;
+  //static uint32_t have_seen_corner = 0;
+  //static uint32_t count = 0;
   static int target_room = -1;
   static int target_is_valid = 0;
 
@@ -65,12 +66,12 @@ uint32_t pc_next_pos(dungeon_t *d, pair_t dir)
 
   dir[dim_y] = dir[dim_x] = 0;
 
-  if (in_corner(d, &d->pc)) {
-    if (!count) {
-      count = 1;
-    }
-    have_seen_corner = 1;
-  }
+  // if (in_corner(d, &d->pc)) {
+  //   if (!count) {
+  //     count = 1;
+  //   }
+  //   have_seen_corner = 1;
+  // }
 
   /* First, eat anybody standing next to us. */
   // if (charxy(d->pc.position[dim_x] - 1, d->pc.position[dim_y] - 1)) {
@@ -167,46 +168,93 @@ uint32_t pc_next_pos(dungeon_t *d, pair_t dir)
   //   dir[dim_x] = dir[dim_y] = 0;
   // }
   switch(getch()){
+    //move up-left
+    //case KEY_HOME:
     case '7':
-    case 'Y':
+    case 'y':
       dir[dim_y] = -1;
       dir[dim_x] = -1;
       break;
+    //move up
+    //case KEY_UP:
     case '8':
-    case 'K':
+    case 'k':
       dir[dim_y] = -1;
       dir[dim_x] = 0;
       break;
+    //move up-right
+    //case KEY_PPAGE:
     case '9':
-    case 'U':
+    case 'u':
       dir[dim_y] = -1;
       dir[dim_x] = 1;
       break;
+    //move right
+    //case KEY_RIGHT:
     case '6':
-    case 'L':
+    case 'l':
       dir[dim_y] = 0;
       dir[dim_x] = 1;
       break;
+    //move down-right
+    //case KEY_NPAGE:
     case '3':
-    case 'N':
+    case 'n':
       dir[dim_y] = 1;
       dir[dim_x] = 1;
       break;
+    //move down
+    //case KEY_DOWN:
     case '2':
-    case 'J':
+    case 'j':
       dir[dim_y] = 1;
       dir[dim_x] = 0;
       break;
+    //move down-left
+    //case KEY_END:
     case '1':
-    case 'B':
+    case 'b':
       dir[dim_y] = 1;
       dir[dim_x] = -1;
       break;
+    //move left
+    //case KEY_LEFT:
     case '4':
-    case 'H':
+    case 'h':
       dir[dim_y] = 0;
       dir[dim_x] = -1;
       break;
+    //Rest
+    //case KEY_B2:
+    case '5':
+    case ' ':
+    case '.':
+      dir[dim_y] = 0;
+      dir[dim_x] = 0;
+      break;
+    //go down stairs
+    case '>':
+      //TODO
+      // if(mappair(d->pc.position) == ter_stairs_down){
+      //   pc_delete(d->pc.pc);
+      //   delete_dungeon(d);
+      //   init_dungeon(d);
+	    //   gen_dungeon(d);
+	    //   config_pc(d);
+	    //   gen_monsters(d);
+      //   clear();
+      //   render_dungeon(d);
+	    //   refresh();
+      // }
+      break;
+    //go up stairs
+    case '<':
+      //TODO
+      if(mappair(d->pc.position) == ter_stairs_up){
+
+      }
+      break;
+
 
     default:
       break;

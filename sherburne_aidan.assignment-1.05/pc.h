@@ -2,8 +2,10 @@
 # define PC_H
 
 # include <stdint.h>
+#include <ncurses.h>
 
 # include "dims.h"
+#include "dungeon.h"
 
 typedef struct dungeon dungeon_t;
 
