@@ -5,6 +5,7 @@
 
 #include "dungeon.h"
 #include "pc.h"
+#include "npc.h"
 #include "utils.h"
 #include "move.h"
 #include "path.h"
@@ -65,6 +66,7 @@ uint32_t pc_next_pos(dungeon_t *d, pair_t dir)
   }
 
   dir[dim_y] = dir[dim_x] = 0;
+  pair_t next_pos;
 
   // if (in_corner(d, &d->pc)) {
   //   if (!count) {
@@ -235,23 +237,31 @@ uint32_t pc_next_pos(dungeon_t *d, pair_t dir)
     //go down stairs
     case '>':
       //TODO
-      // if(mappair(d->pc.position) == ter_stairs_down){
-      //   pc_delete(d->pc.pc);
-      //   delete_dungeon(d);
-      //   init_dungeon(d);
-	    //   gen_dungeon(d);
-	    //   config_pc(d);
-	    //   gen_monsters(d);
-      //   clear();
-      //   render_dungeon(d);
-	    //   refresh();
-      // }
+      if(mappair(d->pc.position) == ter_stairs_down){
+        pc_delete(d->pc.pc);
+        delete_dungeon(d);
+        init_dungeon(d);
+	      gen_dungeon(d);
+	      config_pc(d);
+	      gen_monsters(d);
+        clear();
+        render_dungeon(d);
+	      refresh();
+      }
       break;
     //go up stairs
     case '<':
       //TODO
       if(mappair(d->pc.position) == ter_stairs_up){
-
+        pc_delete(d->pc.pc);
+        delete_dungeon(d);
+        init_dungeon(d);
+	      gen_dungeon(d);
+	      config_pc(d);
+	      gen_monsters(d);
+        clear();
+        render_dungeon(d);
+	      refresh();
       }
       break;
 
@@ -259,6 +269,13 @@ uint32_t pc_next_pos(dungeon_t *d, pair_t dir)
     default:
       break;
   }
+  next_pos[dim_y] = d->pc.position[dim_y] + dir[dim_y];
+  next_pos[dim_x] = d->pc.position[dim_x] + dir[dim_x];
+  if(hardnesspair(next_pos) != 0){
+    dir[dim_y] = 0;
+    dir[dim_x] = 0;
+  }
+
   return 0;
 }
 
