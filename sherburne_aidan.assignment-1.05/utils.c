@@ -17,28 +17,34 @@ void show_menu(dungeon_t *d, uint32_t start_index){
   addch(new_line);
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
-      if (charpair(p)->alive && count < 21) {
+      if (charpair(p) && count < 21) {
         int8_t xdif = p[dim_x] - d->pc.position[dim_x];
         int8_t ydif = p[dim_y] - d->pc.position[dim_y];
         char str[40];
-        if(xdif < 0 && ydif < 0 && num >= start_index){
+        if(xdif < 0 && ydif < 0 && num >= start_index && charpair(p)->alive){
           sprintf(str, "%c, %d west and %d north\n", charpair(p)->symbol, (-1 * xdif), (-1 * ydif));
           addstr(str);
-        }else if(xdif == 0 && ydif < 0 && num >= start_index){
-          sprintf(str, "%c,  %d north\n", charpair(p)->symbol, (-1 * ydif));
+          count++;
+        }else if(xdif == 0 && ydif < 0 && num >= start_index && charpair(p)->alive){
+          sprintf(str, "%c, %d north\n", charpair(p)->symbol, (-1 * ydif));
           addstr(str);
-        }else if(xdif < 0 && ydif == 0 && num >= start_index){
-          sprintf(str, "%c,  %d west\n", charpair(p)->symbol, (-1 * xdif));
+          count++;
+        }else if(xdif < 0 && ydif == 0 && num >= start_index && charpair(p)->alive){
+          sprintf(str, "%c, %d west\n", charpair(p)->symbol, (-1 * xdif));
           addstr(str);
-        }else if(xdif > 0 && ydif > 0 && num >= start_index){
+          count++;
+        }else if(xdif > 0 && ydif > 0 && num >= start_index && charpair(p)->alive){
           sprintf(str, "%c, %d east and %d south\n", charpair(p)->symbol, xdif, ydif);
           addstr(str);
-        }else if(xdif == 0 && ydif > 0 && num >= start_index){
+          count++;
+        }else if(xdif == 0 && ydif > 0 && num >= start_index && charpair(p)->alive){
           sprintf(str, "%c, %d south\n", charpair(p)->symbol, ydif);
           addstr(str);
-        }else if(xdif > 0 && ydif == 0 && num >= start_index){
+          count++;
+        }else if(xdif > 0 && ydif == 0 && num >= start_index && charpair(p)->alive){
           sprintf(str, "%c, %d east\n", charpair(p)->symbol, xdif);
           addstr(str);
+          count++;
         }
         num++;
       }

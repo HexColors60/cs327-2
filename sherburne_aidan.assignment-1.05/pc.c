@@ -159,7 +159,6 @@ uint32_t pc_next_pos(dungeon_t *d, pair_t dir)
       break;
     //display menu
     case 'm':
-
       show_menu(d, 0);
       int breakout = 0;
       index = 0;
@@ -167,13 +166,17 @@ uint32_t pc_next_pos(dungeon_t *d, pair_t dir)
         switch(getch()){
           //scroll up (shift entries down one line)
           case KEY_UP:
-            index = index > 0 ? index - 1 : 0;
-            show_menu(d, index);
+            if(index < (d->num_monsters-22)){
+              index++;
+              show_menu(d, index);
+            }
             break;
           //scroll down (shift entries up one line)
           case KEY_DOWN:
-            index = index < d->num_monsters - 22 ? index + 1 : index;
-            show_menu(d, index);
+            if(index > 0){
+              index--;
+              show_menu(d, index);
+            }
             break;
           //escape, close menu
           case 27:
