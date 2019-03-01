@@ -1,1 +1,18 @@
+@author Aidan Sherburne for CS327 @ Iowa State University, Spring 2019
 
+This program has all of the functionality of the previous assignment, 1.04.
+
+This program adds movement mechanics to the game based on the assignment spec.
+Controls are as specified in the assignment spec.
+This program also includes the ability to travel to new dungeons via up
+and down staircases.
+Additionally, this program includes a sort of menu functionality, allowing the
+player to display a list of all monsters in the dungeon, as well as their
+position relative to the player. This list displays at most 21 monsters at a
+time, leaving the top row open for status messages and the bottom two rows open
+for future use. When in this list, the player can press the up or down arrow
+keys to scroll through the list of monsters, assuming there are more than 21
+monsters in the dungeon.
+To quit this menu, press escape.
+Lastly, this program adds the ability to quit the game by pressing q on a player
+turn. This exits the game completely and returns to the terminal.
