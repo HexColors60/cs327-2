@@ -65,7 +65,7 @@ uint32_t pc_next_pos(dungeon_t *d, pair_t dir)
 
   dir[dim_y] = dir[dim_x] = 0;
   pair_t next_pos;
-
+  uint32_t index;
   switch(getch()){
     //move up-left
     case '7':
@@ -150,11 +150,42 @@ uint32_t pc_next_pos(dungeon_t *d, pair_t dir)
 	      refresh();
       }
       break;
+    //exit program
     case 'q':
       pc_delete(d->pc.pc);
       delete_dungeon(d);
       endwin();
       exit(0);
+      break;
+    //display menu
+    case 'm':
+
+      show_menu(d, 0);
+      int breakout = 0;
+      index = 0;
+      while(!breakout){
+        switch(getch()){
+          //scroll up (shift entries down one line)
+          case KEY_UP:
+            index = index > 0 ? index - 1 : 0;
+            show_menu(d, index);
+            break;
+          //scroll down (shift entries up one line)
+          case KEY_DOWN:
+            index = index < d->num_monsters - 22 ? index + 1 : index;
+            show_menu(d, index);
+            break;
+          //escape, close menu
+          case 27:
+            breakout++;
+            break;
+          default:
+            break;
+        }
+      }
+      clear();
+      render_dungeon(d);
+      refresh();
       break;
 
     default:

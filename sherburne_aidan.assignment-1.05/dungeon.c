@@ -626,7 +626,7 @@ void render_dungeon(dungeon_t *d)
 {
   pair_t p;
   char new_line = '\n';
-
+  addch(new_line);
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
       if (charpair(p)) {

@@ -3,6 +3,7 @@
 
 # include <assert.h>
 # include <stdlib.h>
+#include "dungeon.h"
 
 /* Returns true if random float in [0,1] is less than *
  * numerator/denominator.  Uses only integer math.    */
@@ -20,6 +21,7 @@
 
 #define UNUSED(f) ((void) f)
 
+void show_menu(dungeon_t *d, uint32_t start_index);
 int makedirectory(char *dir);
 
 #endif
