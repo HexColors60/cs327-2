@@ -1,3 +1,4 @@
+
 #include <unistd.h>
 #include <ncurses.h>
 #include <ctype.h>
@@ -259,7 +260,7 @@ void io_display(dungeon_t *d)
     mvprintw(22, 55, "NONE.");
     attroff(COLOR_PAIR(COLOR_BLUE));
   }
-           
+
 
   io_print_message_queue(0, 0);
 
