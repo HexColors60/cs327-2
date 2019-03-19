@@ -172,7 +172,7 @@ void pc_init_fog(pc *p){
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
       visxy(x,y) = 0;
-      fogxy(x,y) = ter_debug;
+      fogxy(x,y) = ter_wall;
     }
   }
 }

@@ -267,15 +267,18 @@ void io_display(dungeon_t *d)
   refresh();
 }
 
-void io_display_nofog(dungeon_t *d)
+void io_display_nofog(dungeon_t *d, pair_t cursorpos)
 {
-  uint32_t y, x;
+  int32_t y, x;
   character_t *c;
 
   clear();
   for (y = 0; y < 21; y++) {
     for (x = 0; x < 80; x++) {
-      if (charxy(x,y)) {
+      if (cursorpos[dim_x] == x && cursorpos[dim_y] == y){
+        mvaddch(y + 1, x, '*');
+      }
+      else if (charxy(x,y)) {
         mvaddch(y + 1, x, charxy(x,y)->symbol);
       } else {
         switch (mapxy(x, y)) {
@@ -371,6 +374,26 @@ uint32_t io_teleport_pc(dungeon_t *d)
 
   return 0;
 }
+
+uint32_t io_teleport_pc(dungeon_t *d, pair_t dest)
+{
+
+  d->character[d->pc.position[dim_y]][d->pc.position[dim_x]] = NULL;
+  d->character[dest[dim_y]][dest[dim_x]] = &d->pc;
+
+  d->pc.position[dim_y] = dest[dim_y];
+  d->pc.position[dim_x] = dest[dim_x];
+
+  if (mappair(dest) < ter_floor) {
+    mappair(dest) = ter_floor;
+  }
+
+  dijkstra(d);
+  dijkstra_tunnel(d);
+
+  return 0;
+}
+
 /* Adjectives to describe our monsters */
 static const char *adjectives[] = {
   "A menacing ",
@@ -515,6 +538,7 @@ void io_handle_input(dungeon_t *d)
 {
   uint32_t fail_code;
   int key;
+  pair_t cursorpos;
 
   do {
     switch (key = getch()) {
@@ -629,9 +653,75 @@ void io_handle_input(dungeon_t *d)
       fail_code = 0;
       break;
     case 'f':
-      io_display_nofog(d);
+      cursorpos[dim_y] = -1;
+      cursorpos[dim_x] = -1;
+      io_display_nofog(d, cursorpos);
       fail_code = 1;
       break;
+    case 't':
+      int8_t teleport_mode;
+      teleport_mode = 1;
+      cursorpos[dim_y] = d->pc.position[dim_y];
+      cursorpos[dim_x] = d->pc.position[dim_x];
+
+      while(teleport_mode){
+      switch (getch()) {
+        case '7':
+        case 'y':
+        case KEY_HOME:
+          move_cursor(d, cursorpos, 7);
+          break;
+        case '8':
+        case 'k':
+        case KEY_UP:
+          move_cursor(d, cursorpos, 8);
+          break;
+        case '9':
+        case 'u':
+        case KEY_PPAGE:
+          move_cursor(d, cursorpos, 9);
+          break;
+        case '6':
+        case 'l':
+        case KEY_RIGHT:
+          move_cursor(d, cursorpos, 6);
+          break;
+        case '3':
+        case 'n':
+        case KEY_NPAGE:
+          move_cursor(d, cursorpos, 3);
+          break;
+        case '2':
+        case 'j':
+        case KEY_DOWN:
+          move_cursor(d, cursorpos, 2);
+          break;
+        case '1':
+        case 'b':
+        case KEY_END:
+          move_cursor(d, cursorpos, 1);
+          break;
+        case '4':
+        case 'h':
+        case KEY_LEFT:
+          move_cursor(d, cursorpos, 4);
+          break;
+        case 't':
+          io_teleport_pc(d, cursorpos);
+          teleport_mode = 0;
+          break;
+        case 'r':
+          io_teleport_pc(d);
+          teleport_mode = 0;
+          break;
+        default:
+          break;
+        }
+        io_display_nofog(d, cursorpos);
+      }
+      fail_code = 0;
+      break;
+
     default:
       /* Also not in the spec.  It's not always easy to figure out what *
        * key code corresponds with a given keystroke.  Print out any    *

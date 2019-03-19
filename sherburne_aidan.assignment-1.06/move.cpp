@@ -320,3 +320,41 @@ uint32_t move_pc(dungeon_t *d, uint32_t dir)
 
   return 1;
 }
+
+uint32_t move_cursor(dungeon_t *d, pair_t cursorpos, uint32_t dir)
+{
+  switch (dir) {
+  case 1:
+  case 2:
+  case 3:
+    cursorpos[dim_y]++;
+    break;
+  case 4:
+  case 5:
+  case 6:
+    break;
+  case 7:
+  case 8:
+  case 9:
+    cursorpos[dim_y]--;
+    break;
+  }
+  switch (dir) {
+  case 1:
+  case 4:
+  case 7:
+    cursorpos[dim_x]--;
+    break;
+  case 2:
+  case 5:
+  case 8:
+    break;
+  case 3:
+  case 6:
+  case 9:
+    cursorpos[dim_x]++;
+    break;
+  }
+  io_display_nofog(d, cursorpos);
+  return 1;
+}
