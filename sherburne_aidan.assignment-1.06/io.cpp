@@ -665,57 +665,58 @@ void io_handle_input(dungeon_t *d)
       cursorpos[dim_x] = d->pc.position[dim_x];
 
       while(teleport_mode){
-      switch (getch()) {
-        case '7':
-        case 'y':
-        case KEY_HOME:
-          move_cursor(d, cursorpos, 7);
-          break;
-        case '8':
-        case 'k':
-        case KEY_UP:
-          move_cursor(d, cursorpos, 8);
-          break;
-        case '9':
-        case 'u':
-        case KEY_PPAGE:
-          move_cursor(d, cursorpos, 9);
-          break;
-        case '6':
-        case 'l':
-        case KEY_RIGHT:
-          move_cursor(d, cursorpos, 6);
-          break;
-        case '3':
-        case 'n':
-        case KEY_NPAGE:
-          move_cursor(d, cursorpos, 3);
-          break;
-        case '2':
-        case 'j':
-        case KEY_DOWN:
-          move_cursor(d, cursorpos, 2);
-          break;
-        case '1':
-        case 'b':
-        case KEY_END:
-          move_cursor(d, cursorpos, 1);
-          break;
-        case '4':
-        case 'h':
-        case KEY_LEFT:
-          move_cursor(d, cursorpos, 4);
-          break;
-        case 't':
-          io_teleport_pc(d, cursorpos);
-          teleport_mode = 0;
-          break;
-        case 'r':
-          io_teleport_pc(d);
-          teleport_mode = 0;
-          break;
-        default:
-          break;
+        io_display_nofog(d, cursorpos);
+        switch (getch()) {
+          case '7':
+          case 'y':
+          case KEY_HOME:
+            move_cursor(d, cursorpos, 7);
+            break;
+          case '8':
+          case 'k':
+          case KEY_UP:
+            move_cursor(d, cursorpos, 8);
+            break;
+          case '9':
+          case 'u':
+          case KEY_PPAGE:
+            move_cursor(d, cursorpos, 9);
+            break;
+          case '6':
+          case 'l':
+          case KEY_RIGHT:
+            move_cursor(d, cursorpos, 6);
+            break;
+          case '3':
+          case 'n':
+          case KEY_NPAGE:
+            move_cursor(d, cursorpos, 3);
+            break;
+          case '2':
+          case 'j':
+          case KEY_DOWN:
+            move_cursor(d, cursorpos, 2);
+            break;
+          case '1':
+          case 'b':
+          case KEY_END:
+            move_cursor(d, cursorpos, 1);
+            break;
+          case '4':
+          case 'h':
+          case KEY_LEFT:
+            move_cursor(d, cursorpos, 4);
+            break;
+          case 't':
+            io_teleport_pc(d, cursorpos);
+            teleport_mode = 0;
+            break;
+          case 'r':
+            io_teleport_pc(d);
+            teleport_mode = 0;
+            break;
+          default:
+            break;
         }
         io_display_nofog(d, cursorpos);
       }
