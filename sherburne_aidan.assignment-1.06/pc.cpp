@@ -30,15 +30,15 @@ void place_pc(dungeon_t *d)
   d->pc.position[dim_x] = rand_range(d->rooms->position[dim_x],
                                      (d->rooms->position[dim_x] +
                                       d->rooms->size[dim_x] - 1));
+  pc_init_fog(d->pc.pc);
+  pc_refresh_fog(&d->pc, d);
+
 }
 
 void config_pc(dungeon_t *d)
 {
   memset(&d->pc, 0, sizeof (d->pc));
   d->pc.symbol = '@';
-
-  place_pc(d);
-
   d->pc.speed = PC_SPEED;
   d->pc.alive = 1;
   d->pc.sequence_number = 0;
@@ -46,10 +46,9 @@ void config_pc(dungeon_t *d)
   d->pc.npc = NULL;
   d->pc.kills[kill_direct] = d->pc.kills[kill_avenged] = 0;
 
-  d->character[d->pc.position[dim_y]][d->pc.position[dim_x]] = &d->pc;
+  place_pc(d);
 
-  pc_init_fog(d->pc.pc);
-  pc_refresh_fog(&d->pc, d);
+  d->character[d->pc.position[dim_y]][d->pc.position[dim_x]] = &d->pc;
 
   dijkstra(d);
   dijkstra_tunnel(d);
@@ -195,7 +194,7 @@ void pc_refresh_fog(character_t *c, dungeon_t *d){
   min_x = c->position[dim_x] - 2;
   min_y = c->position[dim_y] - 2;
   max_x = c->position[dim_x] + 2;
-  max_y = c->position[dim_x] + 2;
+  max_y = c->position[dim_y] + 2;
   if(min_x < 0) min_x = 0;
   if(min_y < 0) min_y = 0;
   if(max_x > DUNGEON_X - 1) max_x = DUNGEON_X - 1;
