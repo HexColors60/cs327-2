@@ -1,0 +1,19 @@
+@author Aidan Sherburne for CS327 @ Iowa State University, Spring 2019
+
+This program has all of the functionality of the previous assignment, 1.05.
+
+This program implements all of the functionality described in the spec for 1.06,
+the most important of which is described below.
+
+This program ports the previous C code to C++. All new code is written in C++.
+The main structs, such as dungeon, character, npc, pc, and event have all been
+converted from C structs to C++ classes, using inheritance where necessary.
+Dungeon rendering has been changed to only show "remembered" terrain, as per
+the spec.
+
+Press f during the player's turn to temporarily display the dungeon map without
+the fog of war. Upon moving or pressing another button, the fog will return.
+Press t during the player turn to enable teleport mode. Then, press r to
+teleport randomly, or use the movement buttons to move the cursor, represented
+by an asterisk, to the desired position. Finally, press t again to teleport the
+pc to the cursor's position.
