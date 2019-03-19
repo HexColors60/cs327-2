@@ -327,7 +327,8 @@ uint32_t move_cursor(dungeon_t *d, pair_t cursorpos, uint32_t dir)
   case 1:
   case 2:
   case 3:
-    cursorpos[dim_y]++;
+    if(mapxy(cursorpos[dim_x], cursorpos[dim_y] + 1) != ter_wall_immutable)
+      cursorpos[dim_y]++;
     break;
   case 4:
   case 5:
@@ -336,14 +337,16 @@ uint32_t move_cursor(dungeon_t *d, pair_t cursorpos, uint32_t dir)
   case 7:
   case 8:
   case 9:
-    cursorpos[dim_y]--;
+    if(mapxy(cursorpos[dim_x], cursorpos[dim_y] - 1) != ter_wall_immutable)
+      cursorpos[dim_y]--;
     break;
   }
   switch (dir) {
   case 1:
   case 4:
   case 7:
-    cursorpos[dim_x]--;
+    if(mapxy(cursorpos[dim_x] - 1, cursorpos[dim_y]) != ter_wall_immutable)
+      cursorpos[dim_x]--;
     break;
   case 2:
   case 5:
@@ -352,7 +355,8 @@ uint32_t move_cursor(dungeon_t *d, pair_t cursorpos, uint32_t dir)
   case 3:
   case 6:
   case 9:
-    cursorpos[dim_x]++;
+    if(mapxy(cursorpos[dim_x] + 1, cursorpos[dim_y]) != ter_wall_immutable)
+      cursorpos[dim_x]++;
     break;
   }
   io_display_nofog(d, cursorpos);
