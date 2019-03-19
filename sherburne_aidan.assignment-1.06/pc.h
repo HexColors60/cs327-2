@@ -11,7 +11,7 @@ typedef struct dungeon dungeon_t;
 
 typedef struct pc pc_t;
 
-class pc : character{
+class pc : public character{
   public:
     terrain_type_t fog[DUNGEON_Y][DUNGEON_X];
     uint8_t visible[DUNGEON_Y][DUNGEON_X];
