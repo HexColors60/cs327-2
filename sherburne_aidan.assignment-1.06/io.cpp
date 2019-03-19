@@ -202,14 +202,14 @@ void io_display(dungeon_t *d)
 {
   uint32_t y, x;
   character_t *c;
-
+  pc_t *p = d->pc.pc;
   clear();
   for (y = 0; y < 21; y++) {
     for (x = 0; x < 80; x++) {
-      if (d->character[y][x]) {
-        mvaddch(y + 1, x, d->character[y][x]->symbol);
+      if (charxy(x,y) && visxy(x,y)) {
+        mvaddch(y + 1, x, charxy(x,y)->symbol);
       } else {
-        switch (mapxy(x, y)) {
+        switch (fogxy(x, y)) {
         case ter_wall:
         case ter_wall_immutable:
           mvaddch(y + 1, x, ' ');

@@ -2,11 +2,13 @@
 
 #include "string.h"
 
+#include "io.h"
 #include "dungeon.h"
 #include "pc.h"
 #include "utils.h"
 #include "move.h"
 #include "path.h"
+
 
 void pc_delete(pc_t *pc)
 {
@@ -45,6 +47,9 @@ void config_pc(dungeon_t *d)
   d->pc.kills[kill_direct] = d->pc.kills[kill_avenged] = 0;
 
   d->character[d->pc.position[dim_y]][d->pc.position[dim_x]] = &d->pc;
+
+  pc_init_fog(d->pc.pc);
+  pc_refresh_fog(&d->pc, d);
 
   dijkstra(d);
   dijkstra_tunnel(d);
@@ -161,4 +166,53 @@ uint32_t pc_in_room(dungeon_t *d, uint32_t room)
   }
 
   return 0;
+}
+
+void pc_init_fog(pc *p){
+  uint32_t x, y;
+  for (y = 0; y < DUNGEON_Y; y++) {
+    for (x = 0; x < DUNGEON_X; x++) {
+      visxy(x,y) = 0;
+      fogxy(x,y) = ter_debug;
+    }
+  }
+}
+
+void pc_reset_fog(pc *p){
+  uint32_t x, y;
+  for (y = 0; y < DUNGEON_Y; y++) {
+    for (x = 0; x < DUNGEON_X; x++) {
+      visxy(x,y) = 0;
+    }
+  }
+}
+
+void pc_refresh_fog(character_t *c, dungeon_t *d){
+  pair_t pc_fov;
+  int32_t min_x, min_y, max_x, max_y;
+  pc_t *p = c->pc;
+
+  min_x = c->position[dim_x] - 2;
+  min_y = c->position[dim_y] - 2;
+  max_x = c->position[dim_x] + 2;
+  max_y = c->position[dim_x] + 2;
+  if(min_x < 0) min_x = 0;
+  if(min_y < 0) min_y = 0;
+  if(max_x > DUNGEON_X - 1) max_x = DUNGEON_X - 1;
+  if(max_y > DUNGEON_Y - 1) max_y = DUNGEON_Y - 1;
+
+  for(pc_fov[dim_y] = min_y; pc_fov[dim_y] <= max_y; pc_fov[dim_y]++){
+    for(pc_fov[dim_x] = min_x; pc_fov[dim_x] <= max_x; pc_fov[dim_x]++){
+      pc_remember(p, pc_fov, mappair(pc_fov));
+    }
+  }
+}
+
+void pc_remember(pc *p, pair_t pos, terrain_type_t t){
+    fogpair(pos) = t;
+    vispair(pos) = 1;
+}
+
+int8_t is_visible(pc *p, int32_t x, int32_t y){
+  return visxy(x,y);
 }
