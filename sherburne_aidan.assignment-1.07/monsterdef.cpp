@@ -149,7 +149,7 @@ void parse_monsters(std::string filename){
 
       if(!DEBUG_PARSE){
         cout << "Name: " << defs[i].name << endl;
-        cout << "Symbol: " << defs[i].symb << endl;
+        cout << "Description: " << endl << defs[i].desc;
         cout << "Colors: ";
         if(defs[i].color[0]){
           cout << "BLACK ";
@@ -176,10 +176,7 @@ void parse_monsters(std::string filename){
           cout << "WHITE ";
         }
         cout << endl;
-        cout << "Description: " << endl << defs[i].desc << endl;
         cout << "Speed: " << defs[i].speed_base << "+" << defs[i].speed_dice << "d" << defs[i].speed_sides << endl;
-        cout << "Damage: " << defs[i].dam_base << "+" << defs[i].dam_dice << "d" << defs[i].dam_sides << endl;
-        cout << "HP: " << defs[i].hp_base << "+" << defs[i].hp_dice << "d" << defs[i].hp_sides << endl;
         cout << "Abilities: ";
         if(defs[i].abil[SMART]){
           cout << "SMART ";
@@ -209,6 +206,9 @@ void parse_monsters(std::string filename){
           cout << "DESTROY ";
         }
         cout << endl;
+        cout << "HP: " << defs[i].hp_base << "+" << defs[i].hp_dice << "d" << defs[i].hp_sides << endl;
+        cout << "Damage: " << defs[i].dam_base << "+" << defs[i].dam_dice << "d" << defs[i].dam_sides << endl;
+        cout << "Symbol: " << defs[i].symb << endl;
         cout << "Rarity: " << defs[i].rrty << endl;
         cout << "**Finished parsing monster " << i << "**" << endl << endl;
       }
