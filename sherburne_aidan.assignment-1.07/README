@@ -1,0 +1,12 @@
+@author Aidan Sherburne for CS327 @ Iowa State University, Spring 2019
+
+This program has all of the functionality of the previous assignment, 1.06.
+
+This program implements all of the functionality described in the spec for 1.07,
+the most important of which is described below.
+
+This program parses the monster_desc.txt file stored in the $home/.rlg327/
+directory. In order to parse this file you must use the -p or --parse flag.
+Using this flag will parse the "$home/.rlg327/monster_desc.txt" file and
+print its results to the console, then quit.
+New code files include monsterdef.cpp and monsterdef.h
