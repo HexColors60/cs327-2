@@ -55,12 +55,17 @@ void parse_monsters(std::string filename){
     }
     int i, x;
     for(i = 0; i < num_parsed_monsters; i++){
+      for(x = 0; x < 9; x++){
+        defs[i].valid[x] = 0;
+      }
       for(; line.compare("END") != 0; std::getline(infile, line)){
         std::string firstWord = line.substr(0, line.find(" "));
         if(firstWord.compare("NAME") == 0){
           defs[i].name = line.substr(line.find_first_of(" \t")+1);
+          defs[i].valid[NAME]++;
         } else if (firstWord.compare("SYMB") == 0){
           defs[i].symb = line.substr(line.find_first_of(" \t")+1).c_str()[0];
+          defs[i].valid[SYMB]++;
         } else if (firstWord.compare("COLOR") == 0){
           for(x = 0; x < NUM_COLORS; x++){
             defs[i].color[x] = 0;
@@ -89,6 +94,7 @@ void parse_monsters(std::string filename){
           if(line.find("WHITE") != std::string::npos){
             defs[i].color[WHITE] = 1;
           }
+          defs[i].valid[COLOR]++;
         } else if (firstWord.compare("DESC") == 0){
           std::getline(infile, line);
           while(line.compare(".") != 0){
@@ -96,6 +102,7 @@ void parse_monsters(std::string filename){
             defs[i].desc += "\n";
             std::getline(infile, line);
           }
+          defs[i].valid[DESC]++;
         } else if (firstWord.compare("SPEED") == 0){
           std::string dice = line.substr(line.find_first_of(" \t")+1);
           defs[i].speed_base = std::stoi(dice.substr(0,dice.find("+")));
@@ -103,6 +110,7 @@ void parse_monsters(std::string filename){
           defs[i].speed_dice = std::stoi(dice.substr(0,dice.find("d")));
           dice = dice.substr(dice.find_first_of("d")+1);
           defs[i].speed_sides = std::stoi(dice);
+          defs[i].valid[SPEED]++;
         } else if (firstWord.compare("DAM") == 0){
           std::string dice = line.substr(line.find_first_of(" \t")+1);
           defs[i].dam_base = std::stoi(dice.substr(0,dice.find("+")));
@@ -110,6 +118,7 @@ void parse_monsters(std::string filename){
           defs[i].dam_dice = std::stoi(dice.substr(0,dice.find("d")));
           dice = dice.substr(dice.find_first_of("d")+1);
           defs[i].dam_sides = std::stoi(dice);
+          defs[i].valid[DAM]++;
         } else if (firstWord.compare("HP") == 0){
           std::string dice = line.substr(line.find_first_of(" \t")+1);
           defs[i].hp_base = std::stoi(dice.substr(0,dice.find("+")));
@@ -117,6 +126,7 @@ void parse_monsters(std::string filename){
           defs[i].hp_dice = std::stoi(dice.substr(0,dice.find("d")));
           dice = dice.substr(dice.find_first_of("d")+1);
           defs[i].hp_sides = std::stoi(dice);
+          defs[i].valid[HP]++;
         } else if (firstWord.compare("ABIL") == 0){
           for(x = 0; x < NUM_ABILITIES; x++){
             defs[i].abil[x] = 0;
@@ -148,12 +158,22 @@ void parse_monsters(std::string filename){
           if(line.find("DESTROY") != std::string::npos){
             defs[i].abil[DESTROY] = 1;
           }
+          defs[i].valid[ABIL]++;
         } else if (firstWord.compare("RRTY") == 0){
           defs[i].rrty = std::stoi(line.substr(line.find_first_of(" \t")+1));
+          defs[i].valid[RRTY]++;
         }
       }
 
-      if(!DEBUG_PARSE){
+      defs[i].isValid = 1;
+      for(x = 0; x < NUM_FIELDS; x++){
+        if(defs[i].valid[x] != 1){
+          defs[i].isValid = 0;
+          break;
+        }
+      }
+
+      if(!DEBUG_PARSE && defs[i].isValid){
         cout << "Name: " << defs[i].name << endl;
         cout << "Description: " << endl << defs[i].desc;
         cout << "Colors: ";
