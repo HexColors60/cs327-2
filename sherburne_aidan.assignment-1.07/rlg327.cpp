@@ -10,6 +10,7 @@
 #include "move.h"
 #include "utils.h"
 #include "io.h"
+#include "monsterdef.h"
 
 const char *victory =
   "\n                                       o\n"
@@ -68,7 +69,7 @@ void usage(char *name)
   fprintf(stderr,
           "Usage: %s [-r|--rand <seed>] [-l|--load [<file>]]\n"
           "          [-s|--save [<file>]] [-i|--image <pgm file>]\n"
-          "          [-n|--nummon <count>]\n",
+          "          [-n|--nummon <count>] [-p|--parse] \n",
           name);
 
   exit(-1);
@@ -85,10 +86,11 @@ int main(int argc, char *argv[])
   char *save_file;
   char *load_file;
   char *pgm_file;
-  
+  uint8_t do_game = 1;
+
   /* Quiet a false positive from valgrind. */
   memset(&d, 0, sizeof (d));
-  
+
   /* Default behavior: Seed with the time, generate a new dungeon, *
    * and don't write to disk.                                      */
   do_load = do_save = do_image = do_save_seed = do_save_image = 0;
@@ -109,7 +111,7 @@ int main(int argc, char *argv[])
    * And the final switch, '--image', allows me to create a dungeon *
    * from a PGM image, so that I was able to create those more      *
    * interesting test dungeons for you.                             */
- 
+
  if (argc > 1) {
     for (i = 1, long_arg = 0; i < argc; i++, long_arg = 0) {
       if (argv[i][0] == '-') { /* All switches start with a dash */
@@ -118,6 +120,14 @@ int main(int argc, char *argv[])
           long_arg = 1; /* handle long and short args at the same place.  */
         }
         switch (argv[i][1]) {
+        case 'p': //Parse monster list
+          if ((!long_arg && argv[i][2]) ||
+              (long_arg && strcmp(argv[i], "-parse"))) {
+            usage(argv[0]);
+            }
+          do_game = 0;
+          parse_monsters((char*)"monster_desc.txt");
+          break;
         case 'n':
           if ((!long_arg && argv[i][2]) ||
               (long_arg && strcmp(argv[i], "-nummon")) ||
@@ -189,7 +199,7 @@ int main(int argc, char *argv[])
       }
     }
   }
-
+if(do_game){
   if (do_seed) {
     /* Allows me to generate more than one dungeon *
      * per second, as opposed to time().           */
@@ -265,4 +275,5 @@ int main(int argc, char *argv[])
   delete_dungeon(&d);
 
   return 0;
+}
 }
