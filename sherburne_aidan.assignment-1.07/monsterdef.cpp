@@ -53,7 +53,7 @@ void parse_monsters(std::string filename){
         break;
       }
     }
-    int i;
+    int i, x;
     for(i = 0; i < num_parsed_monsters; i++){
       for(; line.compare("END") != 0; std::getline(infile, line)){
         std::string firstWord = line.substr(0, line.find(" "));
@@ -62,6 +62,9 @@ void parse_monsters(std::string filename){
         } else if (firstWord.compare("SYMB") == 0){
           defs[i].symb = line.substr(line.find_first_of(" \t")+1).c_str()[0];
         } else if (firstWord.compare("COLOR") == 0){
+          for(x = 0; x < NUM_COLORS; x++){
+            defs[i].color[x] = 0;
+          }
           if(line.find("BLACK") != std::string::npos){
             defs[i].color[BLACK] = 1;
           }
@@ -115,6 +118,9 @@ void parse_monsters(std::string filename){
           dice = dice.substr(dice.find_first_of("d")+1);
           defs[i].hp_sides = std::stoi(dice);
         } else if (firstWord.compare("ABIL") == 0){
+          for(x = 0; x < NUM_ABILITIES; x++){
+            defs[i].abil[x] = 0;
+          }
           if(line.find("SMART") != std::string::npos){
             defs[i].abil[SMART] = 1;
           }
