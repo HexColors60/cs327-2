@@ -226,4 +226,5 @@ void parse_monsters(std::string filename){
         }
       }
     }
+    infile.close();
 }
