@@ -45,17 +45,15 @@
 
 typedef uint32_t npc_characteristics_t;
 
+const static char symbols[] = "0123456789abcdef";
+
 class npc : public character {
  public:
+  npc(dungeon_t *d, monster_description &m, pair_t pos);
   npc_characteristics_t characteristics;
   uint32_t have_seen_pc;
   pair_t pc_last_known_position;
-  std::string name;
-  std::string description;
-  dice damage;
-  uint32_t color;
-  uint32_t abil;
-  int32_t hit;
+  const char *description;
 };
 
 void gen_monsters(dungeon *d);

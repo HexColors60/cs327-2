@@ -63,6 +63,8 @@ class monster_description {
            const uint32_t rarity);
   std::ostream &print(std::ostream &o);
   char get_symbol() { return symbol; }
+  std::string get_description() { return description; }
+  dice get_speed() { return speed; }
 };
 
 class object_description {
