@@ -5,6 +5,7 @@
 
 # include "dims.h"
 # include "character.h"
+# include "descriptions.h"
 
 # define NPC_SMART         0x00000001
 # define NPC_TELEPATH      0x00000002
@@ -49,6 +50,10 @@ class npc : public character {
   npc_characteristics_t characteristics;
   uint32_t have_seen_pc;
   pair_t pc_last_known_position;
+  //const char *desc;
+  //monster_description &mdesc;
+  //npc(dungeon *d, monster_description &m);
+  //~npc();
 };
 
 void gen_monsters(dungeon *d);

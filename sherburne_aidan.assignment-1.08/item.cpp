@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "descriptions.h"
 #include <cstring>
+#include <vector>
 
 char item::symbol(){
   return object_symbol[type];
@@ -34,14 +35,13 @@ void gen_items(dungeon_t *d)
   item *it;
   uint32_t room;
   pair_t p;
+  std::vector<object_description> &o = d->object_descriptions;
 
   memset(d->item_map, 0, sizeof (d->item_map));
 
   for (i = 0; i < d->max_items; i++) {
 
-    it = new item;
-    j = rand_range(0, (d->object_descriptions).size()-1);
-    memset(it, 0, sizeof (*it));
+    j = rand_range(0, o.size()-1);
     do {
       room = rand_range(1, d->num_rooms - 1);
       p[dim_y] = rand_range(d->rooms[room].position[dim_y],
@@ -51,22 +51,24 @@ void gen_items(dungeon_t *d)
                             (d->rooms[room].position[dim_x] +
                              d->rooms[room].size[dim_x] - 1));
     } while (d->item_map[p[dim_y]][p[dim_x]]);
-    it = new item(d->object_descriptions[j], p);
-    d->item_map[p[dim_y]][p[dim_x]] = it;
+    it = new item(o[j], p);
+    itempair(p) = it;
   }
 
   d->num_items = d->max_items;
 }
 
+item::~item(){
+}
 
 void destroy_items(dungeon_t *d)
 {
   uint32_t x, y;
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
-      if (d->item_map[y][x]) {
-        delete d->item_map[y][x];
-        d->item_map[y][x] = 0;
+      if (itemxy(x,y)) {
+        delete itemxy(x,y);
+        itemxy(x,y) = 0;
       }
     }
   }
