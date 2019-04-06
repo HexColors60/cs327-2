@@ -1,0 +1,821 @@
+commit 254fa2887dd1c5c0b202642eb56baa1145b21909
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 18:04:42 2019 -0500
+
+    Update README
+
+commit 121c5a7feec8f8dcfe82f6c92c32e2dd089cde70
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 17:45:51 2019 -0500
+
+    Beautify everything with clang-format
+
+commit 3de85e0450c21a8bc13cb53b91514bbfb046c653
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 17:38:38 2019 -0500
+
+    Improve memory management and cleanup
+
+commit a22437919ed7c33e5ba9aeed00d5f09a202e1a01
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 17:19:41 2019 -0500
+
+    Fix displaying the teleport screen
+
+commit 00887a24a347535374e6cf92a9c6f8c721705f84
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 17:11:58 2019 -0500
+
+    Add uniqueness for items and monsters
+
+commit 6019cffb5f874ed00edf22cc80555ee887f959e0
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 16:18:44 2019 -0500
+
+    Handle black colored monsters/items
+
+commit ae93d619b84bcff26e1033b70eaca3cc4a532ab2
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 16:09:19 2019 -0500
+
+    Fix PC color issue
+
+commit 7fc83ce8cccc528f83f28ab4c140bd12847b6c5a
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 16:09:04 2019 -0500
+
+    Added -o flag for items
+
+commit 4815e978173ccc1c5a4dc203d4cbc82fcf8d572d
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 15:32:26 2019 -0500
+
+    Forgot to include ncurses
+
+commit 8a6ca6c845d9f3e8a53acf36d7fb2b82717b5e7e
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 15:32:14 2019 -0500
+
+    Add color, name, damage dice to PC
+
+commit 950a906cb47b21908e55531510345cd288bfd38f
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 15:31:35 2019 -0500
+
+    update npcs constructors
+
+commit c9f02bec94ccdd1a10083a818546f690844d042d
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 14:51:28 2019 -0500
+
+    Fixed colors for monsters I think...
+
+commit a40812e8859284d1ff5f856f07d363a34c83ec90
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 14:27:06 2019 -0500
+
+    Beautify all files with uncrustify
+
+commit 169a61aa96fefe1c43131acf8447461a40394b59
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 14:22:17 2019 -0500
+
+    First attempt at color for monsters & items
+
+commit bcc4ca7522b1ec7b3c0fd1bde4d5819549c8a849
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 14:21:58 2019 -0500
+
+    add seen field to items
+
+commit 0d428a0a59f5615c8ce6adea42af7d90dd2993cb
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 14:21:23 2019 -0500
+
+    update npcs
+
+commit 156ce1f51629b061e48eacc0979256801288b399
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 01:45:19 2019 -0500
+
+    Update displaying of items. Need to figure out how to mark them as seen
+
+commit 7b608239fa790db6e4161b74854b10eca0857456
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 00:58:55 2019 -0500
+
+    Couldn't sleep, roomates too loud. Fixed the errors instead
+
+commit 6ef20d67af6010f518bde6f289e00a13472f8de0
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 6 00:20:43 2019 -0500
+
+    Probably the last commit of the night
+
+commit 6c147abf2a1ca340b10254c99e4a4070c897a50c
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Apr 5 23:03:29 2019 -0500
+
+    Currently no compile errors
+
+commit 02d257b27572ca84b6dbf62d896a9cde8a985047
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Apr 5 22:46:20 2019 -0500
+
+    Fixed some more errors by adding const qualifiers
+
+commit 03feabe3cbe9956a139df088fe135a1cf5917287
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Apr 5 22:44:21 2019 -0500
+
+    Fix lots of errors in item.cpp, many still present
+
+commit afb33bc4c929013f39542a3675b2badaa840ca46
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Apr 5 22:26:55 2019 -0500
+
+    Update pc
+
+commit bf33ac3be07be1e0e86f49123e16ab777581baaa
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Apr 5 22:25:47 2019 -0500
+
+    Created constructor for items
+
+commit 77c47c88cc468b9f00acfc6b6530fbbee434ce69
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Apr 5 21:50:23 2019 -0500
+
+    Update dungeon.cpp
+
+commit 18be74b14d99dfe3bc342396f2717872196cfbfd
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Apr 5 21:50:10 2019 -0500
+
+    update some includes and fix a typo
+
+commit d3e90907619bd7d9411e59da5bd683a4b598c697
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Apr 5 21:45:52 2019 -0500
+
+    Update rlg327.cpp
+
+commit 033db697d253c337e293dd849d80a756b58a7ed1
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Apr 5 21:45:46 2019 -0500
+
+    Update dungeon.cpp
+
+commit 73d88d2a812665fd27537d5dacd0339f227b71ef
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Apr 5 21:44:25 2019 -0500
+
+    Update Makefile
+
+commit 122347ce5f6bb156c6301c55222d234035703c02
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Apr 5 21:42:43 2019 -0500
+
+    Update dungeon.cpp
+
+commit 434c93ab9e0d082ce0328dcbf4db6e28f513f663
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Apr 5 21:42:16 2019 -0500
+
+    Begin implementing gen_items and destroy_items
+
+commit 3d143a4d0aa80b3eb3914bee724b958f1d581bb3
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Apr 5 21:41:46 2019 -0500
+
+    Update item.h
+
+commit 4c57e25dc83421a397764b8c1edc90030983ee34
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Apr 5 21:41:05 2019 -0500
+
+    Create item.cpp
+
+commit 43d4b977ebb75c50420283fa8ed56b5ee5098602
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Apr 5 21:40:13 2019 -0500
+
+    Create item.h
+
+commit 3d5b6ad6589b7cde06448272a72f7e387b60b973
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Apr 5 20:48:56 2019 -0500
+
+    Set d.max_items to MAX_ITEMS in  rlg327
+
+commit 7ef3d36dd0aba7a7821fceaf66ddba01f8d2e5c6
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Apr 5 20:47:21 2019 -0500
+
+    Added MAX_ITEMS, item_map, etc.
+
+commit b3bf84d09404998e41f7e3aabb8049ca3d245cbd
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Apr 5 20:21:05 2019 -0500
+
+    Removed monster parsing code
+
+commit 15d373462494630d47c503d05e8916372d7dd362
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Apr 4 14:10:31 2019 -0500
+
+    Add Jeremy's 1.07 solution for a starting point to 1.08
+
+commit d9716bbcfefa779ad72bcb0bcc2428630596a000
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Mar 29 14:05:32 2019 -0500
+
+    Update CHANGELOG
+
+commit f7040836f024037e1654532d7b6233927a8d2d4b
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Mar 29 14:05:12 2019 -0500
+
+    Added checks for valid monster descriptions (bottom of spec p.3)
+
+commit 7513a63f871a34d6ad6a6cc0c2ab6b4ea32e6b76
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Mar 29 13:33:10 2019 -0500
+
+    Update CHANGELOG
+
+commit de91494e2785b0433ac74ae7459eb28006c5d956
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Mar 29 13:32:10 2019 -0500
+
+    Update README
+
+commit 52a1d139ed28e5b37d24c580c4ba499a9b9e1b6c
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Mar 29 13:27:42 2019 -0500
+
+    Close file when we are done with it
+
+commit 143fd0f858146f052fe5d689c9d26b74ca831bbc
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Mar 29 13:21:59 2019 -0500
+
+    Fixed bugs by initializing the arrays
+
+commit 125de3a4c490334cff9547d4562580b89704a287
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Mar 29 12:32:22 2019 -0500
+
+    Fixed print order, bugs still present
+
+commit 555964cc05da8a490420bf936026154bb4f909c8
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Mar 29 12:20:39 2019 -0500
+
+    Implement parsing. Bugs exist in colors and abilities after "C++" monster
+
+commit 98e6a8da59c0a1cf26a8528be0c8eac29c5d4d66
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Mar 29 12:19:48 2019 -0500
+
+    Add --parse flag to rlg327.cpp, update functionality accordingly
+
+commit 46f43f1c5eb55ce56f3e3cf057283b10bedd8fa5
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Mar 29 12:18:38 2019 -0500
+
+    Update Makefile
+
+commit 0585bd99af01ef20df63ac9a7c043a19651d7b9a
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Mar 28 15:46:55 2019 -0500
+
+    Add Jeremy's 1.06 solution for 1.07 base
+
+commit 30a6c1b38d82ad78f5fa7fe421c1a0861a400552
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Mar 19 12:51:41 2019 -0500
+
+    Update CHANGELOG
+
+commit a25bc42decb77c06a20fdc9dd3388fe914ae5e23
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Mar 19 12:50:47 2019 -0500
+
+    Fixed bug when leaving teleport mode
+
+commit b1e7b6f43ad6555169ea7fcfca1e79c8e2158da6
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Mar 19 12:44:06 2019 -0500
+
+    Added README
+
+commit b5597bfaed62d198829734ab76b0d2398b44cda3
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Mar 19 12:34:08 2019 -0500
+
+    Fixed monster display bug
+
+commit 08dcdde22326e28f7bac42e09705d35c73bc9530
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Mar 19 12:21:54 2019 -0500
+
+    Fixed border teleport bug
+
+commit f3899b8d48b15a90a2b771601975c765c9d1573d
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Mar 19 12:15:23 2019 -0500
+
+    All features working, monster display and border teleport bugs persist
+
+commit 0b9f2ddc03352b7c9f3e7373a6b9645677a120b3
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Mar 19 10:48:12 2019 -0500
+
+    Added support fo displaying dungeon without fog
+
+commit 470088f7bea560aa2a973053a999969638d3d64d
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Mar 19 10:32:41 2019 -0500
+
+    Fix/improve fog of war
+
+commit ac9846cd5539615d8ba8be183ae6c92af13fedbc
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Mar 19 10:13:40 2019 -0500
+
+    Begin work on fog of war, some bugs present
+
+commit 5a091be1b7f8c6a780587f826fe53b1dc2765e5b
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Mar 18 21:45:07 2019 -0500
+
+    Fix class inheritence by making character public
+
+commit 7918e6f18a990e3de1de65550e4b4a4aadb7292c
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Mar 18 20:08:03 2019 -0500
+
+    Convert pc struct to class, inherits character
+
+commit 5043d325ebc9e0a6a4e3bc05e29c040ecfa20897
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Mar 18 20:06:43 2019 -0500
+
+    Convert npc struct to class, inherits character
+
+commit 4c7c353153af16d1221f101fa0475fbd5a61ec08
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Mar 18 19:33:11 2019 -0500
+
+    Convert event struct to class
+
+commit 83a789c8f171c0a539d358c517da414d0deb1e6c
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Mar 18 19:31:26 2019 -0500
+
+    Convert dungeon struct to class
+
+commit 3773d69569b9f1e9491c00ae22e3a48466d280dd
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Mar 18 19:31:02 2019 -0500
+
+    Convert character struct to class
+
+commit 2855866aed59db94c4493be0debaa8c1368c5dd0
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Mar 18 16:30:01 2019 -0500
+
+    Update .gitignore to include rlg327 and TAGS files
+
+commit cafb6ed0e51726a0b0b60a49497aa50674330d7d
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Mar 18 16:28:34 2019 -0500
+
+    Convert program to C++ and fix errors
+
+commit dd1c7e929fdd28857eddccccbda0051dfdd2eaee
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Mar 18 15:49:25 2019 -0500
+
+    Add .gitignore so I don't have to worry about make clean every two secs
+
+commit ca6d4ae749bf6d5251faf54581a7bd0a473913e5
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Mar 18 13:54:13 2019 -0500
+
+    Update makefile
+
+commit cfb442dd148d816c3694e18be0876836eb041d99
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Mar 18 13:53:51 2019 -0500
+
+    Rename all .c files (except heap.c) to .cpp
+
+commit 3328db1cebe991ef1771972762d909ae141153d5
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Mar 15 12:14:27 2019 -0500
+
+    Use Jeremy's code to build off of
+
+commit 183212e6b1ebc7de8a7dd7fdf6a17efffdde878e
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Feb 28 20:49:03 2019 -0600
+
+    Update README
+
+commit 7c22e9787b137e536ab673e3c355559e116d01f2
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Feb 28 20:48:02 2019 -0600
+
+    Update README
+
+commit 615b42bbdb4c6dd70cf1670ed87b29a4259b62aa
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Feb 28 20:32:57 2019 -0600
+
+    Everything should be working correctly
+
+commit 8fdb55dde1477163dc421088a3812413af00e82f
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Feb 28 20:05:23 2019 -0600
+
+    Add code for menu, need to resolve segfault
+
+commit 9101cf44c43c9285c80012252be8b72657b02942
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Feb 28 19:02:46 2019 -0600
+
+    Cleaned up code, added q exit case
+
+commit 199f9273fca7a0493e0a664c9fcf724d3783bb82
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Feb 28 18:37:45 2019 -0600
+
+    General movement mechanics should be working. Need to test stairs
+
+commit 3cf465535a2b9811fdf6a836b13c3e7e4fca426f
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Feb 28 16:12:34 2019 -0600
+
+    Basic movements mostly working. Need to make pc non-tunneling
+
+commit 1943ebc50b7fa88cc113f7297d31adc9859ae88a
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Feb 28 14:53:32 2019 -0600
+
+    Started implementing pc movement mechanics with ncurses
+
+commit f0972688617f7b3f4afd9970b34e0976dd6ab6e9
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Feb 28 14:00:33 2019 -0600
+
+    Added ncurses import and initialization
+
+commit 9eb1897bf891c14227c612937459194178827e59
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Feb 28 13:33:03 2019 -0600
+
+    Add Dr. Sheaffer's 1.04 solution as a base for 1.05
+
+commit 20974747722a4de6341afc665b6f6f671b177493
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Feb 25 10:42:21 2019 -0600
+
+    Update CHANGELOG
+
+commit 7457028fd95898c41d6df1cfcba39adf8b01bced
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Feb 25 10:41:34 2019 -0600
+
+    Added last seen position for intelligent monsters
+
+commit 13e2377f206c85df0cda721d67b5be1752551c8d
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Feb 25 09:52:01 2019 -0600
+
+    Added README
+
+commit 9f88c7458ce82d022a8cd141a4375dd642a4d80b
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Feb 25 09:42:19 2019 -0600
+
+    Squashed some major bugs, everything should be working correctly now
+
+commit 50ae2ebc1f356fd74aab96dc3004b0ccb4428699
+Author: aidans <aidans@iastate.edu>
+Date:   Sun Feb 24 23:43:37 2019 -0600
+
+    Debugged the heck out of my movement code. Still occasionally hangs
+
+commit afe652bc6a779b25fcf3436454b2c6931ea6f14d
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Feb 23 17:19:14 2019 -0600
+
+    Finished all movement cases. TODO: debugging
+
+commit 2c97773292ff05627184f84db8d025902b081b28
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Feb 23 17:05:14 2019 -0600
+
+    Updated Makefile with -lm to solve sqrt issue
+
+commit 6d26551ff900859241f9167f4e05772e5a04612c
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Feb 23 17:04:40 2019 -0600
+
+    Continued work on movement cases, beautified code
+
+commit de0c5c688682f3937946530d324d727e89fb3165
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Feb 23 15:16:08 2019 -0600
+
+    improved monster killing logic
+
+commit fe6f4ede497c61bd01b6c41e33d8089b9b0587da
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Feb 23 14:34:03 2019 -0600
+
+    committing before debugging my move method
+
+commit 209edf39a6d1ebb01d556d82672ad80de9165205
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Feb 23 14:21:07 2019 -0600
+
+    Start debugging move events
+
+commit d0258c734e1d1e07c14a265317499458ee7b4101
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Feb 23 13:54:25 2019 -0600
+
+    Added comments
+
+commit e54496a031453702bb0ff320e20f840291dc81f7
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Feb 23 13:47:58 2019 -0600
+
+    Finish implementing move event heap
+
+commit 968fafb546fd461c97d45b488497ee62fc0c076d
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Feb 23 13:09:02 2019 -0600
+
+    Started to implement the heap for moves
+
+commit 4e49b89598da7a3f236a29a68b6fc674644993de
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Feb 22 21:14:03 2019 -0600
+
+    deleted temp files
+
+commit 61713efbe7991e82599de3834a71ea0d10c63734
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Feb 22 21:08:07 2019 -0600
+
+    minor improvements
+
+commit 69262c336ff804b4c9a9e333cf960cd06cf42b43
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Feb 22 20:42:25 2019 -0600
+
+    redid most of what I did wrong before. Added line of sight method.
+
+commit ab56b77b59de71e036f0ebd4d52fce1f20f0ccce
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Feb 22 16:29:14 2019 -0600
+
+    Making a commit before I start over. Sheaffer said in lecture that the way I was doing things was bad. Press F to pay respects to my past work
+
+commit 6114bc2f50e52ea374a98578103fb0237d878ede
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Feb 22 14:46:25 2019 -0600
+
+    Begin work on monster movement
+
+commit 31f42b15ecc003965f1b01b92ab990e33ada3662
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Feb 21 21:39:16 2019 -0600
+
+    Finished monster generation
+
+commit 35d58a322261a5f03914a2e61bd24bdf6adcace7
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Feb 21 20:18:05 2019 -0600
+
+    modified render_dungeon to display monsters
+
+commit 1e73b4f5ce30e06a1085b31a359d124c91791db4
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Feb 21 20:10:27 2019 -0600
+
+    created move_mon cases, implemented movement/turns in main method
+
+commit bea5d66764a6be8d9cfa833e3502bec27e4c78da
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Feb 21 19:17:30 2019 -0600
+
+    addedpc as monster in the mons array
+
+commit 33ac7ce0b0f00365051559b82328ad5b9cd07964
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Feb 21 19:02:17 2019 -0600
+
+    created monster struct, started work on gen_monsters method
+
+commit 6330c0145d15bdc087856747ea309e7ab2f4c0c4
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Feb 21 17:34:07 2019 -0600
+
+    Add Dr. Sheaffer's 1.03 solution to use as a starting point for 1.04
+
+commit 3507ae12a578bf8554b75fc23700969aec1068e4
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Feb 14 13:27:20 2019 -0600
+
+    Added printout for PC position
+
+commit 4115f94eafd6e2351c323a149baa9391859ca15b
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Feb 13 12:42:36 2019 -0600
+
+    Update README and CHANGELOG
+
+commit 983886fb78b27f042f51da9850bbc02f3088b6d3
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Feb 13 12:27:48 2019 -0600
+
+    Finished tunneling map
+
+commit 932c6de8b408714eac6490dca1514bdf40ef4a97
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 12 20:29:01 2019 -0600
+
+    Begin working on tunneling map, bugs exist
+
+commit 2a3ccd8cb5d294fba1ad78a7c341e1903a5a30ae
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 12 15:41:18 2019 -0600
+
+    Okay now I actually fixed the bugs this time
+
+commit 0f74c8b8a38fcce5fc2ce24dd578d40dedb85c07
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 12 13:16:48 2019 -0600
+
+    squashed non-tunneling bugs
+
+commit 7d21533ac1ac553f7e0ba9d87e1bd3cdb33fe8bc
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 12 12:48:58 2019 -0600
+
+    Completed non-tunneling, bugs present for disconnected rooms/corridors
+
+commit 596fd52a3d8d2bcd604968e6bd1cd8953cab6345
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Feb 11 14:07:36 2019 -0600
+
+    Downloaded Jeremy's solutions for 1.02 to build off of
+
+commit 89cc32ed0eb48296502978a3ae49a21e237f7014
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Feb 6 15:22:04 2019 -0600
+
+    Update README
+
+commit 7df6dd431f9fb4c2a850cff8db903b6930e26e32
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Feb 6 14:36:22 2019 -0600
+
+    Update CHANGELOG
+
+commit 6b01507920b2d8dee144fd578abf13a7632e4941
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Feb 6 14:20:51 2019 -0600
+
+    Squashed some bugs that prevented hello.rlg327 from working correctly
+
+commit f38383ba7e3f4e5efac92e1205c68088d81f4669
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Feb 6 12:59:18 2019 -0600
+
+    Fixed bugs with load_dungeon, everything seems to be working correctly.
+
+commit 549c2f8a53ec4b5366f8acaeaeab11a8199ea760
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Feb 6 11:52:48 2019 -0600
+
+    Forgot to run make clean before last commit. Fixing that.
+
+commit 375dd7e6158867f76b2e3e35a5d44707945bbb7f
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Feb 6 11:51:59 2019 -0600
+
+    Finished load_dungeon, need to debug positions of down stairs
+
+commit c494e216f4feb499cda0330d9b3816aa5a1a5d1b
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 5 23:42:43 2019 -0600
+
+    Fixed some bugs, continued work on load_dungeon
+
+commit 4ca987bfa81b0120d7629c1a2ae8b08243fcb236
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 5 22:24:23 2019 -0600
+
+    Begin work on load_dungeon, minor changes to save_dungeon
+
+commit 9d1702e53fe22f5921454acdfd344f1baae17a40
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 5 21:48:45 2019 -0600
+
+    Okay now I actually finished the save
+
+commit 785ca151cd4be86f7be048f32f245b603aed3e08
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 5 21:19:01 2019 -0600
+
+    Finished save
+
+commit ee2380d178015d0de2fdfccd621e9559320f38fa
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 5 20:27:03 2019 -0600
+
+    Added semantic, version, size
+
+commit 35b6ba9024ca7ae94c0f3b71d8d957840ba60bef
+Author: aidans <aidans@iastate.edu>
+Date:   Tue Feb 5 19:47:16 2019 -0600
+
+    Started save_dungeon method
+
+commit 01110ad414970d4c1aeb4cb1afa73bf92dc48bc7
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Feb 4 17:12:27 2019 -0600
+
+    Added support for creating /.rlg327/ path, added --save and --load flags
+
+commit c7d9b17546624ee8c6f937e91b515a35771a1993
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Feb 4 15:11:25 2019 -0600
+
+    Added initial 1.02 files
+
+commit 32e32158fffdd16162ed4e182cfa4d69398e6f1c
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Jan 28 08:54:22 2019 -0600
+
+    Update CHANGELOG
+
+commit 2f2a317b45acd976eec9309297f85fe4e22472ff
+Author: aidans <aidans@iastate.edu>
+Date:   Fri Jan 25 15:52:25 2019 -0600
+
+    Update README
+
+commit 4abd6e4a69a4a19e85828b5d2f9ac5c4cde688af
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Jan 24 19:23:05 2019 -0600
+
+    Added stair generation, other small tweaks
+
+commit 52e656ad9c1dbe88dee986276bd3c344fbc6c355
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Jan 24 19:04:45 2019 -0600
+
+    Removed border
+
+commit ea349c3bc5d23f70533525e25a96e4f36dcd315e
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Jan 24 17:46:22 2019 -0600
+
+    Fixed corridor generation, no more diagonal jumps
+
+commit 6c117f71e4ee7b687835f2bfff645c588c71cf63
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Jan 24 16:41:08 2019 -0600
+
+    Improved room generation, added room collision prevention
+
+commit ba2ad6f229661e2aaf88fe6f3cb277319b46cbcf
+Author: aidans <aidans@iastate.edu>
+Date:   Thu Jan 24 12:37:47 2019 -0600
+
+    Added corridor drawing and room location picking
+
+commit 614067875dc39070f4df79e0ba70f3424c97f50d
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Jan 23 22:23:09 2019 -0600
+
+    Begin work on dungeon generation
+
+commit c9d2343fa909cad65385021f7d08c35a6c843fbe
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Jan 23 15:36:37 2019 -0600
+
+    Add existing files for assignment 0
+
+commit 7a92662ee1c153ecd86209c32b6c08a23607c581
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Jan 23 15:33:48 2019 -0600
+
+    Initial commit
