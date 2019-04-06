@@ -41,19 +41,19 @@
 # define NPC_BIT31         0x80000000
 
 # define has_characteristic(character, bit)              \
-  ((character)->npc->characteristics & NPC_##bit)
+        ((character)->npc->characteristics & NPC_ ## bit)
 
 typedef uint32_t npc_characteristics_t;
 
 //const static char symbols[] = "0123456789abcdef";
 
-class npc : public character {
- public:
-  npc(dungeon_t *d, monster_description &m, pair_t pos);
-  npc_characteristics_t characteristics;
-  uint32_t have_seen_pc;
-  pair_t pc_last_known_position;
-  const char *description;
+class npc: public character {
+public:
+        npc(dungeon_t *d, monster_description &m, pair_t pos);
+        npc_characteristics_t characteristics;
+        uint32_t have_seen_pc;
+        pair_t pc_last_known_position;
+        const char *description;
 };
 
 void gen_monsters(dungeon *d);
