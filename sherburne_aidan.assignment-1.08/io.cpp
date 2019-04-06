@@ -8,7 +8,11 @@
 #include "path.h"
 #include "pc.h"
 #include "utils.h"
+#include "npc.h"
 #include "dungeon.h"
+#include "item.h"
+
+
 
 /* Same ugly hack we did in path.c */
 static dungeon *thedungeon;
@@ -215,17 +219,15 @@ void io_display(dungeon *d)
       if ((illuminated = is_illuminated(d->PC, y, x))) {
         attron(A_BOLD);
       }
-      if (d->character_map[y][x] &&
-           can_see(d,
-                  character_get_pos(d->PC),
-                  character_get_pos(d->character_map[y][x]),
-                  1, 0)) {
-       mvaddch(y + 1, x,
-                character_get_symbol(d->character_map[y][x]));
+      if (d->character_map[y][x] && can_see(d, character_get_pos(d->PC), character_get_pos(d->character_map[y][x]), 1, 0)) {
+        //attron(COLOR_PAIR(charxy(x,y)->get_color()));
+        mvaddch(y + 1, x, character_get_symbol(charpair(pos)));
+        //attroff(COLOR_PAIR(charxy(x,y)->get_color()));
         visible_monsters++;
       } else if (itemxy(x,y) && (can_see(d, character_get_pos(d->PC), pos, 1, 0) || itemxy(x,y)->get_seen())){
-       mvaddch(y + 1, x,
-                itemxy(x,y)->get_symbol());
+        attron(COLOR_PAIR(itemxy(x,y)->get_color()));
+        mvaddch(y + 1, x, itemxy(x,y)->get_symbol());
+        attroff(COLOR_PAIR(itemxy(x,y)->get_color()));
       } else {
         switch (pc_learned_terrain(d->PC, y, x)) {
         case ter_wall:
@@ -297,9 +299,13 @@ void io_display_no_fog(dungeon *d)
   for (y = 0; y < 21; y++) {
     for (x = 0; x < 80; x++) {
       if (d->character_map[y][x]) {
-        mvaddch(y + 1, x, d->character_map[y][x]->symbol);
+        //attron(COLOR_PAIR(charxy(x,y)->get_color()));
+        mvaddch(y + 1, x, character_get_symbol(charxy(x,y)));
+        //attroff(COLOR_PAIR(charxy(x,y)->get_color()));
       } else if (itemxy(x,y)) {
+        attron(COLOR_PAIR(itemxy(x,y)->get_color()));
         mvaddch(y + 1, x, itemxy(x,y)->get_symbol());
+        attroff(COLOR_PAIR(itemxy(x,y)->get_color()));
       } else {
         switch (mapxy(x, y)) {
         case ter_wall:
