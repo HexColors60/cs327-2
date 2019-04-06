@@ -22,9 +22,11 @@ class item {
   uint32_t val;
   uint32_t art;
   uint32_t rrty;
+  uint8_t seen;
   pair_t position;
  public:
-  char symbol();
+  char get_symbol() { return object_symbol[type]; }
+  uint8_t get_seen() { return seen; }
   item(object_description &o, pair_t pos);
   ~item();
 };

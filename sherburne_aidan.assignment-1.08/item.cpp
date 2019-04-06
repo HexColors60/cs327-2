@@ -6,9 +6,9 @@
 #include <cstring>
 #include <vector>
 
-char item::symbol(){
-  return object_symbol[type];
-}
+//char item::get_symbol(){
+//  return object_symbol[type];
+//}
 
 item::item(object_description &o, pair_t pos) :
   odesc(o),
@@ -27,6 +27,7 @@ item::item(object_description &o, pair_t pos) :
 {
   position[dim_y] = pos[dim_y];
   position[dim_x] = pos[dim_x];
+  seen = 0;
 }
 
 void gen_items(dungeon_t *d)

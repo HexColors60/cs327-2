@@ -209,6 +209,9 @@ void io_display(dungeon *d)
   clear();
   for (visible_monsters = -1, y = 0; y < 21; y++) {
     for (x = 0; x < 80; x++) {
+      pair_t pos;
+      pos[dim_x] = x;
+      pos[dim_y] = y;
       if ((illuminated = is_illuminated(d->PC, y, x))) {
         attron(A_BOLD);
       }
@@ -220,6 +223,9 @@ void io_display(dungeon *d)
        mvaddch(y + 1, x,
                 character_get_symbol(d->character_map[y][x]));
         visible_monsters++;
+      } else if (itemxy(x,y) && (can_see(d, character_get_pos(d->PC), pos, 1, 0) || itemxy(x,y)->get_seen())){
+       mvaddch(y + 1, x,
+                itemxy(x,y)->get_symbol());
       } else {
         switch (pc_learned_terrain(d->PC, y, x)) {
         case ter_wall:
@@ -276,7 +282,7 @@ void io_display(dungeon *d)
     mvprintw(22, 55, "NONE.");
     attroff(COLOR_PAIR(COLOR_BLUE));
   }
-  
+
   io_print_message_queue(0, 0);
 
   refresh();
@@ -292,6 +298,8 @@ void io_display_no_fog(dungeon *d)
     for (x = 0; x < 80; x++) {
       if (d->character_map[y][x]) {
         mvaddch(y + 1, x, d->character_map[y][x]->symbol);
+      } else if (itemxy(x,y)) {
+        mvaddch(y + 1, x, itemxy(x,y)->get_symbol());
       } else {
         switch (mapxy(x, y)) {
         case ter_wall:
@@ -344,7 +352,7 @@ void io_display_no_fog(dungeon *d)
     mvprintw(22, 55, "NONE.");
     attroff(COLOR_PAIR(COLOR_BLUE));
   }
-  
+
   io_print_message_queue(0, 0);
 }
 
@@ -402,7 +410,7 @@ uint32_t io_teleport_pc(dungeon *d)
         break;
       default:
         break;
-      }      
+      }
     }
 
     mvaddch(dest[dim_y] + 1, dest[dim_x], actual);
@@ -491,7 +499,7 @@ uint32_t io_teleport_pc(dungeon *d)
 
   if (charpair(dest) && charpair(dest) != d->PC) {
     io_queue_message("Teleport failed.  Destination occupied.");
-  } else {  
+  } else {
     d->character_map[d->PC->position[dim_y]][d->PC->position[dim_x]] = NULL;
     d->character_map[dest[dim_y]][dest[dim_x]] = d->PC;
 
