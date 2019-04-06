@@ -26,6 +26,8 @@ class item {
   pair_t position;
  public:
   char symbol();
+  item(object_description &o, pair_t pos);
+  ~item();
 };
 
 void gen_items(dungeon_t *d);

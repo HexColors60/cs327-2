@@ -9,6 +9,25 @@ char item::symbol(){
   return object_symbol[type];
 }
 
+item::item(object_description &o, pair_t pos) :
+  odesc(o),
+  name(o.get_name()),
+  description(o.get_description()),
+  type(o.get_type()),
+  color(o.get_color()),
+  damage(o.get_damage()),
+  hit(o.get_hit().roll()),
+  dodge(o.get_dodge().roll()),
+  defence(o.get_defence().roll()),
+  weight(o.get_weight().roll()),
+  speed(o.get_speed().roll()),
+  attribute(o.get_attribute().roll()),
+  value(o.get_value().roll()),
+{
+  it->position[dim_y] = p[dim_y];
+  it->position[dim_x] = p[dim_x];
+}
+
 void gen_items(dungeon_t *d)
 {
   uint32_t i;
@@ -32,21 +51,6 @@ void gen_items(dungeon_t *d)
                             (d->rooms[room].position[dim_x] +
                              d->rooms[room].size[dim_x] - 1));
     } while (d->item_map[p[dim_y]][p[dim_x]]);
-    it->position[dim_y] = p[dim_y];
-    it->position[dim_x] = p[dim_x];
-    it->odesc = o;
-    it->name = o.get_name();
-    it->description = o.get_description();
-    it->type = o.get_type();
-    it->color = o.get_color();
-    it->hit = o.get_hit().roll();
-    it->damage = o.get_damage();
-    it->dodge = o.get_dodge().roll();
-    it->def = o.get_defence().roll();
-    it->weight = o.get_weight().roll();
-    it->speed = o.get_speed().roll();
-    it->attr = o.get_attribute().roll();
-    it->val = o.get_value().roll();
   }
 
   d->num_objects = d->max_items;
