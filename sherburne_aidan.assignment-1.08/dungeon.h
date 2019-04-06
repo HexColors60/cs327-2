@@ -7,6 +7,7 @@
 # include "dims.h"
 # include "character.h"
 # include "descriptions.h"
+# include "item.h"
 
 #define DUNGEON_X              80
 #define DUNGEON_Y              21
@@ -87,7 +88,7 @@ class dungeon {
   uint16_t num_monsters;
   uint16_t max_monsters;
   uint16_t num_items;
-  uint16_t max_item;
+  uint16_t max_items;
   uint32_t character_sequence_number;
   /* Game time isn't strictly necessary.  It's implicit in the turn number *
    * of the most recent thing removed from the event queue; however,       *
