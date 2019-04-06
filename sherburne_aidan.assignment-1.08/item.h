@@ -1,10 +1,9 @@
 #ifndef ITEM_H
 # define ITEM_H
 
-# include <string>
-
 # include "descriptions.h"
 # include "dims.h"
+# include <string>
 
 class item {
  private:

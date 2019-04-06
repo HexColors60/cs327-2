@@ -50,10 +50,12 @@ class npc : public character {
   npc_characteristics_t characteristics;
   uint32_t have_seen_pc;
   pair_t pc_last_known_position;
-  //const char *desc;
-  //monster_description &mdesc;
-  //npc(dungeon *d, monster_description &m);
-  //~npc();
+  std::string name;
+  std::string description;
+  dice damage;
+  uint32_t color;
+  uint32_t abil;
+  int32_t hit;
 };
 
 void gen_monsters(dungeon *d);
