@@ -24,5 +24,11 @@ class item {
   uint32_t art;
   uint32_t rrty;
   pair_t position;
+ public:
+  char symbol();
 };
+
+void gen_items(dungeon_t *d);
+void destroy_items(dungeon_t *d);
+
 #endif

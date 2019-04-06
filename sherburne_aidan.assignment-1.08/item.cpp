@@ -5,6 +5,9 @@
 #include "descriptions.h"
 #include vector
 
+char item::symbol(){
+  return object_symbol[type];
+}
 
 void gen_items(dungeon_t *d)
 {
