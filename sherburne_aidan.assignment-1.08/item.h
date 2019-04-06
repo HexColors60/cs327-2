@@ -22,13 +22,15 @@ class item {
   uint32_t val;
   uint32_t art;
   uint32_t rrty;
-  uint8_t seen;
+  bool seen;
   pair_t position;
  public:
   char get_symbol() { return object_symbol[type]; }
-  uint8_t get_seen() { return seen; }
+  uint32_t get_color() { return color; }
+  bool get_seen() { return seen; }
+  void see() { seen = true;}
   item(object_description &o, pair_t pos);
-  ~item();
+  //~item();
 };
 
 void gen_items(dungeon_t *d);

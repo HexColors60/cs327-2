@@ -27,7 +27,7 @@ item::item(object_description &o, pair_t pos) :
 {
   position[dim_y] = pos[dim_y];
   position[dim_x] = pos[dim_x];
-  seen = 0;
+  seen = false;
 }
 
 void gen_items(dungeon_t *d)
@@ -59,8 +59,8 @@ void gen_items(dungeon_t *d)
   d->num_items = d->max_items;
 }
 
-item::~item(){
-}
+//item::~item(){
+//}
 
 void destroy_items(dungeon_t *d)
 {
