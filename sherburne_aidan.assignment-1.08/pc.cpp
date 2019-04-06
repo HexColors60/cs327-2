@@ -33,6 +33,10 @@ void config_pc(dungeon *d)
         d->PC = new pc;
 
         d->PC->symbol = '@';
+        d->PC->color = COLOR_GREEN;
+        d->PC->name = "Aidan Sherburne";
+        static dice die(1,2,3);
+        d->PC->damage = &die;
 
         place_pc(d);
 
