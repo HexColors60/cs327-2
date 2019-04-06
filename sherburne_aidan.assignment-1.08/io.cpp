@@ -41,6 +41,7 @@ void io_init_terminal(void)
         init_pair(COLOR_MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
         init_pair(COLOR_CYAN, COLOR_CYAN, COLOR_BLACK);
         init_pair(COLOR_WHITE, COLOR_WHITE, COLOR_BLACK);
+        init_pair(COLOR_BLACK, COLOR_WHITE, COLOR_BLACK);
 }
 
 void io_reset_terminal(void)
