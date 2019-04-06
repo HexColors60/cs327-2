@@ -220,9 +220,9 @@ void io_display(dungeon *d)
                                 attron(A_BOLD);
                         }
                         if (d->character_map[y][x] && can_see(d, character_get_pos(d->PC), character_get_pos(d->character_map[y][x]), 1, 0)) {
-                                //attron(COLOR_PAIR(charxy(x,y)->get_color()));
+                                attron(COLOR_PAIR(charxy(x,y)->get_color()));
                                 mvaddch(y + 1, x, character_get_symbol(charpair(pos)));
-                                //attroff(COLOR_PAIR(charxy(x,y)->get_color()));
+                                attroff(COLOR_PAIR(charxy(x,y)->get_color()));
                                 visible_monsters++;
                         } else if (itemxy(x,y) && (can_see(d, character_get_pos(d->PC), pos, 1, 0) || itemxy(x,y)->get_seen())) {
                                 attron(COLOR_PAIR(itemxy(x,y)->get_color()));
@@ -299,9 +299,9 @@ void io_display_no_fog(dungeon *d)
         for (y = 0; y < 21; y++) {
                 for (x = 0; x < 80; x++) {
                         if (d->character_map[y][x]) {
-                                //attron(COLOR_PAIR(charxy(x,y)->get_color()));
+                                attron(COLOR_PAIR(charxy(x,y)->get_color()));
                                 mvaddch(y + 1, x, character_get_symbol(charxy(x,y)));
-                                //attroff(COLOR_PAIR(charxy(x,y)->get_color()));
+                                attroff(COLOR_PAIR(charxy(x,y)->get_color()));
                         } else if (itemxy(x,y)) {
                                 attron(COLOR_PAIR(itemxy(x,y)->get_color()));
                                 mvaddch(y + 1, x, itemxy(x,y)->get_symbol());

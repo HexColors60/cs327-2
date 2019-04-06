@@ -20,6 +20,7 @@ npc::npc(dungeon_t *d, monster_description &m, pair_t pos)
         sequence_number = ++d->character_sequence_number;
         characteristics = rand() & 0x0000000f;
         symbol = m.get_symbol();
+        color = m.get_color();
         have_seen_pc = 0;
         kills[kill_direct] = kills[kill_avenged] = 0;
 }

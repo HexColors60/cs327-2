@@ -34,7 +34,9 @@ const char *name;
 inline char get_symbol() {
         return symbol;
 }
-//inline uint32_t get_color() { return color[rand_range(0, color.size() - 1)]; }
+inline uint32_t get_color() {
+        return color[rand_range(0, color.size() - 1)];
+}
 };
 
 class dungeon;

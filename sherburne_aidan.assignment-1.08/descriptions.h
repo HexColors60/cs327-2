@@ -65,6 +65,9 @@ std::ostream &print(std::ostream &o);
 char get_symbol() {
         return symbol;
 }
+std::vector<uint32_t> get_color() {
+        return color;
+}
 std::string get_description() {
         return description;
 }
