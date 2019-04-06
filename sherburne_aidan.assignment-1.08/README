@@ -1,0 +1,22 @@
+@author Aidan Sherburne for CS327 @ Iowa State University, Spring 2019
+
+This program has all of the functionality of the previous assignment, 1.07.
+
+This program implements all of the functionality described in the spec for 1.08,
+the most important of which is described below.
+
+This program generates monsters and items based on the descriptions stored in
+the monster_desc.txt and object_desc.txt files. These files are parsed and used
+to generate monsters and items and place them into the dungeon. Certain
+restrictions apply, such as when an item is an artifact or when a monster is
+unique. In this case, these monsters/items can only be generated once.
+
+This program also introduces color into the dungeon by using the color property
+of the items and monsters retrieved from the descriptions, and using those
+colors to display in the dungeon.
+
+Lastly, I have added a -o or --objnum flag to the main program, allowing the
+user to specify how many items they want to spawn in the dungeon.
+
+For more description of what this version of the program does, see the
+assignment spec.
