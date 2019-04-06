@@ -682,8 +682,8 @@ void init_dungeon(dungeon *d)
         empty_dungeon(d);
         memset(&d->events, 0, sizeof (d->events));
         heap_init(&d->events, compare_events, event_delete);
-        //memset(d->character_map, 0, sizeof (d->character_map));
-        //memset(d->item_map, 0, sizeof (d->item_map));
+        memset(d->character_map, 0, sizeof (d->character_map));
+        memset(d->item_map, 0, sizeof (d->item_map));
 }
 
 int write_dungeon_map(dungeon *d, FILE *f)

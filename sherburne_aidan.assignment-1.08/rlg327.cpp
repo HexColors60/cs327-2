@@ -279,6 +279,7 @@ int main(int argc, char *argv[])
         }
 
         delete_dungeon(&d);
+        destroy_descriptions(&d);
 
         return 0;
 }
