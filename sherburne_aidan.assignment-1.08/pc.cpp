@@ -8,6 +8,7 @@
 #include "move.h"
 #include "path.h"
 #include "io.h"
+#include "item.h"
 
 uint32_t pc_is_alive(dungeon *d)
 {
