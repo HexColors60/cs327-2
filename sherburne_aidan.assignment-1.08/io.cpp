@@ -392,7 +392,13 @@ uint32_t io_teleport_pc(dungeon *d)
 
         while ((c = getch()) != 'g' && c != '.' && c != 'r') {
                 if (charpair(dest)) {
-                        actual = character_get_symbol(charpair(dest));
+                        attron(COLOR_PAIR(charpair(dest)->get_color()));
+                        mvaddch(dest[dim_y] + 1, dest[dim_x], character_get_symbol(charpair(dest)));
+                        attroff(COLOR_PAIR(charpair(dest)->get_color()));
+                } else if (itempair(dest)) {
+                        attron(COLOR_PAIR(itempair(dest)->get_color()));
+                        mvaddch(dest[dim_y] + 1, dest[dim_x], itempair(dest)->get_symbol());
+                        attroff(COLOR_PAIR(itempair(dest)->get_color()));
                 } else {
                         switch (mappair(dest)) {
                         case ter_wall:
@@ -418,9 +424,8 @@ uint32_t io_teleport_pc(dungeon *d)
                         default:
                                 break;
                         }
+                        mvaddch(dest[dim_y] + 1, dest[dim_x], actual);
                 }
-
-                mvaddch(dest[dim_y] + 1, dest[dim_x], actual);
 
                 switch (c) {
                 case '7':
