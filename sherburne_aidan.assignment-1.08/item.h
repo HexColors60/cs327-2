@@ -9,12 +9,12 @@
 class item {
  private:
   object_description &odesc;
-  std::string &name;
-  std::string &description;
+  const std::string &name;
+  const std::string &description;
   object_type_t type;
   uint32_t color;
   uint32_t hit;
-  dice &damage;
+  const dice &damage;
   uint32_t dodge;
   uint32_t def;
   uint32_t weight;
