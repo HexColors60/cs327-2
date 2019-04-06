@@ -69,7 +69,7 @@ void usage(char *name)
         fprintf(stderr,
                 "Usage: %s [-r|--rand <seed>] [-l|--load [<file>]]\n"
                 "          [-s|--save [<file>]] [-i|--image <pgm file>]\n"
-                "          [-n|--nummon <count>]\n",
+                "          [-n|--nummon <count>] [-o|--objnum <count>]\n",
                 name);
 
         exit(-1);
@@ -123,6 +123,14 @@ int main(int argc, char *argv[])
                                         long_arg = 1; /* handle long and short args at the same place.  */
                                 }
                                 switch (argv[i][1]) {
+                                case 'o':
+                                        if ((!long_arg && argv[i][2]) ||
+                                            (long_arg && strcmp(argv[i], "-objnum")) ||
+                                            argc < ++i + 1 /* No more arguments */ ||
+                                            !sscanf(argv[i], "%hu", &d.max_items)) {
+                                                usage(argv[0]);
+                                        }
+                                        break;
                                 case 'n':
                                         if ((!long_arg && argv[i][2]) ||
                                             (long_arg && strcmp(argv[i], "-nummon")) ||
