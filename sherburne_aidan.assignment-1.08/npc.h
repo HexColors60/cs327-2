@@ -46,6 +46,7 @@
 typedef uint32_t npc_characteristics_t;
 
 //const static char symbols[] = "0123456789abcdef";
+class monster_description;
 
 class npc: public character {
 public:

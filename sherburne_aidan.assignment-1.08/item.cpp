@@ -40,9 +40,12 @@ void gen_items(dungeon_t *d)
 
         memset(d->item_map, 0, sizeof (d->item_map));
 
-        for (i = 0; i < d->max_items; i++) {
 
+        for (i = 0; i < d->max_items; i++) {
                 j = rand_range(0, o.size()-1);
+                while(!o[j].can_spawn())
+                        j = rand_range(0, o.size()-1);
+                o[j].spawn();
                 do {
                         room = rand_range(1, d->num_rooms - 1);
                         p[dim_y] = rand_range(d->rooms[room].position[dim_y],

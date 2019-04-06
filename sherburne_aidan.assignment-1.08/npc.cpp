@@ -9,6 +9,7 @@
 #include "path.h"
 #include "event.h"
 #include "pc.h"
+#include "descriptions.h"
 
 npc::npc(dungeon_t *d, monster_description &m, pair_t pos) : mdesc(m)
 {
@@ -63,8 +64,13 @@ void gen_monsters(dungeon *d)
 
         memset(d->character_map, 0, sizeof (d->character_map));
 
+
+
         for (i = 0; i < d->num_monsters; i++) {
                 j = rand_range(0, md.size()-1);
+                while(!md[j].can_spawn())
+                        j = rand_range(0, md.size()-1);
+                md[j].spawn();
                 do {
                         room = rand_range(1, d->num_rooms - 1);
                         p[dim_y] = rand_range(d->rooms[room].position[dim_y],

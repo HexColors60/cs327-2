@@ -6,6 +6,8 @@
 # include <vector>
 # include <string>
 # include "dice.h"
+//# include "npc.h"
+# define NPC_UNIQ          0x00000080
 
 typedef struct dungeon dungeon_t;
 
@@ -46,6 +48,8 @@ std::vector<uint32_t> color;
 uint32_t abilities;
 dice speed, hitpoints, damage;
 uint32_t rarity;
+uint32_t spawned;
+
 public:
 monster_description() : name(),       description(), symbol(0),   color(0),
         abilities(0), speed(),       hitpoints(), damage(),
@@ -80,6 +84,14 @@ dice get_hit() {
 dice get_speed() {
         return speed;
 }
+bool can_spawn() {
+        if((((abilities & NPC_UNIQ) && spawned == 0) || !(abilities & NPC_UNIQ)) && rarity > (uint8_t)(rand() % 100))
+                return true;
+        else return false;
+}
+void spawn() {
+        spawned++;
+}
 };
 
 class object_description {
@@ -90,6 +102,7 @@ uint32_t color;
 dice hit, damage, dodge, defence, weight, speed, attribute, value;
 bool artifact;
 uint32_t rarity;
+uint32_t spawned;
 public:
 object_description() : name(),    description(), type(objtype_no_type),
         color(0),  hit(),         damage(),
@@ -150,6 +163,14 @@ inline const dice &get_attribute() const {
 }
 inline const dice &get_value() const {
         return value;
+}
+bool can_spawn() {
+        if((((artifact) && spawned == 0) || !artifact) && rarity > (uint8_t)(rand() % 100))
+                return true;
+        else return false;
+}
+void spawn() {
+        spawned++;
 }
 };
 
