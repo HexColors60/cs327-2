@@ -22,6 +22,7 @@
 #define NPC_MIN_SPEED          5
 #define NPC_MAX_SPEED          20
 #define MAX_MONSTERS           15
+#define MAX_ITEMS              15
 #define SAVE_DIR               ".rlg327"
 #define DUNGEON_SAVE_FILE      "dungeon"
 #define DUNGEON_SAVE_SEMANTIC  "RLG327-" TERM
@@ -35,6 +36,8 @@
 #define hardnessxy(x, y) (d->hardness[y][x])
 #define charpair(pair) (d->character_map[pair[dim_y]][pair[dim_x]])
 #define charxy(x, y) (d->character_map[y][x])
+#define itempair(pair) (d->item_map[pair[dim_y]][pair[dim_x]])
+#define itemxy(x, y) (d->item_map[y][x])
 
 enum __attribute__ ((__packed__)) terrain_type {
   ter_debug,
@@ -78,10 +81,13 @@ class dungeon {
   uint8_t pc_distance[DUNGEON_Y][DUNGEON_X];
   uint8_t pc_tunnel[DUNGEON_Y][DUNGEON_X];
   character *character_map[DUNGEON_Y][DUNGEON_X];
+  item *item_map[DUNGEON_Y][DUNGEON_X];
   pc *PC;
   heap_t events;
   uint16_t num_monsters;
   uint16_t max_monsters;
+  uint16_t num_items;
+  uint16_t max_item;
   uint32_t character_sequence_number;
   /* Game time isn't strictly necessary.  It's implicit in the turn number *
    * of the most recent thing removed from the event queue; however,       *
