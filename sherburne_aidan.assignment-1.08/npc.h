@@ -49,6 +49,7 @@ typedef uint32_t npc_characteristics_t;
 
 class npc: public character {
 public:
+        monster_description &mdesc;
         npc(dungeon_t *d, monster_description &m, pair_t pos);
         npc_characteristics_t characteristics;
         uint32_t have_seen_pc;

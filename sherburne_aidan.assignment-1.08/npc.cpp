@@ -10,19 +10,25 @@
 #include "event.h"
 #include "pc.h"
 
-npc::npc(dungeon_t *d, monster_description &m, pair_t pos)
+npc::npc(dungeon_t *d, monster_description &m, pair_t pos) : mdesc(m)
 {
         description = m.get_description().c_str();
         position[dim_y] = pos[dim_y];
         position[dim_x] = pos[dim_x];
+        pc_last_known_position[dim_y] = pos[dim_y];
+        pc_last_known_position[dim_x] = pos[dim_x];
+        hp = m.get_hit().roll();
         speed = m.get_speed().roll();
         alive = 1;
         sequence_number = ++d->character_sequence_number;
         characteristics = rand() & 0x0000000f;
         symbol = m.get_symbol();
         color = m.get_color();
+        name = m.get_name().c_str();
+        description = m.get_description().c_str();
         have_seen_pc = 0;
         kills[kill_direct] = kills[kill_avenged] = 0;
+
 }
 
 static uint32_t max_monster_cells(dungeon *d)

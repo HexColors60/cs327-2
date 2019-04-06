@@ -31,6 +31,7 @@ uint32_t kills[num_kill_types];
 std::vector<uint32_t> color;
 const dice *damage;
 const char *name;
+uint32_t hp;
 inline char get_symbol() {
         return symbol;
 }

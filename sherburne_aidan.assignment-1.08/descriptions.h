@@ -71,6 +71,12 @@ std::vector<uint32_t> get_color() {
 std::string get_description() {
         return description;
 }
+std::string get_name() {
+        return name;
+}
+dice get_hit() {
+        return hitpoints;
+}
 dice get_speed() {
         return speed;
 }
