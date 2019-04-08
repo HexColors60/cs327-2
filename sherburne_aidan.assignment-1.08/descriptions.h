@@ -53,7 +53,7 @@ private:
 public:
   monster_description()
       : name(), description(), symbol(0), color(0), abilities(0), speed(),
-        hitpoints(), damage(), rarity(0) {}
+        hitpoints(), damage(), rarity(0), spawned(0){}
   void set(const std::string &name, const std::string &description,
            const char symbol, const std::vector<uint32_t> &color,
            const dice &speed, const uint32_t abilities, const dice &hitpoints,
@@ -89,7 +89,7 @@ public:
   object_description()
       : name(), description(), type(objtype_no_type), color(0), hit(), damage(),
         dodge(), defence(), weight(), speed(), attribute(), value(),
-        artifact(false), rarity(0) {}
+        artifact(false), rarity(0), spawned(0) {}
   void set(const std::string &name, const std::string &description,
            const object_type_t type, const uint32_t color, const dice &hit,
            const dice &damage, const dice &dodge, const dice &defence,
