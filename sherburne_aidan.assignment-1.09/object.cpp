@@ -60,7 +60,7 @@ void gen_object(dungeon *d)
     p[dim_x] = rand_range(d->rooms[room].position[dim_x],
                           (d->rooms[room].position[dim_x] +
                            d->rooms[room].size[dim_x] - 1));
-  } while (mappair(p) > ter_stairs);
+  } while (mappair(p) > ter_stairs || objpair(p));
 
   o = new object(v[i], p, d->objmap[p[dim_y]][p[dim_x]]);
 
