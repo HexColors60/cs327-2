@@ -10,6 +10,165 @@
 #include "io.h"
 #include "object.h"
 
+pc::pc(){
+  uint8_t i;
+  hp = 5000;
+  for(i = 0; i < bp_capacity; i++){
+    bp[i] = 0; // initialize empty backpack
+  }
+  for(i = 0; i < INVENTORY_SLOTS; i++){
+    inv[i] = 0; // initialize empty inventory
+  }
+}
+
+pc::~pc(){
+  uint8_t i;
+  for(i = 0; i < bp_capacity; i++){
+    if(bp[i]){
+      delete bp[i];
+      bp[i] = NULL;
+    }
+  }
+  for(i = 0; i < INVENTORY_SLOTS; i++){
+    if(inv[i]){
+      delete inv[i];
+      inv[i] = NULL;
+    }
+  }
+}
+
+void pc::update_speed(){
+  int8_t i;
+  int32_t new_speed = 0;
+  for(i = 0; i < bp_capacity; i++){
+    if(bp[i]){
+      new_speed += bp[i]->get_speed();
+    }
+  }
+  if(new_speed < 1){
+    new_speed = 1;
+  }
+  speed = new_speed;
+}
+
+int32_t pc::get_inv_slot(){
+  int8_t i;
+  for(i = 0; i < INVENTORY_SLOTS; i++){
+    if(!inv[i]){
+      return i;
+    }
+  }
+  return -1;
+}
+
+uint8_t pc::grab_item(dungeon *d){
+  object *o;
+  int8_t i = get_inv_slot();
+  if(i == -1){
+    io_queue_message("You have no room in your inventory.");
+    return 1;
+  }
+  else{
+    inv[i] = objpair(position);
+    objpair(position) = NULL;
+    io_queue_message("Grabbed: %s.", inv[i].get_name());
+  }
+  return 0;
+}
+
+uint8_t pc::drop_item(dungeon *d, uint8_t sel, uint8_t slot){
+  if(sel == 0){// drop from backpack
+    if(!bp[slot]){
+      io_queue_message("You have nothing equipped there, stupid!");
+      return 1;
+    }
+    if(objpair(position)){
+      io_queue_message("There is already an item there!");
+      return 1;
+    }
+    else{
+      io_queue_message("Dropped: %s.", bp[slot].get_name());
+      objpair(position) = bp[slot];
+      bp[slot] = NULL;
+    }
+  }
+  else if(sel == 1){// drop from inventory
+    if(!inv[slot]){
+      io_queue_message("That inventory slot is empty, stupid!");
+      return 1;
+    }
+    if(objpair(position)){
+      io_queue_message("There is already an item there!");
+      return 1;
+    }
+    else{
+      io_queue_message("Dropped: %s.", inv[slot].get_name());
+      objpair(position) = inv[slot];
+      inv[slot] = NULL;
+    }
+  }
+  return 0;
+}
+
+uint8_t pc::destroy_item(uint8_t sel, uint8_t slot){
+  if(sel == 0){// destroy from backpack
+    if(!bp[slot]){
+      io_queue_message("You have nothing equipped there, stupid!");
+      return 1;
+    }
+    io_queue_message("Destroyed: %s.", bp[slot].get_name());
+    delete bp[slot];
+    bp[slot] = NULL;
+  }
+  else if(sel == 1){// destroy from inventory
+    if(!inv[slot]){
+      io_queue_message("That inventory slot is empty, stupid!");
+      return 1;
+    }
+    io_queue_message("Destroyed: %s.", inv[slot].get_name());
+    delete inv[slot];
+    inv[slot] = NULL;
+  }
+  return 0;
+}
+
+uint8_t pc::equip_item(uint8_t slot){
+  object *o;
+  uint8_t i;
+  if(!inv[slot]){
+    io_queue_message("That inventory slot is empty, stupid!");
+    return 1;
+  }
+  i = inv[slot].get_bp_slot();
+  // swap the item in the inventory with the equipped item
+  o = inv[slot];
+  inv[slot] = bp[i];
+  bp[i] = o;
+  io_queue_message("Equipped: %s.", bp[i].get_name());
+  update_speed();
+  return 0;
+}
+
+uint8_t pc::remove_item(uint8_t slot){
+  object *o;
+  if(!bp[slot]){
+    io_queue_message("You have nothing equipped there, stupid!");
+    return 1;
+  }
+  int8_t i = get_inv_slot();
+  if(i == -1){
+    io_queue_message("You have no open inventory slots.");
+    return 1;
+  }
+  // swap the item in the inventory with the equipped item
+  o = bp[slot];
+  bp[slot] = inv[i];
+  inv[i] = o;
+  io_queue_message("Removed: %s.", inv[i].get_name());
+  update_speed();
+  return 0;
+}
+
 uint32_t pc_is_alive(dungeon *d)
 {
   return d->PC->alive;
@@ -31,12 +190,13 @@ void place_pc(dungeon *d)
 void config_pc(dungeon *d)
 {
   static dice pc_dice(0, 1, 4);
-  
+
   d->PC = new pc;
 
   d->PC->symbol = '@';
 
   place_pc(d);
+  io_display();
 
   d->PC->speed = PC_SPEED;
   d->PC->alive = 1;
@@ -237,7 +397,7 @@ void pc_observe_terrain(pc *p, dungeon *d)
     can_see(d, p->position, where, 1, 1);
     where[dim_y] = y_max;
     can_see(d, p->position, where, 1, 1);
-  }       
+  }
 }
 
 int32_t is_illuminated(pc *p, int16_t y, int16_t x)
