@@ -64,7 +64,7 @@ int32_t pc::get_inv_slot(){
 uint8_t pc::grab_item(dungeon *d){
   //object *o;
   int8_t i = get_inv_slot();
-  if(i == -1){
+  if(i == -1 && objpair(position)){
     io_queue_message("You have no room in your inventory.");
     return 1;
   }
