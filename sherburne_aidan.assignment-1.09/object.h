@@ -16,10 +16,10 @@ class object {
   const dice &damage;
   int32_t hit, dodge, defence, weight, speed, attribute, value;
   bool seen;
-  object *next;
+  //object *next;
   object_description &od;
  public:
-  object(object_description &o, pair_t p, object *next);
+  object(object_description &o, pair_t p);
   ~object();
   inline int32_t get_damage_base() const
   {

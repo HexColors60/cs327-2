@@ -5,7 +5,7 @@
 #include "dungeon.h"
 #include "utils.h"
 
-object::object(object_description &o, pair_t p, object *next) :
+object::object(object_description &o, pair_t p) :
   name(o.get_name()),
   description(o.get_description()),
   type(o.get_type()),
@@ -19,7 +19,6 @@ object::object(object_description &o, pair_t p, object *next) :
   attribute(o.get_attribute().roll()),
   value(o.get_value().roll()),
   seen(false),
-  next(next),
   od(o)
 {
   position[dim_x] = p[dim_x];
@@ -31,9 +30,6 @@ object::object(object_description &o, pair_t p, object *next) :
 object::~object()
 {
   od.destroy();
-  if (next) {
-    delete next;
-  }
 }
 
 int8_t object::get_bp_slot(){
@@ -47,6 +43,7 @@ void gen_object(dungeon *d)
   pair_t p;
   std::vector<object_description> &v = d->object_descriptions;
   int i;
+  int num_tries = 0;
 
   do {
     i = rand_range(0, v.size() - 1);
@@ -60,9 +57,10 @@ void gen_object(dungeon *d)
     p[dim_x] = rand_range(d->rooms[room].position[dim_x],
                           (d->rooms[room].position[dim_x] +
                            d->rooms[room].size[dim_x] - 1));
-  } while (mappair(p) > ter_stairs || objpair(p));
+    num_tries++;
+  } while ((mappair(p) > ter_stairs || objpair(p)) && num_tries < 1500);
 
-  o = new object(v[i], p, d->objmap[p[dim_y]][p[dim_x]]);
+  o = new object(v[i], p);
 
   d->objmap[p[dim_y]][p[dim_x]] = o;
 
@@ -83,7 +81,7 @@ void gen_objects(dungeon *d)
 
 char object::get_symbol()
 {
-  return next ? '&' : object_symbol[type];
+  return object_symbol[type];
 }
 
 uint32_t object::get_color()
