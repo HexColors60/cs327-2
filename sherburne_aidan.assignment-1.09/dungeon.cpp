@@ -1273,7 +1273,7 @@ void new_dungeon(dungeon *d)
   d->character_sequence_number = sequence_number;
 
   place_pc(d);
-  io_display();
+  io_display(d);
   d->character_map[d->PC->position[dim_y]][d->PC->position[dim_x]] = d->PC;
 
   gen_monsters(d);

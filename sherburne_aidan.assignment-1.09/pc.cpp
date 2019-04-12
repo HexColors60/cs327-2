@@ -196,7 +196,7 @@ void config_pc(dungeon *d)
   d->PC->symbol = '@';
 
   place_pc(d);
-  io_display();
+  io_display(d);
 
   d->PC->speed = PC_SPEED;
   d->PC->alive = 1;
