@@ -56,7 +56,7 @@ void do_combat(dungeon *d, character *atk, character *def)
   if (def->alive) {
     def->alive = 0;
     charpair(def->position) = NULL;
-    
+
     if (def != d->PC) {
       d->num_monsters--;
     } else {
@@ -327,6 +327,7 @@ uint32_t move_pc(dungeon *d, uint32_t dir)
     move_character(d, d->PC, next);
     dijkstra(d);
     dijkstra_tunnel(d);
+    d->PC->grab_item(d);
 
     return 0;
   } else if (mappair(next) < ter_floor) {

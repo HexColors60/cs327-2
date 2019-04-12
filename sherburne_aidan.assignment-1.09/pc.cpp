@@ -69,9 +69,11 @@ uint8_t pc::grab_item(dungeon *d){
     return 1;
   }
   else{
-    inv[i] = objpair(position);
-    objpair(position) = NULL;
-    io_queue_message("Grabbed: %s.", inv[i]->get_name());
+    if(objpair(position)){
+      inv[i] = objpair(position);
+      objpair(position) = NULL;
+      io_queue_message("Grabbed: %s.", inv[i]->get_name());
+    }
   }
   return 0;
 }
@@ -140,6 +142,15 @@ uint8_t pc::equip_item(uint8_t slot){
     return 1;
   }
   i = inv[slot]->get_bp_slot();
+  // handle two ring slots
+  if(inv[slot]->get_type() == objtype_RING && bp[i]){
+    if(bp[i+1]){
+      io_queue_message("Required inventory slot is full.");
+      return 1;
+    }
+    else
+      i++;
+  }
   // swap the item in the inventory with the equipped item
   o = inv[slot];
   inv[slot] = bp[i];
