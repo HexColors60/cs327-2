@@ -81,30 +81,30 @@ uint8_t pc::grab_item(dungeon *d){
 uint8_t pc::drop_item(dungeon *d, uint8_t sel, uint8_t slot){
   if(sel == 0){// drop from backpack
     if(!bp[slot]){
-      mvprintw(13, 0, "You have nothing equipped there, stupid!");
+      mvprintw(15, 0, "You have nothing equipped there, stupid!");
       return 1;
     }
     if(objpair(position)){
-      mvprintw(13, 0, "There is already an item there!");
+      mvprintw(15, 0, "There is already an item there!");
       return 1;
     }
     else{
-      mvprintw(13, 0, "Dropped: %s.", bp[slot]->get_name());
+      mvprintw(15, 0, "Dropped: %s.", bp[slot]->get_name());
       objpair(position) = bp[slot];
       bp[slot] = NULL;
     }
   }
   else if(sel == 1){// drop from inventory
     if(!inv[slot]){
-      mvprintw(13, 0, "That inventory slot is empty, stupid!");
+      mvprintw(15, 0, "That inventory slot is empty, stupid!");
       return 1;
     }
     if(objpair(position)){
-      mvprintw(13, 0, "There is already an item there!");
+      mvprintw(15, 0, "There is already an item there!");
       return 1;
     }
     else{
-      mvprintw(13, 0, "Dropped: %s.", inv[slot]->get_name());
+      mvprintw(15, 0, "Dropped: %s.", inv[slot]->get_name());
       objpair(position) = inv[slot];
       inv[slot] = NULL;
     }
@@ -116,19 +116,19 @@ uint8_t pc::drop_item(dungeon *d, uint8_t sel, uint8_t slot){
 uint8_t pc::destroy_item(uint8_t sel, uint8_t slot){
   if(sel == 0){// destroy from backpack
     if(!bp[slot]){
-      mvprintw(13, 0, "You have nothing equipped there, stupid!");
+      mvprintw(15, 0, "You have nothing equipped there, stupid!");
       return 1;
     }
-    mvprintw(13, 0, "Destroyed: %s.", bp[slot]->get_name());
+    mvprintw(15, 0, "Destroyed: %s.", bp[slot]->get_name());
     delete bp[slot];
     bp[slot] = NULL;
   }
   else if(sel == 1){// destroy from inventory
     if(!inv[slot]){
-      mvprintw(13, 0, "That inventory slot is empty, stupid!");
+      mvprintw(15, 0, "That inventory slot is empty, stupid!");
       return 1;
     }
-    mvprintw(13, 0, "Destroyed: %s.", inv[slot]->get_name());
+    mvprintw(15, 0, "Destroyed: %s.", inv[slot]->get_name());
     delete inv[slot];
     inv[slot] = NULL;
   }
@@ -139,14 +139,14 @@ uint8_t pc::equip_item(uint8_t slot){
   object *o;
   uint8_t i;
   if(!inv[slot]){
-    mvprintw(13, 0, "That inventory slot is empty, stupid!");
+    mvprintw(15, 0, "That inventory slot is empty, stupid!");
     return 1;
   }
   i = inv[slot]->get_bp_slot();
   // handle two ring slots
   if(inv[slot]->get_type() == objtype_RING && bp[i]){
     if(bp[i+1]){
-      mvprintw(13, 0, "Required inventory slot is full.");
+      mvprintw(15, 0, "Required inventory slot is full.");
       return 1;
     }
     else
@@ -156,7 +156,7 @@ uint8_t pc::equip_item(uint8_t slot){
   o = inv[slot];
   inv[slot] = bp[i];
   bp[i] = o;
-  mvprintw(13, 0, "Equipped: %s.", bp[i]->get_name());
+  mvprintw(15, 0, "Equipped: %s.", bp[i]->get_name());
   update_speed();
   return 0;
 }
@@ -164,19 +164,19 @@ uint8_t pc::equip_item(uint8_t slot){
 uint8_t pc::remove_item(uint8_t slot){
   object *o;
   if(!bp[slot]){
-    mvprintw(13, 0, "You have nothing equipped there, stupid!");
+    mvprintw(15, 0, "You have nothing equipped there, stupid!");
     return 1;
   }
   int8_t i = get_inv_slot();
   if(i == -1){
-    mvprintw(13, 0, "You have no open inventory slots.");
+    mvprintw(15, 0, "You have no open inventory slots.");
     return 1;
   }
   // swap the item in the inventory with the equipped item
   o = bp[slot];
   bp[slot] = inv[i];
   inv[i] = o;
-  mvprintw(13, 0, "Removed: %s.", inv[i]->get_name());
+  mvprintw(15, 0, "Removed: %s.", inv[i]->get_name());
   update_speed();
   return 0;
 }

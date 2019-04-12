@@ -11,7 +11,7 @@ void io_display(dungeon *d);
 void io_handle_input(dungeon *d);
 void io_queue_message(const char *format, ...);
 void io_display_inventory(dungeon *d, uint8_t index);
-void io_display_equipment(dungeon *d);
+void io_display_equipment(dungeon *d, uint8_t index);
 void io_look(dungeon *d);
 std::string io_object_info(object *o);
 

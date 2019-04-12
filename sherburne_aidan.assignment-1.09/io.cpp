@@ -947,7 +947,7 @@ void io_handle_input(dungeon *d) {
       fail_code = 1;
       break;
     case 'e': // view equipment
-      io_display_equipment(d);
+      io_display_equipment(d, 0);
       fail_code = 1;
       break;
     case 'L': // look mode
@@ -971,10 +971,10 @@ void io_handle_input(dungeon *d) {
 }
 
 std::string io_object_info(object *o, std::string str) {
-str = "";
+  str = "";
   if (o) {
     str.append(o->get_name());
-    while(str.length() < 36){
+    while (str.length() < 36) {
       str.append(" ");
     }
     str.append("(s:");
@@ -996,19 +996,19 @@ void io_display_inventory(dungeon *d, uint8_t index) {
 
   for (i = 0; i < INVENTORY_SLOTS; i++) {
     str = io_object_info(d->PC->inv[i], str);
-    if(i == index){
-      str.insert(0,"*");
-    }else{
-      str.insert(0," ");
+    if (i == index) {
+      str.insert(0, "*");
+    } else {
+      str.insert(0, " ");
     }
     mvprintw(i + 2, 4, "[slot %c] %-72s ", '0' + i, str.c_str());
   }
-  while(i + 2 < 21){
+  while (i + 2 < 21) {
     mvprintw(i + 2, 0, " %-80s ", "");
     i++;
   }
-  mvprintw(19, 4, " %-72s ", "i: exit, Up/Dn: select, I: info");
-  mvprintw(20, 4, " %-72s ", "w: equip, d: drop, x:destroy");
+  mvprintw(19, 4, " %-72s ", "e: equipment, Up/Dn: select, I: info, i: exit");
+  mvprintw(20, 4, " %-72s ", "w: equip, d: drop, x: destroy");
   refresh();
 
   int loop = 1;
@@ -1018,14 +1018,18 @@ void io_display_inventory(dungeon *d, uint8_t index) {
     case 'i':
       loop = 0;
       break;
+    case 'e':
+      io_display_equipment(d, 0);
+      loop = 0;
+      break;
     case KEY_UP:
-      if(index > 0){
+      if (index > 0) {
         io_display_inventory(d, index - 1);
         loop = 0;
       }
       break;
     case KEY_DOWN:
-      if(index < INVENTORY_SLOTS - 1){
+      if (index < INVENTORY_SLOTS - 1) {
         io_display_inventory(d, index + 1);
         loop = 0;
       }
@@ -1040,20 +1044,92 @@ void io_display_inventory(dungeon *d, uint8_t index) {
       d->PC->destroy_item(1, index);
       break;
     case 'I':
-      mvprintw(13, 0, "%-80s", d->PC->inv[index]->get_description().c_str());
+      if (d->PC->inv[index])
+        mvprintw(15, 0, "%-80s", d->PC->inv[index]->get_description().c_str());
+      else
+        mvprintw(15, 0, "There's no item there, dummy!");
       break;
     default:
       break;
     }
     i = 0;
-    mvprintw(19, 4, " %-72s ", "i: exit, Up/Dn: select, I: info");
-    mvprintw(20, 4, " %-72s ", "w: equip, d: drop, x:destroy");
+    mvprintw(19, 4, " %-72s ", "e: equipment, Up/Dn: select, I: info, i: exit");
+    mvprintw(20, 4, " %-72s ", "w: equip, d: drop, x: destroy");
     refresh();
   }
 
   io_display(d);
 }
 
-void io_display_equipment(dungeon *d) {}
+void io_display_equipment(dungeon *d, uint8_t index) {
+  uint32_t i;
+  std::string str = " ";
+
+  for (i = 0; i < bp_capacity; i++) {
+    str = io_object_info(d->PC->bp[i], str);
+    if (i == index) {
+      str.insert(0, "*");
+    } else {
+      str.insert(0, " ");
+    }
+    mvprintw(i + 2, 4, "[%c] %-72s ", 'A' + i, str.c_str());
+  }
+  while (i + 2 < 21) {
+    mvprintw(i + 2, 0, " %-80s ", "");
+    i++;
+  }
+  mvprintw(19, 4, " %-72s ", "i: inventory, Up/Dn: select, I: info, e: exit");
+  mvprintw(20, 4, " %-72s ", "t: remove, d: drop, x: destroy");
+  refresh();
+
+  int loop = 1;
+  std::string desc = "";
+  while (loop) {
+    switch (getch()) {
+    case 'e':
+      loop = 0;
+      break;
+    case 'i':
+      io_display_inventory(d, 0);
+      loop = 0;
+      break;
+    case KEY_UP:
+      if (index > 0) {
+        io_display_equipment(d, index - 1);
+        loop = 0;
+      }
+      break;
+    case KEY_DOWN:
+      if (index < bp_capacity - 1) {
+        io_display_equipment(d, index + 1);
+        loop = 0;
+      }
+      break;
+    case 't':
+      d->PC->remove_item(index);
+      break;
+    case 'd':
+      d->PC->drop_item(d, 0, index); // drop from backpack
+      break;
+    case 'x':
+      d->PC->destroy_item(0, index);
+      break;
+    case 'I':
+      if (d->PC->bp[index])
+        mvprintw(15, 0, "%-80s", d->PC->bp[index]->get_description().c_str());
+      else
+        mvprintw(15, 0, "There's no item equipped there, dummy!");
+      break;
+    default:
+      break;
+    }
+    i = 0;
+    mvprintw(19, 4, " %-72s ", "i: inventory, Up/Dn: select, I: info, e: exit");
+    mvprintw(20, 4, " %-72s ", "t: remove, d: drop, x: destroy");
+    refresh();
+  }
+
+  io_display(d);
+}
 
 void io_look(dungeon *d) {}
