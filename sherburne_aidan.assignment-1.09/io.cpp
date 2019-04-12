@@ -13,20 +13,9 @@
 #include "pc.h"
 #include "utils.h"
 
-const char *ostrings[] {
-  " WEAPON",
-  "OFFHAND",
-  " RANGED",
-  "  ARMOR",
-  " HELMET",
-  "  CLOAK",
-  " GLOVES",
-  "  BOOTS",
-  " AMULET",
-  "  LIGHT",
-  "  LRING",
-  "  RRING"
-};
+const char *ostrings[]{" WEAPON", "OFFHAND", " RANGED", "  ARMOR",
+                       " HELMET", "  CLOAK", " GLOVES", "  BOOTS",
+                       " AMULET", "  LIGHT", "  LRING", "  RRING"};
 
 /* Same ugly hack we did in path.c */
 static dungeon *thedungeon;
@@ -1016,7 +1005,7 @@ void io_display_inventory(dungeon *d, uint8_t index) {
     } else {
       str.insert(0, " ");
     }
-    mvprintw(i + 2, 4, "[slot %c] %-72s ", '0' + i, str.c_str());
+    mvprintw(i + 2, 4, "[slot %c] %-70s ", '0' + i, str.c_str());
   }
   while (i + 2 < 21) {
     mvprintw(i + 2, 0, " %-80s ", "");
