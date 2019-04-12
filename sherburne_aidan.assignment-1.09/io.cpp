@@ -996,23 +996,23 @@ void io_display_inventory(dungeon *d, uint8_t index) {
 
   for (i = 0; i < INVENTORY_SLOTS; i++) {
     str = io_object_info(d->PC->inv[i], str);
-    if(i == index && d->PC->inv[i]){
+    if(i == index){
       str.insert(0,"*");
     }else{
       str.insert(0," ");
     }
-    mvprintw(i + 3, 4, "[slot %c] %-72s ", '0' + i, str.c_str());
+    mvprintw(i + 2, 4, "[slot %c] %-72s ", '0' + i, str.c_str());
   }
-  while(i + 3 < 16){
-    mvprintw(i + 3, 4, " %-72s ", "");
+  while(i + 2 < 21){
+    mvprintw(i + 2, 0, " %-80s ", "");
     i++;
   }
-  mvprintw(16, 4, " %-72s ", "");
-  mvprintw(17, 4, " %-72s ", "i: exit, Up/Dn: select, I: info");
-  mvprintw(18, 4, " %-72s ", "w: equip, d: drop, x:destroy");
+  mvprintw(19, 4, " %-72s ", "i: exit, Up/Dn: select, I: info");
+  mvprintw(20, 4, " %-72s ", "w: equip, d: drop, x:destroy");
   refresh();
 
   int loop = 1;
+  std::string desc = "";
   while (loop) {
     switch (getch()) {
     case 'i':
@@ -1025,16 +1025,30 @@ void io_display_inventory(dungeon *d, uint8_t index) {
       }
       break;
     case KEY_DOWN:
-      if(index < INVENTORY_SLOTS - 1 && d->PC->inv[index + 1]){
+      if(index < INVENTORY_SLOTS - 1){
         io_display_inventory(d, index + 1);
         loop = 0;
       }
       break;
     case 'w':
+      d->PC->equip_item(index);
+      break;
+    case 'd':
+      d->PC->drop_item(d, 1, index); // drop from inventory
+      break;
+    case 'x':
+      d->PC->destroy_item(1, index);
+      break;
+    case 'I':
+      mvprintw(13, 0, "%-80s", d->PC->inv[index]->get_description().c_str());
       break;
     default:
       break;
     }
+    i = 0;
+    mvprintw(19, 4, " %-72s ", "i: exit, Up/Dn: select, I: info");
+    mvprintw(20, 4, " %-72s ", "w: equip, d: drop, x:destroy");
+    refresh();
   }
 
   io_display(d);
