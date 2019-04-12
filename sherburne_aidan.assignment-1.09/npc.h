@@ -42,6 +42,7 @@
 # define has_characteristic(character, bit)              \
   (((npc *) character)->characteristics & NPC_##bit)
 # define is_unique(character) has_characteristic(character, UNIQ)
+# define is_boss(character) has_characteristic(character, BOSS)
 
 class monster_description;
 
