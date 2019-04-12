@@ -62,7 +62,7 @@ int32_t pc::get_inv_slot(){
 }
 
 uint8_t pc::grab_item(dungeon *d){
-  object *o;
+  //object *o;
   int8_t i = get_inv_slot();
   if(i == -1){
     io_queue_message("You have no room in your inventory.");
@@ -71,7 +71,7 @@ uint8_t pc::grab_item(dungeon *d){
   else{
     inv[i] = objpair(position);
     objpair(position) = NULL;
-    io_queue_message("Grabbed: %s.", inv[i].get_name());
+    io_queue_message("Grabbed: %s.", inv[i]->get_name());
   }
   return 0;
 }
@@ -87,7 +87,7 @@ uint8_t pc::drop_item(dungeon *d, uint8_t sel, uint8_t slot){
       return 1;
     }
     else{
-      io_queue_message("Dropped: %s.", bp[slot].get_name());
+      io_queue_message("Dropped: %s.", bp[slot]->get_name());
       objpair(position) = bp[slot];
       bp[slot] = NULL;
     }
@@ -102,7 +102,7 @@ uint8_t pc::drop_item(dungeon *d, uint8_t sel, uint8_t slot){
       return 1;
     }
     else{
-      io_queue_message("Dropped: %s.", inv[slot].get_name());
+      io_queue_message("Dropped: %s.", inv[slot]->get_name());
       objpair(position) = inv[slot];
       inv[slot] = NULL;
     }
@@ -116,7 +116,7 @@ uint8_t pc::destroy_item(uint8_t sel, uint8_t slot){
       io_queue_message("You have nothing equipped there, stupid!");
       return 1;
     }
-    io_queue_message("Destroyed: %s.", bp[slot].get_name());
+    io_queue_message("Destroyed: %s.", bp[slot]->get_name());
     delete bp[slot];
     bp[slot] = NULL;
   }
@@ -125,7 +125,7 @@ uint8_t pc::destroy_item(uint8_t sel, uint8_t slot){
       io_queue_message("That inventory slot is empty, stupid!");
       return 1;
     }
-    io_queue_message("Destroyed: %s.", inv[slot].get_name());
+    io_queue_message("Destroyed: %s.", inv[slot]->get_name());
     delete inv[slot];
     inv[slot] = NULL;
   }
@@ -139,12 +139,12 @@ uint8_t pc::equip_item(uint8_t slot){
     io_queue_message("That inventory slot is empty, stupid!");
     return 1;
   }
-  i = inv[slot].get_bp_slot();
+  i = inv[slot]->get_bp_slot();
   // swap the item in the inventory with the equipped item
   o = inv[slot];
   inv[slot] = bp[i];
   bp[i] = o;
-  io_queue_message("Equipped: %s.", bp[i].get_name());
+  io_queue_message("Equipped: %s.", bp[i]->get_name());
   update_speed();
   return 0;
 }
@@ -164,7 +164,7 @@ uint8_t pc::remove_item(uint8_t slot){
   o = bp[slot];
   bp[slot] = inv[i];
   inv[i] = o;
-  io_queue_message("Removed: %s.", inv[i].get_name());
+  io_queue_message("Removed: %s.", inv[i]->get_name());
   update_speed();
   return 0;
 }
