@@ -1,13 +1,13 @@
 #ifndef OBJECT_H
-# define OBJECT_H
+#define OBJECT_H
 
-# include <string>
+#include <string>
 
-# include "descriptions.h"
-# include "dims.h"
+#include "descriptions.h"
+#include "dims.h"
 
 class object {
- private:
+private:
   const std::string &name;
   const std::string &description;
   object_type_t type;
@@ -16,27 +16,19 @@ class object {
   const dice &damage;
   int32_t hit, dodge, defence, weight, speed, attribute, value;
   bool seen;
-  //object *next;
+  // object *next;
   object_description &od;
- public:
+
+public:
   object(object_description &o, pair_t p);
   ~object();
-  inline int32_t get_damage_base() const
-  {
-    return damage.get_base();
-  }
-  inline int32_t get_damage_number() const
-  {
-    return damage.get_number();
-  }
-  inline int32_t get_damage_sides() const
-  {
-    return damage.get_sides();
-  }
+  inline int32_t get_damage_base() const { return damage.get_base(); }
+  inline int32_t get_damage_number() const { return damage.get_number(); }
+  inline int32_t get_damage_sides() const { return damage.get_sides(); }
   char get_symbol();
   uint32_t get_color();
   const char *get_name();
-  std::string get_description(){ return description; }
+  std::string get_description() { return description; }
   int32_t get_speed();
   int32_t roll_dice();
   int32_t get_type();

@@ -1,12 +1,12 @@
 #ifndef DESCRIPTIONS_H
-# define DESCRIPTIONS_H
+#define DESCRIPTIONS_H
 
-# include <stdint.h>
-# include <vector>
-# include <string>
+#include <stdint.h>
+#include <string>
+#include <vector>
 
-# include "dice.h"
-# include "npc.h"
+#include "dice.h"
+#include "npc.h"
 
 class dungeon;
 
@@ -41,60 +41,42 @@ extern const char object_symbol[];
 class npc;
 
 class monster_description {
- private:
+private:
   std::string name, description;
   char symbol;
   std::vector<uint32_t> color;
   uint32_t abilities;
   dice speed, hitpoints, damage;
   uint32_t rarity;
-   uint32_t num_alive, num_killed;
-  inline bool can_be_generated()
-  {
+  uint32_t num_alive, num_killed;
+  inline bool can_be_generated() {
     return (((abilities & NPC_UNIQ) && !num_alive && !num_killed) ||
             !(abilities & NPC_UNIQ));
   }
-  inline bool pass_rarity_roll()
-  {
-    return rarity > (unsigned) (rand() % 100);
-  }
+  inline bool pass_rarity_roll() { return rarity > (unsigned)(rand() % 100); }
 
 public:
-  monster_description() : name(),       description(), symbol(0),    color(0),
-                          abilities(0), speed(),       hitpoints(),  damage(),
-                          rarity(0),    num_alive(0),  num_killed(0)
-  {
-  }
-  void set(const std::string &name,
-           const std::string &description,
-           const char symbol,
-           const std::vector<uint32_t> &color,
-           const dice &speed,
-           const uint32_t abilities,
-           const dice &hitpoints,
-           const dice &damage,
-           const uint32_t rarity);
+  monster_description()
+      : name(), description(), symbol(0), color(0), abilities(0), speed(),
+        hitpoints(), damage(), rarity(0), num_alive(0), num_killed(0) {}
+  void set(const std::string &name, const std::string &description,
+           const char symbol, const std::vector<uint32_t> &color,
+           const dice &speed, const uint32_t abilities, const dice &hitpoints,
+           const dice &damage, const uint32_t rarity);
   std::ostream &print(std::ostream &o);
   char get_symbol() { return symbol; }
-  inline void birth()
-  {
-    num_alive++;
-  }
-  inline void die()
-  {
+  inline void birth() { num_alive++; }
+  inline void die() {
     num_killed++;
     num_alive--;
   }
-  inline void destroy()
-  {
-    num_alive--;
-  }
+  inline void destroy() { num_alive--; }
   static npc *generate_monster(dungeon *d);
   friend npc;
 };
 
 class object_description {
- private:
+private:
   std::string name, description;
   object_type_t type;
   uint32_t color;
@@ -103,37 +85,21 @@ class object_description {
   uint32_t rarity;
   uint32_t num_generated;
   uint32_t num_found;
- public:
-  object_description() : name(),    description(), type(objtype_no_type),
-                         color(0),  hit(),         damage(),
-                         dodge(),   defence(),     weight(),
-                         speed(),   attribute(),   value(),
-                         artifact(false), rarity(0), num_generated(0),
-                         num_found(0)
-  {
-  }
-  inline bool can_be_generated()
-  {
+
+public:
+  object_description()
+      : name(), description(), type(objtype_no_type), color(0), hit(), damage(),
+        dodge(), defence(), weight(), speed(), attribute(), value(),
+        artifact(false), rarity(0), num_generated(0), num_found(0) {}
+  inline bool can_be_generated() {
     return !artifact || (artifact && !num_generated && !num_found);
   }
-  inline bool pass_rarity_roll()
-  {
-    return rarity > (unsigned) (rand() % 100);
-  }
-  void set(const std::string &name,
-           const std::string &description,
-           const object_type_t type,
-           const uint32_t color,
-           const dice &hit,
-           const dice &damage,
-           const dice &dodge,
-           const dice &defence,
-           const dice &weight,
-           const dice &speed,
-           const dice &attrubute,
-           const dice &value,
-           const bool artifact,
-           const uint32_t rarity);
+  inline bool pass_rarity_roll() { return rarity > (unsigned)(rand() % 100); }
+  void set(const std::string &name, const std::string &description,
+           const object_type_t type, const uint32_t color, const dice &hit,
+           const dice &damage, const dice &dodge, const dice &defence,
+           const dice &weight, const dice &speed, const dice &attrubute,
+           const dice &value, const bool artifact, const uint32_t rarity);
   std::ostream &print(std::ostream &o);
   /* Need all these accessors because otherwise there is a *
    * circular dependancy that is difficult to get around.  */

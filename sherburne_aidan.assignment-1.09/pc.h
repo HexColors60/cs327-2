@@ -1,13 +1,13 @@
 #ifndef PC_H
-# define PC_H
+#define PC_H
 
-# include <stdint.h>
+#include <stdint.h>
 
-# include "dims.h"
-# include "character.h"
-# include "dungeon.h"
+#include "character.h"
+#include "dims.h"
+#include "dungeon.h"
 
-typedef enum backpack{
+typedef enum backpack {
   bp_weapon,
   bp_offhand,
   bp_ranged,
@@ -27,8 +27,9 @@ class pc : public character {
 private:
   int32_t get_inv_slot();
   void update_speed();
- public:
-   pc();
+
+public:
+  pc();
   ~pc();
   terrain_type known_terrain[DUNGEON_Y][DUNGEON_X];
   uint8_t visible[DUNGEON_Y][DUNGEON_X];

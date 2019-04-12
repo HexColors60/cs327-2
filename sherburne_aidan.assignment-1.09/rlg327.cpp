@@ -1,71 +1,70 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
-#include <stdlib.h>
 #include <unistd.h>
 
 #include "dungeon.h"
-#include "pc.h"
-#include "npc.h"
-#include "move.h"
-#include "utils.h"
 #include "io.h"
+#include "move.h"
+#include "npc.h"
 #include "object.h"
+#include "pc.h"
+#include "utils.h"
 
 const char *victory =
-  "\n                                       o\n"
-  "                                      $\"\"$o\n"
-  "                                     $\"  $$\n"
-  "                                      $$$$\n"
-  "                                      o \"$o\n"
-  "                                     o\"  \"$\n"
-  "                oo\"$$$\"  oo$\"$ooo   o$    \"$    ooo\"$oo  $$$\"o\n"
-  "   o o o o    oo\"  o\"      \"o    $$o$\"     o o$\"\"  o$      \"$  "
-  "\"oo   o o o o\n"
-  "   \"$o   \"\"$$$\"   $$         $      \"   o   \"\"    o\"         $"
-  "   \"o$$\"    o$$\n"
-  "     \"\"o       o  $          $\"       $$$$$       o          $  ooo"
-  "     o\"\"\n"
-  "        \"o   $$$$o $o       o$        $$$$$\"       $o        \" $$$$"
-  "   o\"\n"
-  "         \"\"o $$$$o  oo o  o$\"         $$$$$\"        \"o o o o\"  "
-  "\"$$$  $\n"
-  "           \"\" \"$\"     \"\"\"\"\"            \"\"$\"            \""
-  "\"\"      \"\"\" \"\n"
-  "            \"oooooooooooooooooooooooooooooooooooooooooooooooooooooo$\n"
-  "             \"$$$$\"$$$$\" $$$$$$$\"$$$$$$ \" \"$$$$$\"$$$$$$\"  $$$\""
-  "\"$$$$\n"
-  "              $$$oo$$$$   $$$$$$o$$$$$$o\" $$$$$$$$$$$$$$ o$$$$o$$$\"\n"
-  "              $\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\""
-  "\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"$\n"
-  "              $\"                                                 \"$\n"
-  "              $\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\""
-  "$\"$\"$\"$\"$\"$\"$\"$\n"
-  "                                   You win!\n\n";
+    "\n                                       o\n"
+    "                                      $\"\"$o\n"
+    "                                     $\"  $$\n"
+    "                                      $$$$\n"
+    "                                      o \"$o\n"
+    "                                     o\"  \"$\n"
+    "                oo\"$$$\"  oo$\"$ooo   o$    \"$    ooo\"$oo  $$$\"o\n"
+    "   o o o o    oo\"  o\"      \"o    $$o$\"     o o$\"\"  o$      \"$  "
+    "\"oo   o o o o\n"
+    "   \"$o   \"\"$$$\"   $$         $      \"   o   \"\"    o\"         $"
+    "   \"o$$\"    o$$\n"
+    "     \"\"o       o  $          $\"       $$$$$       o          $  ooo"
+    "     o\"\"\n"
+    "        \"o   $$$$o $o       o$        $$$$$\"       $o        \" $$$$"
+    "   o\"\n"
+    "         \"\"o $$$$o  oo o  o$\"         $$$$$\"        \"o o o o\"  "
+    "\"$$$  $\n"
+    "           \"\" \"$\"     \"\"\"\"\"            \"\"$\"            \""
+    "\"\"      \"\"\" \"\n"
+    "            \"oooooooooooooooooooooooooooooooooooooooooooooooooooooo$\n"
+    "             \"$$$$\"$$$$\" $$$$$$$\"$$$$$$ \" \"$$$$$\"$$$$$$\"  $$$\""
+    "\"$$$$\n"
+    "              $$$oo$$$$   $$$$$$o$$$$$$o\" $$$$$$$$$$$$$$ o$$$$o$$$\"\n"
+    "              $\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\""
+    "\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"$\n"
+    "              $\"                                                 \"$\n"
+    "              $\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\"$\""
+    "$\"$\"$\"$\"$\"$\"$\"$\n"
+    "                                   You win!\n\n";
 
 const char *tombstone =
-  "\n\n\n\n                /\"\"\"\"\"/\"\"\"\"\"\"\".\n"
-  "               /     /         \\             __\n"
-  "              /     /           \\            ||\n"
-  "             /____ /   Rest in   \\           ||\n"
-  "            |     |    Pieces     |          ||\n"
-  "            |     |               |          ||\n"
-  "            |     |   A. Luser    |          ||\n"
-  "            |     |               |          ||\n"
-  "            |     |     * *   * * |         _||_\n"
-  "            |     |     *\\/* *\\/* |        | TT |\n"
-  "            |     |     *_\\_  /   ...\"\"\"\"\"\"| |"
-  "| |.\"\"....\"\"\"\"\"\"\"\".\"\"\n"
-  "            |     |         \\/..\"\"\"\"\"...\"\"\""
-  "\\ || /.\"\"\".......\"\"\"\"...\n"
-  "            |     |....\"\"\"\"\"\"\"........\"\"\"\"\""
-  "\"^^^^\".......\"\"\"\"\"\"\"\"..\"\n"
-  "            |......\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"......"
-  "..\"\"\"\"\"....\"\"\"\"\"..\"\"...\"\"\".\n\n"
-  "            You're dead.  Better luck in the next life.\n\n\n";
+    "\n\n\n\n                /\"\"\"\"\"/\"\"\"\"\"\"\".\n"
+    "               /     /         \\             __\n"
+    "              /     /           \\            ||\n"
+    "             /____ /   Rest in   \\           ||\n"
+    "            |     |    Pieces     |          ||\n"
+    "            |     |               |          ||\n"
+    "            |     |   A. Luser    |          ||\n"
+    "            |     |               |          ||\n"
+    "            |     |     * *   * * |         _||_\n"
+    "            |     |     *\\/* *\\/* |        | TT |\n"
+    "            |     |     *_\\_  /   ...\"\"\"\"\"\"| |"
+    "| |.\"\"....\"\"\"\"\"\"\"\".\"\"\n"
+    "            |     |         \\/..\"\"\"\"\"...\"\"\""
+    "\\ || /.\"\"\".......\"\"\"\"...\n"
+    "            |     |....\"\"\"\"\"\"\"........\"\"\"\"\""
+    "\"^^^^\".......\"\"\"\"\"\"\"\"..\"\n"
+    "            |......\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"......"
+    "..\"\"\"\"\"....\"\"\"\"\"..\"\"...\"\"\".\n\n"
+    "            You're dead.  Better luck in the next life.\n\n\n";
 
-void usage(char *name)
-{
+void usage(char *name) {
   fprintf(stderr,
           "Usage: %s [-r|--rand <seed>] [-l|--load [<file>]]\n"
           "          [-s|--save [<file>]] [-i|--image <pgm file>]\n"
@@ -75,8 +74,7 @@ void usage(char *name)
   exit(-1);
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   dungeon d;
   time_t seed;
   struct timeval tv;
@@ -99,7 +97,7 @@ int main(int argc, char *argv[])
    * to have short and long forms of most switches (assuming you    *
    * don't run out of letters).  For now, we've got plenty.  Long   *
    * forms use whole words and take two dashes.  Short forms use an *
-    * abbreviation after a single dash.  We'll add '--rand' (to     *
+   * abbreviation after a single dash.  We'll add '--rand' (to     *
    * specify a random seed), which will take an argument of it's    *
    * own, and we'll add short forms for all three commands, '-l',   *
    * '-s', and '-r', respectively.  We're also going to allow an    *
@@ -109,7 +107,7 @@ int main(int argc, char *argv[])
    * from a PGM image, so that I was able to create those more      *
    * interesting test dungeons for you.                             */
 
- if (argc > 1) {
+  if (argc > 1) {
     for (i = 1, long_arg = 0; i < argc; i++, long_arg = 0) {
       if (argv[i][0] == '-') { /* All switches start with a dash */
         if (argv[i][1] == '-') {
@@ -155,17 +153,17 @@ int main(int argc, char *argv[])
           if ((argc > i + 1) && argv[i + 1][0] != '-') {
             /* There is another argument, and it's not a switch, so *
              * we'll save to it.  If it is "seed", we'll save to    *
-	     * <the current seed>.rlg327.  If it is "image", we'll  *
-	     * save to <the current image>.rlg327.                  */
-	    if (!strcmp(argv[++i], "seed")) {
-	      do_save_seed = 1;
-	      do_save_image = 0;
-	    } else if (!strcmp(argv[i], "image")) {
-	      do_save_image = 1;
-	      do_save_seed = 0;
-	    } else {
-	      save_file = argv[i];
-	    }
+             * <the current seed>.rlg327.  If it is "image", we'll  *
+             * save to <the current image>.rlg327.                  */
+            if (!strcmp(argv[++i], "seed")) {
+              do_save_seed = 1;
+              do_save_image = 0;
+            } else if (!strcmp(argv[i], "image")) {
+              do_save_image = 1;
+              do_save_seed = 0;
+            } else {
+              save_file = argv[i];
+            }
           }
           break;
         case 'i':
@@ -236,19 +234,19 @@ int main(int argc, char *argv[])
 
   if (do_save) {
     if (do_save_seed) {
-       /* 10 bytes for number, plus dot, extention and null terminator. */
-      save_file = (char *) malloc(18);
+      /* 10 bytes for number, plus dot, extention and null terminator. */
+      save_file = (char *)malloc(18);
       sprintf(save_file, "%ld.rlg327", seed);
     }
     if (do_save_image) {
       if (!pgm_file) {
-	fprintf(stderr, "No image file was loaded.  Using default.\n");
-	do_save_image = 0;
+        fprintf(stderr, "No image file was loaded.  Using default.\n");
+        do_save_image = 0;
       } else {
-	/* Extension of 3 characters longer than image extension + null. */
-	save_file = (char *) malloc(strlen(pgm_file) + 4);
-	strcpy(save_file, pgm_file);
-	strcpy(strchr(save_file, '.') + 1, "rlg327");
+        /* Extension of 3 characters longer than image extension + null. */
+        save_file = (char *)malloc(strlen(pgm_file) + 4);
+        strcpy(save_file, pgm_file);
+        strcpy(strchr(save_file, '.') + 1, "rlg327");
       }
     }
     write_dungeon(&d, save_file);

@@ -1,12 +1,12 @@
 #ifndef CHARACTER_H
-# define CHARACTER_H
+#define CHARACTER_H
 
-# include <cstdint>
-# include <vector>
-# include <cstdlib>
+#include <cstdint>
+#include <cstdlib>
+#include <vector>
 
-# include "dims.h"
-# include "utils.h"
+#include "dims.h"
+#include "utils.h"
 
 typedef enum kill_type {
   kill_direct,
@@ -17,7 +17,7 @@ typedef enum kill_type {
 class dice;
 
 class character {
- public:
+public:
   virtual ~character() {}
   char symbol;
   pair_t position;
@@ -46,8 +46,8 @@ int32_t compare_characters_by_next_turn(const void *character1,
                                         const void *character2);
 /* can_see() is a bit overloaded.  is_pc controls the range (NPCs can see    *
  * farther than the PC.  learn controls whether the PC should learn terrain. */
-uint32_t can_see(dungeon *d, pair_t voyeur, pair_t exhibitionist,
-                 int is_pc, int learn);
+uint32_t can_see(dungeon *d, pair_t voyeur, pair_t exhibitionist, int is_pc,
+                 int learn);
 void character_delete(character *c);
 int16_t *character_get_pos(character *c);
 int16_t character_get_y(const character *c);

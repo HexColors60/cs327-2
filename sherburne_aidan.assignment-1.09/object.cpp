@@ -1,43 +1,28 @@
-#include <vector>
 #include <cstring>
+#include <vector>
 
-#include "object.h"
 #include "dungeon.h"
+#include "object.h"
 #include "utils.h"
 
-object::object(object_description &o, pair_t p) :
-  name(o.get_name()),
-  description(o.get_description()),
-  type(o.get_type()),
-  color(o.get_color()),
-  damage(o.get_damage()),
-  hit(o.get_hit().roll()),
-  dodge(o.get_dodge().roll()),
-  defence(o.get_defence().roll()),
-  weight(o.get_weight().roll()),
-  speed(o.get_speed().roll()),
-  attribute(o.get_attribute().roll()),
-  value(o.get_value().roll()),
-  seen(false),
-  od(o)
-{
+object::object(object_description &o, pair_t p)
+    : name(o.get_name()), description(o.get_description()), type(o.get_type()),
+      color(o.get_color()), damage(o.get_damage()), hit(o.get_hit().roll()),
+      dodge(o.get_dodge().roll()), defence(o.get_defence().roll()),
+      weight(o.get_weight().roll()), speed(o.get_speed().roll()),
+      attribute(o.get_attribute().roll()), value(o.get_value().roll()),
+      seen(false), od(o) {
   position[dim_x] = p[dim_x];
   position[dim_y] = p[dim_y];
 
   od.generate();
 }
 
-object::~object()
-{
-  od.destroy();
-}
+object::~object() { od.destroy(); }
 
-int8_t object::get_bp_slot(){
-  return type - 1;
-}
+int8_t object::get_bp_slot() { return type - 1; }
 
-void gen_object(dungeon *d)
-{
+void gen_object(dungeon *d) {
   object *o;
   uint32_t room;
   pair_t p;
@@ -51,26 +36,24 @@ void gen_object(dungeon *d)
 
   room = rand_range(0, d->num_rooms - 1);
   do {
-    p[dim_y] = rand_range(d->rooms[room].position[dim_y],
-                          (d->rooms[room].position[dim_y] +
-                           d->rooms[room].size[dim_y] - 1));
-    p[dim_x] = rand_range(d->rooms[room].position[dim_x],
-                          (d->rooms[room].position[dim_x] +
-                           d->rooms[room].size[dim_x] - 1));
+    p[dim_y] = rand_range(
+        d->rooms[room].position[dim_y],
+        (d->rooms[room].position[dim_y] + d->rooms[room].size[dim_y] - 1));
+    p[dim_x] = rand_range(
+        d->rooms[room].position[dim_x],
+        (d->rooms[room].position[dim_x] + d->rooms[room].size[dim_x] - 1));
     num_tries++;
   } while ((mappair(p) > ter_stairs || objpair(p)) && num_tries < 1500);
 
   o = new object(v[i], p);
 
   d->objmap[p[dim_y]][p[dim_x]] = o;
-
 }
 
-void gen_objects(dungeon *d)
-{
+void gen_objects(dungeon *d) {
   uint32_t i;
 
-  memset(d->objmap, 0, sizeof (d->objmap));
+  memset(d->objmap, 0, sizeof(d->objmap));
 
   for (i = 0; i < d->max_objects; i++) {
     gen_object(d);
@@ -79,35 +62,17 @@ void gen_objects(dungeon *d)
   d->num_objects = d->max_objects;
 }
 
-char object::get_symbol()
-{
-  return object_symbol[type];
-}
+char object::get_symbol() { return object_symbol[type]; }
 
-uint32_t object::get_color()
-{
-  return color;
-}
+uint32_t object::get_color() { return color; }
 
-const char *object::get_name()
-{
-  return name.c_str();
-}
+const char *object::get_name() { return name.c_str(); }
 
+int32_t object::get_speed() { return speed; }
 
+int32_t object::roll_dice() { return damage.roll(); }
 
-int32_t object::get_speed()
-{
-  return speed;
-}
-
-int32_t object::roll_dice()
-{
-  return damage.roll();
-}
-
-void destroy_objects(dungeon *d)
-{
+void destroy_objects(dungeon *d) {
   uint32_t y, x;
 
   for (y = 0; y < DUNGEON_Y; y++) {
@@ -120,7 +85,4 @@ void destroy_objects(dungeon *d)
   }
 }
 
-int32_t object::get_type()
-{
-  return type;
-}
+int32_t object::get_type() { return type; }

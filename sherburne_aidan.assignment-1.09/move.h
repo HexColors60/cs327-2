@@ -1,17 +1,14 @@
 #ifndef MOVE_H
-# define MOVE_H
+#define MOVE_H
 
-# include <stdint.h>
+#include <stdint.h>
 
-# include "dims.h"
+#include "dims.h"
 
 class character;
 class dungeon;
 
-void next_move(dungeon *d,
-               character *c,
-               pair_t goal_pos,
-               pair_t next_pos);
+void next_move(dungeon *d, character *c, pair_t goal_pos, pair_t next_pos);
 void do_moves(dungeon *d);
 void dir_nearest_wall(dungeon *d, character *c, pair_t dir);
 uint32_t in_corner(dungeon *d, character *c);

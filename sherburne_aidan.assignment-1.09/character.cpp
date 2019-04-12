@@ -1,89 +1,55 @@
 #include <stdlib.h>
 
 #include "character.h"
+#include "dungeon.h"
 #include "heap.h"
 #include "npc.h"
 #include "pc.h"
-#include "dungeon.h"
 
-void character_delete(character *c)
-{
-  delete c;
-}
+void character_delete(character *c) { delete c; }
 
-int16_t *character_get_pos(character *c)
-{
-  return c->position;
-}
+int16_t *character_get_pos(character *c) { return c->position; }
 
-int16_t character_get_y(const character *c)
-{
-  return c->position[dim_y];
-}
+int16_t character_get_y(const character *c) { return c->position[dim_y]; }
 
-int16_t character_set_y(character *c, int16_t y)
-{
+int16_t character_set_y(character *c, int16_t y) {
   return c->position[dim_y] = y;
 }
 
-int16_t character_get_x(const character *c)
-{
-  return c->position[dim_x];
-}
+int16_t character_get_x(const character *c) { return c->position[dim_x]; }
 
-int16_t character_set_x(character *c, int16_t x)
-{
+int16_t character_set_x(character *c, int16_t x) {
   return c->position[dim_x] = x;
 }
 
-void character_die(character *c)
-{
-  c->alive = 0;
-}
+void character_die(character *c) { c->alive = 0; }
 
-int character_is_alive(const character *c)
-{
-  return c->alive;
-}
+int character_is_alive(const character *c) { return c->alive; }
 
-char character_get_symbol(const character *c)
-{
-  return c->symbol;
-}
+char character_get_symbol(const character *c) { return c->symbol; }
 
-uint32_t character_get_speed(const character *c)
-{
-  return c->speed;
-}
+uint32_t character_get_speed(const character *c) { return c->speed; }
 
-uint32_t character_get_dkills(const character *c)
-{
+uint32_t character_get_dkills(const character *c) {
   return c->kills[kill_direct];
 }
 
-uint32_t character_get_ikills(const character *c)
-{
+uint32_t character_get_ikills(const character *c) {
   return c->kills[kill_avenged];
 }
 
-uint32_t character_increment_dkills(character *c)
-{
+uint32_t character_increment_dkills(character *c) {
   return c->kills[kill_direct]++;
 }
 
-uint32_t character_increment_ikills(character *c, uint32_t k)
-{
+uint32_t character_increment_ikills(character *c, uint32_t k) {
   return c->kills[kill_avenged] += k;
 }
 
-const char *character_get_name(const character *c)
-{
-  return c->name;
-}
+const char *character_get_name(const character *c) { return c->name; }
 
-uint32_t can_see(dungeon *d, pair_t voyeur, pair_t exhibitionist,
-                 int is_pc, int learn)
-{
+uint32_t can_see(dungeon *d, pair_t voyeur, pair_t exhibitionist, int is_pc,
+                 int learn) {
   /* Application of Bresenham's Line Drawing Algorithm.  If we can draw *
    * a line from v to e without intersecting any walls, then v can see  *
    * e.  Unfortunately, Bresenham isn't symmetric, so line-of-sight     *

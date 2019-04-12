@@ -1,13 +1,12 @@
+#include <errno.h>
+#include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <errno.h>
-#include <stdio.h>
 
 #include "utils.h"
 
-int makedirectory(char *dir)
-{
+int makedirectory(char *dir) {
   char *slash;
 
   for (slash = dir + strlen(dir); slash > dir && *slash != '/'; slash--)
