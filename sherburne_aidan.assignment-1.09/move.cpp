@@ -11,9 +11,14 @@
 #include "io.h"
 #include "move.h"
 #include "npc.h"
+#include "object.h"
 #include "path.h"
 #include "pc.h"
 #include "utils.h"
+
+static int bosses_killed = 0;
+
+bool boss_alive() { return (bosses_killed == 0); }
 
 void do_combat(dungeon *d, character *atk, character *def) {
   int can_see_atk, can_see_def;
@@ -44,69 +49,64 @@ void do_combat(dungeon *d, character *atk, character *def) {
       "ganglia",            /* 23 */
       "ear",                /* 24 */
       "subcutaneous tissue" /* 25 */
-      "cerebellum",
-      /* 26 */        /* Brain parts begin here */
-      "hippocampus",  /* 27 */
-      "frontal lobe", /* 28 */
-      "brain",        /* 29 */
+      "cerebellum",         /* 26 */
+      "hippocampus",        /* 27 */
+      "frontal lobe",       /* 28 */
+      "brain",              /* 29 */
   };
-  int part;
+  uint32_t damage, i;
 
   if (def->alive) {
-    def->alive = 0;
-    charpair(def->position) = NULL;
 
-    if (def != d->PC) {
-      d->num_monsters--;
-    } else {
-      if ((part = rand() % (sizeof(organs) / sizeof(organs[0]))) < 26) {
-        io_queue_message("As %s%s eats your %s,", is_unique(atk) ? "" : "the ",
-                         atk->name,
-                         organs[rand() % (sizeof(organs) / sizeof(organs[0]))]);
-        io_queue_message("   ...you wonder if there is an afterlife.");
-        /* Queue an empty message, otherwise the game will not pause for *
-         * player to see above.                                          */
-        io_queue_message("");
-      } else {
-        io_queue_message("Your last thoughts fade away as "
-                         "%s%s eats your %s...",
-                         is_unique(atk) ? "" : "the ", atk->name, organs[part]);
-        io_queue_message("");
+    can_see_atk =
+        can_see(d, character_get_pos(d->PC), character_get_pos(atk), 1, 0);
+    can_see_def =
+        can_see(d, character_get_pos(d->PC), character_get_pos(def), 1, 0);
+
+    if (def != d->PC && atk != d->PC) { // monster vs monster
+      if (can_see_atk && can_see_def) {
+        io_queue_message("%s%s bumped into %s%s!", is_unique(atk) ? "" : "the ",
+                         atk->name, is_unique(def) ? "" : "the ", def->name);
       }
-      /* Queue an empty message, otherwise the game will not pause for *
-       * player to see above.                                          */
-      io_queue_message("");
+      return;
     }
-    atk->kills[kill_direct]++;
-    atk->kills[kill_avenged] +=
-        (def->kills[kill_direct] + def->kills[kill_avenged]);
-  }
 
-  if (atk == d->PC) {
-    io_queue_message("You smite %s%s!", is_unique(def) ? "" : "the ",
-                     def->name);
-  }
+    damage = atk->damage->roll(); // get base damage from monster/PC
 
-  can_see_atk =
-      can_see(d, character_get_pos(d->PC), character_get_pos(atk), 1, 0);
-  can_see_def =
-      can_see(d, character_get_pos(d->PC), character_get_pos(def), 1, 0);
-
-  if (atk != d->PC && def != d->PC) {
-    if (can_see_atk && !can_see_def) {
-      io_queue_message("%s%s callously murders some poor, "
-                       "defenseless creature.",
-                       is_unique(atk) ? "" : "The ", atk->name);
-    }
-    if (can_see_def && !can_see_atk) {
-      io_queue_message("Something kills %s%s.",
-                       is_unique(def) ? "" : "the helpless ", def->name);
-    }
-    if (can_see_atk && can_see_def) {
-      io_queue_message("You watch in abject horror as %s%s "
-                       "gruesomely murders %s%s!",
+    if (atk == d->PC) {
+      for (i = 0; i < bp_capacity; i++) {
+        if (d->PC->bp[i]) {
+          damage += d->PC->bp[i]->roll_dice();
+        }
+      }
+      io_queue_message("You attack %s%s for %d damage",
+                       is_unique(def) ? "" : "the ", def->name, damage);
+    } else {
+      io_queue_message("%s%s attacks your %s for %d damage",
                        is_unique(atk) ? "" : "the ", atk->name,
-                       is_unique(def) ? "" : "the ", def->name);
+                       organs[rand() % (sizeof(organs) / sizeof(organs[0]))],
+                       damage);
+    }
+
+    if (damage >= def->hp) { // if we deal more damage than the defender has
+
+      if (atk == d->PC) {
+        io_queue_message("You have slain the beast!");
+        if (is_boss(def)) {
+          bosses_killed++;
+        }
+      } else {
+        io_queue_message("You have been slain!");
+      }
+      io_queue_message("");
+      def->alive = 0;
+      def->hp = 0;
+      atk->kills[kill_direct]++;
+      atk->kills[kill_avenged] +=
+          (def->kills[kill_direct] + def->kills[kill_avenged]);
+      charpair(def->position) = NULL;
+    } else {
+      def->hp -= damage;
     }
   }
 }
@@ -114,7 +114,31 @@ void do_combat(dungeon *d, character *atk, character *def) {
 void move_character(dungeon *d, character *c, pair_t next) {
   if (charpair(next) && ((next[dim_y] != c->position[dim_y]) ||
                          (next[dim_x] != c->position[dim_x]))) {
-    do_combat(d, c, charpair(next));
+    if ((charpair(next) == d->PC) || c == d->PC)
+      do_combat(d, c, charpair(next));
+    else { // both are monsters
+      int i;
+      pair_t direction;
+      pair_t circle[9] = {
+          {-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 0},
+          {0, 1},   {1, -1}, {1, 0},  {1, 1},
+      };
+      int stuck = 1;
+      int r;
+
+      for (i = 0; i < 9 && stuck; i++) {
+        r = rand() % 9;
+        direction[dim_y] = next[dim_y] + circle[r][dim_y];
+        direction[dim_x] = next[dim_x] + circle[r][dim_x];
+        if ((!charpair(direction) && (mappair(direction) >= ter_floor)) ||
+            (charpair(direction) == c)) {
+          stuck = 0;
+        }
+      }
+      if (stuck) {
+        return;
+      }
+    }
   } else {
     /* No character in new position. */
 
@@ -146,7 +170,7 @@ void do_moves(dungeon *d) {
     e = (event *)malloc(sizeof(*e));
     e->type = event_character_turn;
     /* Hack: New dungeons are marked.  Unmark and ensure PC goes at d->time, *
-     * otherwise, monsters get a turn before the PC.                         */
+     * otherwise, monsters get a turn before the PC. */
     if (d->is_new) {
       d->is_new = 0;
       e->time = d->time;

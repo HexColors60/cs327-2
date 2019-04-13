@@ -190,7 +190,7 @@ void place_pc(dungeon *d) {
 }
 
 void config_pc(dungeon *d) {
-  static dice pc_dice(0, 1, 4);
+  static dice pc_dice(10000, 1, 4);
 
   d->PC = new pc;
 
