@@ -1,0 +1,32 @@
+@author Aidan Sherburne for CS327 @ Iowa State University, Spring 2019
+
+This program has all of the functionality of the previous assignment, 1.08.
+
+This program implements all of the functionality described in the spec for 1.09,
+the most important of which is described below.
+
+This program adds object functionality such as equiping, removing, dropping,
+and destroying objects. It implements a backpack for equipped items and an
+inventory for storing more items that are not equipped. Items are automatically
+picked up upon walking over them, unless the inventory is full.
+
+Commands added are as specified in the spec, though I chose to implement them
+slightly differently. My implementation is as follows:
+    'w' equips the highlighted item in the inventory menu.
+    't' removes the selected item from the backpack to the inventory.
+    'x' destroys the selected item in either the inventory or the backpack.
+    'd' drops the selected item from either the inventory or the backpack.
+    'i' toggles the inventory menu.
+    'e' toggles the backpack (equipment menu).
+    'I' displays information about the selected item in either menu.
+    'L' toggles "Look mode".
+          In look mode, you move the curson similarly to in teleport mode.
+          When hovering over a monster, object, or the PC, press 't' to inspect.
+          Inspecting a monster will show its name, health, speed, and
+          description. Inspecting an item will show its name, buff stats, and
+          description. Inspecting the PC will show its name, health, and speed.
+
+Combat mechanics are also updated as per the spec.
+
+For more description of what this version of the program does, see the
+assignment spec.
