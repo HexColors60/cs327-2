@@ -1141,6 +1141,7 @@ void io_look(dungeon *d) {
   int c;
   fd_set readfs;
   struct timeval tv;
+  int tmp = 0;
 
   pc_reset_visibility(d->PC);
   io_display_no_fog(d);
@@ -1160,8 +1161,8 @@ void io_look(dungeon *d) {
 
       tv.tv_sec = 0;
       tv.tv_usec = 125000; /* An eigth of a second */
-
-      io_redisplay_non_terrain(d, dest);
+      if (tmp != -1)
+        io_redisplay_non_terrain(d, dest);
     } while (!select(STDIN_FILENO + 1, &readfs, NULL, NULL, &tv));
     /* Can simply draw the terrain when we move the cursor away, *
      * because if it is a character or object, the refresh       *
@@ -1266,49 +1267,43 @@ void io_look(dungeon *d) {
       if (!charpair(dest) && !objpair(dest)) {
         mvprintw(0, 0, "%-80s", "No monster/object at that location.");
       } else {
-        int i = 0;
         std::string str = "";
-        while (i + 2 < 22) {
-          move(i + 2, 0);
-          clrtoeol();
-          i++;
-        }
+        clear();
         if (charpair(dest)) {
-          // TODO
-          if (charpair(dest) != d->PC)){
-              mvprintw(0, 0, "%-80s", "Press any key to continue...");
-              attron(COLOR_PAIR(charpair(dest)->color));
-              mvprintw(9, 30, "%-50s", charpair(dest)->name);
-              attroff(COLOR_PAIR(charpair(dest)->color));
-              mvprintw(10, 0, "%-80s", " ");
-              mvprintw(11, 30, "HP:\t%5d", charpair(dest)->hp);
-              mvprintw(12, 30, "Speed:\t%5d", charpair(dest)->speed);
-              mvprintw(13, 30, "%-80s", charpair(dest)->description);
-            }
-          else {
+          if (charpair(dest) != d->PC) {
+            mvprintw(0, 0, "%-80s", "Press any key to continue...");
+            mvprintw(6, 30, "%-50s", charpair(dest)->name);
+            if (is_boss(charpair(dest)))
+              mvprintw(8, 30, "%-80s", "BOSS");
+            mvprintw(9, 30, "HP:\t%5d", charpair(dest)->hp);
+            mvprintw(10, 30, "Speed:\t%5d", charpair(dest)->speed);
+            mvprintw(12, 0, "%-80s", ((npc *)(charpair(dest)))->description);
+          } else {
             str = d->PC->name;
             mvprintw(0, 0, "%-80s", "Press any key to continue...");
-            mvprintw(9, 30, "%-50s", d->PC->name);
-            mvprintw(10, 0, "%-80s", " ");
-            mvprintw(11, 30, "Health: \t%5d", d->PC->hp);
-            mvprintw(12, 30, "Speed:  \t%5d", d->PC->speed);
+            mvprintw(6, 30, "%-50s", d->PC->name);
+            mvprintw(8, 0, "%-80s", " ");
+            mvprintw(9, 30, "Health: \t%5d", d->PC->hp);
+            mvprintw(10, 30, "Speed:  \t%5d", d->PC->speed);
           }
         } else if (objpair(dest)) {
           str = io_object_info(objpair(dest), str);
           mvprintw(0, 0, "%-80s", "Press any key to continue...");
-          mvprintw(9, (80 - str.length()) / 2, "%-50s", str.c_str());
-          mvprintw(10, 0, "%-80s", " ");
-          mvprintw(11, 0, "%-80s", objpair(dest)->get_description().c_str());
+          mvprintw(6, (80 - str.length()) / 2, "%-50s", str.c_str());
+          mvprintw(7, 0, "%-80s", " ");
+          mvprintw(8, 0, "%-80s", objpair(dest)->get_description().c_str());
         }
       }
+      tmp = -2;
       refresh();
       break;
     }
-    if (c != 't') {
+    if (tmp == -1) {
       pc_reset_visibility(d->PC);
       io_display_no_fog(d);
       mvprintw(0, 0, "Choose a monster/object.  't' to inspect; 'L' to exit.");
     }
+    tmp++;
   } while (c != 'L');
 
   io_display(d);
