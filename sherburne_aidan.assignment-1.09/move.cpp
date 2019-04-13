@@ -23,36 +23,36 @@ bool boss_alive() { return (bosses_killed == 0); }
 void do_combat(dungeon *d, character *atk, character *def) {
   int can_see_atk, can_see_def;
   const char *organs[] = {
-      "liver",              /*  0 */
-      "pancreas",           /*  1 */
-      "heart",              /*  2 */
-      "eye",                /*  3 */
-      "arm",                /*  4 */
-      "leg",                /*  5 */
-      "intestines",         /*  6 */
-      "gall bladder",       /*  7 */
-      "lungs",              /*  8 */
-      "hand",               /*  9 */
-      "foot",               /* 10 */
-      "spinal cord",        /* 11 */
-      "pituitary gland",    /* 12 */
-      "thyroid",            /* 13 */
-      "tongue",             /* 14 */
-      "bladder",            /* 15 */
-      "diaphram",           /* 16 */
-      "stomach",            /* 17 */
-      "pharynx",            /* 18 */
-      "esophagus",          /* 19 */
-      "trachea",            /* 20 */
-      "urethra",            /* 21 */
-      "spleen",             /* 22 */
-      "ganglia",            /* 23 */
-      "ear",                /* 24 */
-      "subcutaneous tissue" /* 25 */
-      "cerebellum",         /* 26 */
-      "hippocampus",        /* 27 */
-      "frontal lobe",       /* 28 */
-      "brain",              /* 29 */
+      "liver",               /*  0 */
+      "pancreas",            /*  1 */
+      "heart",               /*  2 */
+      "eye",                 /*  3 */
+      "arm",                 /*  4 */
+      "leg",                 /*  5 */
+      "intestines",          /*  6 */
+      "gall bladder",        /*  7 */
+      "lungs",               /*  8 */
+      "hand",                /*  9 */
+      "foot",                /* 10 */
+      "spinal cord",         /* 11 */
+      "pituitary gland",     /* 12 */
+      "thyroid",             /* 13 */
+      "tongue",              /* 14 */
+      "bladder",             /* 15 */
+      "diaphram",            /* 16 */
+      "stomach",             /* 17 */
+      "pharynx",             /* 18 */
+      "esophagus",           /* 19 */
+      "trachea",             /* 20 */
+      "urethra",             /* 21 */
+      "spleen",              /* 22 */
+      "ganglia",             /* 23 */
+      "ear",                 /* 24 */
+      "subcutaneous tissue", /* 25 */
+      "cerebellum",          /* 26 */
+      "hippocampus",         /* 27 */
+      "frontal lobe",        /* 28 */
+      "brain",               /* 29 */
   };
   uint32_t damage, i;
 
@@ -119,17 +119,13 @@ void move_character(dungeon *d, character *c, pair_t next) {
     else { // both are monsters
       int i;
       pair_t direction;
-      pair_t circle[9] = {
-          {-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 0},
-          {0, 1},   {1, -1}, {1, 0},  {1, 1},
-      };
+      pair_t circle[9] = {{-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {0, 0},
+                          {1, 0},   {-1, 1}, {0, 1},  {1, 1}};
       int stuck = 1;
-      int r;
 
       for (i = 0; i < 9 && stuck; i++) {
-        r = rand() % 9;
-        direction[dim_y] = next[dim_y] + circle[r][dim_y];
-        direction[dim_x] = next[dim_x] + circle[r][dim_x];
+        direction[dim_y] = next[dim_y] + circle[i][dim_y];
+        direction[dim_x] = next[dim_x] + circle[i][dim_x];
         if ((!charpair(direction) && (mappair(direction) >= ter_floor)) ||
             (charpair(direction) == c)) {
           stuck = 0;
@@ -137,7 +133,14 @@ void move_character(dungeon *d, character *c, pair_t next) {
       }
       if (stuck) {
         return;
-      }
+      } // swap
+      charpair(c->position) = NULL;
+      charpair(direction) = charpair(next);
+      charpair(next) = c;
+      charpair(direction)->position[dim_y] = direction[dim_y];
+      charpair(direction)->position[dim_x] = direction[dim_x];
+      c->position[dim_y] = next[dim_y];
+      c->position[dim_x] = next[dim_x];
     }
   } else {
     /* No character in new position. */
