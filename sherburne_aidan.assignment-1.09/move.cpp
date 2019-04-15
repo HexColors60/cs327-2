@@ -117,15 +117,15 @@ void move_character(dungeon *d, character *c, pair_t next) {
     if ((charpair(next) == d->PC) || c == d->PC)
       do_combat(d, c, charpair(next));
     else { // both are monsters
-      int i;
+      int i, r;
       pair_t direction;
-      pair_t circle[9] = {{-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {0, 0},
+      pair_t circle[9] = {{-1, -1}, {0, -1}, {1, -1}, {-1, 0},
                           {1, 0},   {-1, 1}, {0, 1},  {1, 1}};
       int stuck = 1;
 
-      for (i = 0; i < 9 && stuck; i++) {
-        direction[dim_y] = next[dim_y] + circle[i][dim_y];
-        direction[dim_x] = next[dim_x] + circle[i][dim_x];
+      for (i = 0, r = rand(); i < 8 && stuck; i++, r++) {
+        direction[dim_y] = next[dim_y] + circle[r % 8][dim_y];
+        direction[dim_x] = next[dim_x] + circle[r % 8][dim_x];
         if ((!charpair(direction) && (mappair(direction) >= ter_floor)) ||
             (charpair(direction) == c)) {
           stuck = 0;
