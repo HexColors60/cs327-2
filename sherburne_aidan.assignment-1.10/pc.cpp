@@ -14,6 +14,7 @@ pc::pc() {
   uint8_t i;
   hp = 5000;
   gold = 0;
+  respawn_cost = COST_BASE;
   for (i = 0; i < bp_capacity; i++) {
     bp[i] = 0; // initialize empty backpack
   }
@@ -36,6 +37,14 @@ pc::~pc() {
       inv[i] = NULL;
     }
   }
+}
+
+void pc::respawn(dungeon *d) {
+  gold -= respawn_cost;
+  respawn_cost *= 2;
+  alive = 1;
+  hp = 1000;
+  io_teleport_pc(d);
 }
 
 void pc::update_speed() {

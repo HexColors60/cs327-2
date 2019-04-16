@@ -1285,6 +1285,7 @@ void io_look(dungeon *d) {
             mvprintw(8, 0, "%-80s", " ");
             mvprintw(9, 30, "Health: \t%5d", d->PC->hp);
             mvprintw(10, 30, "Speed:  \t%5d", d->PC->speed);
+            mvprintw(11, 30, "Gold:  \t%5d", d->PC->gold);
           }
         } else if (objpair(dest)) {
           str = io_object_info(objpair(dest), str);

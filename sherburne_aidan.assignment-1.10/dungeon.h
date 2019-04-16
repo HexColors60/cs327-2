@@ -29,6 +29,7 @@
 #define MONSTER_DESC_FILE "monster_desc.txt"
 #define OBJECT_DESC_FILE "object_desc.txt"
 #define INVENTORY_SLOTS 10
+#define COST_BASE 50
 
 #define mappair(pair) (d->map[pair[dim_y]][pair[dim_x]])
 #define mapxy(x, y) (d->map[y][x])

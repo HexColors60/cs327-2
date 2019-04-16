@@ -91,10 +91,16 @@ void do_combat(dungeon *d, character *atk, character *def) {
     if (damage >= def->hp) { // if we deal more damage than the defender has
 
       if (atk == d->PC) {
+        uint32_t reward;
         io_queue_message("You have slain the beast!");
         if (is_boss(def)) {
           bosses_killed++;
+          reward = 250;
+        } else {
+          reward = rand() % 50;
         }
+        d->PC->gold += reward;
+        io_queue_message("You receive %d gold for your bravery.", reward);
       } else {
         io_queue_message("You have been slain!");
       }
