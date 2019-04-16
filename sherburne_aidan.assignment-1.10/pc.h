@@ -36,11 +36,13 @@ public:
   object *inv[INVENTORY_SLOTS];
   object *bp[bp_capacity];
   uint32_t gold;
+  uint32_t respawn_cost;
   uint8_t grab_item(dungeon *d);
   uint8_t drop_item(dungeon *d, uint8_t sel, uint8_t slot);
   uint8_t destroy_item(uint8_t sel, uint8_t slot);
   uint8_t equip_item(uint8_t slot);
   uint8_t remove_item(uint8_t slot);
+  void respawn(dungeon *d);
 };
 
 void pc_delete(pc *pc);
@@ -55,5 +57,6 @@ void pc_init_known_terrain(pc *p);
 void pc_observe_terrain(pc *p, dungeon *d);
 int32_t is_illuminated(pc *p, int16_t y, int16_t x);
 void pc_reset_visibility(pc *p);
+void pc_offer_respawn(dungeon *d);
 
 #endif

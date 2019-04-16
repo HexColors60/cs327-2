@@ -1309,3 +1309,38 @@ void io_look(dungeon *d) {
 
   io_display(d);
 }
+
+void io_respawn_menu(dungeon *d) {
+  clear();
+  if (d->PC->gold >= d->PC->respawn_cost) {
+    mvprintw(6, 30, "You have been slain!");
+    mvprintw(8, 30, "You have %d gold.", d->PC->gold);
+    mvprintw(12, 24, "Press 'r' to respawn for %d gold.", d->PC->respawn_cost);
+    mvprintw(13, 30, "Or press 'q' to quit.", d->PC->respawn_cost);
+    refresh();
+    int loop = 1;
+    while (loop) {
+      switch (getch()) {
+      case 'r':
+        io_queue_message(
+            "You were resurrected! Where would you like to spawn?");
+        d->PC->respawn(d);
+        loop = 0;
+        break;
+      case 'q':
+      case 'Q':
+        loop = 0;
+        break;
+      default:
+        break;
+      }
+    }
+  } else {
+    mvprintw(6, 30, "You have been slain!");
+    mvprintw(8, 30, "You have %d gold.", d->PC->gold);
+    mvprintw(12, 30, "%d gold is required to respawn", d->PC->respawn_cost);
+    mvprintw(13, 30, "Press any button to continue...");
+    refresh();
+    getch();
+  }
+}

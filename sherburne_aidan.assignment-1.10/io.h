@@ -15,5 +15,6 @@ void io_display_equipment(dungeon *d, uint8_t index);
 void io_look(dungeon *d);
 std::string io_object_info(object *o);
 void io_respawn_menu(dungeon *d);
+uint32_t io_teleport_pc(dungeon *d);
 
 #endif

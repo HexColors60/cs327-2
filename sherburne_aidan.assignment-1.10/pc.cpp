@@ -411,3 +411,5 @@ void pc_see_object(character *the_pc, object *o) {
     o->has_been_seen();
   }
 }
+
+void pc_offer_respawn(dungeon *d) { io_respawn_menu(d); }

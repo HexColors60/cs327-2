@@ -111,6 +111,9 @@ void do_combat(dungeon *d, character *atk, character *def) {
       atk->kills[kill_avenged] +=
           (def->kills[kill_direct] + def->kills[kill_avenged]);
       charpair(def->position) = NULL;
+
+      if(!pc_is_alive(d))
+        pc_offer_respawn(d);
     } else {
       def->hp -= damage;
     }
