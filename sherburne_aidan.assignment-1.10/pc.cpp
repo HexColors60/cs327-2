@@ -13,6 +13,7 @@
 pc::pc() {
   uint8_t i;
   hp = 5000;
+  gold = 0;
   for (i = 0; i < bp_capacity; i++) {
     bp[i] = 0; // initialize empty backpack
   }

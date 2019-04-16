@@ -35,6 +35,7 @@ public:
   uint8_t visible[DUNGEON_Y][DUNGEON_X];
   object *inv[INVENTORY_SLOTS];
   object *bp[bp_capacity];
+  uint32_t gold;
   uint8_t grab_item(dungeon *d);
   uint8_t drop_item(dungeon *d, uint8_t sel, uint8_t slot);
   uint8_t destroy_item(uint8_t sel, uint8_t slot);
