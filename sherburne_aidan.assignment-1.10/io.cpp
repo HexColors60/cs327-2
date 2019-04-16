@@ -913,8 +913,15 @@ void io_handle_input(dungeon *d) {
       fail_code = 1;
       break;
     case 'g':
-      /* Teleport the PC to a random place in the dungeon.              */
-      io_teleport_pc(d);
+      if (d->PC->gold >= COST_BASE) {
+        io_queue_message("You purchased a teleport for %d gold.", COST_BASE);
+        /* Teleport the PC to a random place in the dungeon.              */
+        d->PC->gold -= COST_BASE;
+        io_teleport_pc(d);
+      } else {
+        io_queue_message("You need %d gold to purchase a teleport.", COST_BASE);
+        io_queue_message("You only have %d gold.", d->PC->gold);
+      }
       fail_code = 1;
       break;
     case 'f':
@@ -1011,8 +1018,8 @@ void io_display_inventory(dungeon *d, uint8_t index) {
     mvprintw(i + 2, 0, " %-80s ", "");
     i++;
   }
-  mvprintw(19, 4, " %-72s ", "e: equipment, Up/Dn: select, I: info, i: exit");
-  mvprintw(20, 4, " %-72s ", "w: equip, d: drop, x: destroy");
+  mvprintw(19, 4, "e: equipment, Up/Dn: select, I: info, i: exit");
+  mvprintw(20, 4, "w: equip, d: drop, x: destroy, s: sell");
   refresh();
 
   int loop = 1;
@@ -1044,6 +1051,9 @@ void io_display_inventory(dungeon *d, uint8_t index) {
     case 'd':
       d->PC->drop_item(d, 1, index); // drop from inventory
       break;
+    case 's':
+      d->PC->sell_item(1, index);
+      break;
     case 'x':
       d->PC->destroy_item(1, index);
       break;
@@ -1057,8 +1067,8 @@ void io_display_inventory(dungeon *d, uint8_t index) {
       break;
     }
     i = 0;
-    mvprintw(19, 4, " %-72s ", "e: equipment, Up/Dn: select, I: info, i: exit");
-    mvprintw(20, 4, " %-72s ", "w: equip, d: drop, x: destroy");
+    mvprintw(19, 4, "e: equipment, Up/Dn: select, I: info, i: exit");
+    mvprintw(20, 4, "w: equip, d: drop, x: destroy, s: sell");
     refresh();
   }
 
@@ -1082,8 +1092,8 @@ void io_display_equipment(dungeon *d, uint8_t index) {
     mvprintw(i + 2, 0, " %-80s ", "");
     i++;
   }
-  mvprintw(19, 4, " %-72s ", "i: inventory, Up/Dn: select, I: info, e: exit");
-  mvprintw(20, 4, " %-72s ", "t: remove, d: drop, x: destroy");
+  mvprintw(19, 4, "i: inventory, Up/Dn: select, I: info, e: exit");
+  mvprintw(20, 4, "t: remove, d: drop, x: destroy, s: sell");
   refresh();
 
   int loop = 1;
@@ -1115,6 +1125,9 @@ void io_display_equipment(dungeon *d, uint8_t index) {
     case 'd':
       d->PC->drop_item(d, 0, index); // drop from backpack
       break;
+    case 's':
+      d->PC->sell_item(0, index);
+      break;
     case 'x':
       d->PC->destroy_item(0, index);
       break;
@@ -1128,8 +1141,8 @@ void io_display_equipment(dungeon *d, uint8_t index) {
       break;
     }
     i = 0;
-    mvprintw(19, 4, " %-72s ", "i: inventory, Up/Dn: select, I: info, e: exit");
-    mvprintw(20, 4, " %-72s ", "t: remove, d: drop, x: destroy");
+    mvprintw(19, 4, "i: inventory, Up/Dn: select, I: info, e: exit");
+    mvprintw(20, 4, "t: remove, d: drop, x: destroy, s: sell");
     refresh();
   }
 

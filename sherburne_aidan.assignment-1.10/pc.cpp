@@ -12,7 +12,7 @@
 
 pc::pc() {
   uint8_t i;
-  hp = 5000;
+  hp = 1000;
   gold = 0;
   respawn_cost = COST_BASE;
   for (i = 0; i < bp_capacity; i++) {
@@ -72,7 +72,6 @@ int32_t pc::get_inv_slot() {
 }
 
 uint8_t pc::grab_item(dungeon *d) {
-  // object *o;
   int8_t i = get_inv_slot();
   if (i == -1 && objpair(position)) {
     io_queue_message("You have no room in your inventory.");
@@ -116,6 +115,32 @@ uint8_t pc::drop_item(dungeon *d, uint8_t sel, uint8_t slot) {
     }
   }
   refresh();
+  return 0;
+}
+
+uint8_t pc::sell_item(uint8_t sel, uint8_t slot) {
+  uint32_t val;
+  if (sel == 0) { // sell from backpack
+    if (!bp[slot]) {
+      mvprintw(15, 0, "Sold: Absolutely Nothing for 0 gold.");
+      return 1;
+    }
+    val = bp[slot]->get_value();
+    mvprintw(15, 0, "Sold: %s for %d gold.", bp[slot]->get_name(), val);
+    gold += val;
+    delete bp[slot];
+    bp[slot] = NULL;
+  } else if (sel == 1) { // sell from inventory
+    if (!inv[slot]) {
+      mvprintw(15, 0, "Sold: Absolutely Nothing for 0 gold.");
+      return 1;
+    }
+    val = inv[slot]->get_value();
+    mvprintw(15, 0, "Sold: %s for %d gold.", inv[slot]->get_name(), val);
+    gold += val;
+    delete inv[slot];
+    inv[slot] = NULL;
+  }
   return 0;
 }
 

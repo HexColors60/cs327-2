@@ -42,6 +42,7 @@ public:
   uint8_t destroy_item(uint8_t sel, uint8_t slot);
   uint8_t equip_item(uint8_t slot);
   uint8_t remove_item(uint8_t slot);
+  uint8_t sell_item(uint8_t sel, uint8_t slot);
   void respawn(dungeon *d);
 };
 
