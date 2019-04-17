@@ -1298,7 +1298,10 @@ void io_look(dungeon *d) {
             mvprintw(8, 0, "%-80s", " ");
             mvprintw(9, 30, "Health: \t%5d", d->PC->hp);
             mvprintw(10, 30, "Speed:  \t%5d", d->PC->speed);
-            mvprintw(11, 30, "Gold:  \t%5d", d->PC->gold);
+            mvprintw(11, 30, "Gold:   \t%5d", d->PC->gold);
+	    mvprintw(12, 30, "Level:  \t%5d", d->PC->level);
+	    mvprintw(13, 30, "Exp:    \t%5d", d->PC->experience);
+	    mvprintw(14, 30, "Next level at %d exp", d->PC->level * d->PC->level * COST_BASE);
           }
         } else if (objpair(dest)) {
           str = io_object_info(objpair(dest), str);
@@ -1326,7 +1329,7 @@ void io_look(dungeon *d) {
 void io_respawn_menu(dungeon *d) {
   clear();
   if (d->PC->gold >= d->PC->respawn_cost) {
-    mvprintw(6, 30, "You have been slain!");
+    mvprintw(6, 30, "You have been slain at level %d!", d->PC->level);
     mvprintw(8, 30, "You have %d gold.", d->PC->gold);
     mvprintw(12, 24, "Press 'r' to respawn for %d gold.", d->PC->respawn_cost);
     mvprintw(13, 30, "Or press 'q' to quit.", d->PC->respawn_cost);
@@ -1349,7 +1352,7 @@ void io_respawn_menu(dungeon *d) {
       }
     }
   } else {
-    mvprintw(6, 30, "You have been slain!");
+    mvprintw(6, 30, "You have been slain at level %d!", d->PC->level);
     mvprintw(8, 30, "You have %d gold.", d->PC->gold);
     mvprintw(12, 30, "%d gold is required to respawn", d->PC->respawn_cost);
     mvprintw(13, 30, "Press any button to continue...");

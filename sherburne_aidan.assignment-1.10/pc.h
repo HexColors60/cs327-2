@@ -36,7 +36,9 @@ public:
   object *inv[INVENTORY_SLOTS];
   object *bp[bp_capacity];
   uint32_t gold;
+  uint32_t experience;
   uint32_t respawn_cost;
+  uint32_t level;
   uint8_t grab_item(dungeon *d);
   uint8_t drop_item(dungeon *d, uint8_t sel, uint8_t slot);
   uint8_t destroy_item(uint8_t sel, uint8_t slot);
@@ -44,6 +46,7 @@ public:
   uint8_t remove_item(uint8_t slot);
   uint8_t sell_item(uint8_t sel, uint8_t slot);
   void respawn(dungeon *d);
+  uint8_t level_up();
 };
 
 void pc_delete(pc *pc);

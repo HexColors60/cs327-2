@@ -99,8 +99,11 @@ void do_combat(dungeon *d, character *atk, character *def) {
         } else {
           reward = rand() % 50;
         }
-        d->PC->gold += reward;
-        io_queue_message("You receive %d gold for your bravery.", reward);
+	d->PC->experience += reward;
+        d->PC->gold += reward % 20;
+        io_queue_message("You receive %d experience and %d gold for your bravery.", reward, reward % 20);
+	if(d->PC->level_up())
+	  io_queue_message("Leveled up to Lv.%d!", d->PC->level);
       } else {
         io_queue_message("You have been slain!");
       }

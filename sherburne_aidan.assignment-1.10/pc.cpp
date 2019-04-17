@@ -14,6 +14,8 @@ pc::pc() {
   uint8_t i;
   hp = 1000;
   gold = 0;
+  level = 1;
+  experience = 0;
   respawn_cost = COST_BASE;
   for (i = 0; i < bp_capacity; i++) {
     bp[i] = 0; // initialize empty backpack
@@ -37,6 +39,17 @@ pc::~pc() {
       inv[i] = NULL;
     }
   }
+}
+
+uint8_t pc::level_up(){
+  if(experience >= level * level * COST_BASE){
+    experience %= level * level * COST_BASE;
+    level++;
+    gold += COST_BASE * level; // Gold reward for leveling
+    hp = 1000; // Restore health on level up
+    return 1;
+  }
+  return 0;
 }
 
 void pc::respawn(dungeon *d) {
