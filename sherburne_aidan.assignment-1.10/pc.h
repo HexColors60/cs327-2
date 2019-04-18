@@ -39,6 +39,7 @@ public:
   uint32_t experience;
   uint32_t respawn_cost;
   uint32_t level;
+  int32_t visual_range;
   uint8_t grab_item(dungeon *d);
   uint8_t drop_item(dungeon *d, uint8_t sel, uint8_t slot);
   uint8_t destroy_item(uint8_t sel, uint8_t slot);

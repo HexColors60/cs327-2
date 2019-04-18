@@ -37,6 +37,7 @@ public:
   void has_been_seen() { seen = true; }
   int16_t *get_position() { return position; }
   int8_t get_bp_slot();
+  uint32_t get_attr();
 };
 
 void gen_objects(dungeon *d);

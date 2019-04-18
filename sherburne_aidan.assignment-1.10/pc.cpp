@@ -17,6 +17,7 @@ pc::pc() {
   level = 1;
   experience = 0;
   respawn_cost = COST_BASE;
+  visual_range = PC_VISUAL_RANGE;
   for (i = 0; i < bp_capacity; i++) {
     bp[i] = 0; // initialize empty backpack
   }
@@ -47,6 +48,8 @@ uint8_t pc::level_up(){
     level++;
     gold += COST_BASE * level; // Gold reward for leveling
     hp = 1000; // Restore health on level up
+    static dice new_dice(1, level, 4 + level);
+    damage = &new_dice;
     return 1;
   }
   return 0;
@@ -63,14 +66,19 @@ void pc::respawn(dungeon *d) {
 void pc::update_speed() {
   int8_t i;
   int32_t new_speed = 0;
+  int32_t vr = PC_VISUAL_RANGE;
   for (i = 0; i < bp_capacity; i++) {
     if (bp[i]) {
       new_speed += bp[i]->get_speed();
+      if(bp[i]->get_type() == objtype_LIGHT){
+        vr += bp[i]->get_attr();
+      }
     }
   }
   if (new_speed < 1) {
     new_speed = 1;
   }
+  visual_range = vr;
   speed = new_speed;
 }
 
@@ -410,19 +418,19 @@ void pc_observe_terrain(pc *p, dungeon *d) {
   pair_t where;
   int16_t y_min, y_max, x_min, x_max;
 
-  y_min = p->position[dim_y] - PC_VISUAL_RANGE;
+  y_min = p->position[dim_y] - p->visual_range;
   if (y_min < 0) {
     y_min = 0;
   }
-  y_max = p->position[dim_y] + PC_VISUAL_RANGE;
+  y_max = p->position[dim_y] + p->visual_range;
   if (y_max > DUNGEON_Y - 1) {
     y_max = DUNGEON_Y - 1;
   }
-  x_min = p->position[dim_x] - PC_VISUAL_RANGE;
+  x_min = p->position[dim_x] - p->visual_range;
   if (x_min < 0) {
     x_min = 0;
   }
-  x_max = p->position[dim_x] + PC_VISUAL_RANGE;
+  x_max = p->position[dim_x] + p->visual_range;
   if (x_max > DUNGEON_X - 1) {
     x_max = DUNGEON_X - 1;
   }

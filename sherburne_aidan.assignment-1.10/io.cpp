@@ -173,9 +173,9 @@ static void io_redisplay_visible_monsters(dungeon *d) {
   uint32_t color;
   uint32_t illuminated;
 
-  for (pos[dim_y] = -PC_VISUAL_RANGE; pos[dim_y] <= PC_VISUAL_RANGE;
+  for (pos[dim_y] = -d->PC->visual_range; pos[dim_y] <= d->PC->visual_range;
        pos[dim_y]++) {
-    for (pos[dim_x] = -PC_VISUAL_RANGE; pos[dim_x] <= PC_VISUAL_RANGE;
+    for (pos[dim_x] = -d->PC->visual_range; pos[dim_x] <= d->PC->visual_range;
          pos[dim_x]++) {
       if ((d->PC->position[dim_y] + pos[dim_y] < 0) ||
           (d->PC->position[dim_y] + pos[dim_y] >= DUNGEON_Y) ||
@@ -1298,10 +1298,11 @@ void io_look(dungeon *d) {
             mvprintw(8, 0, "%-80s", " ");
             mvprintw(9, 30, "Health: \t%5d", d->PC->hp);
             mvprintw(10, 30, "Speed:  \t%5d", d->PC->speed);
-            mvprintw(11, 30, "Gold:   \t%5d", d->PC->gold);
-	    mvprintw(12, 30, "Level:  \t%5d", d->PC->level);
-	    mvprintw(13, 30, "Exp:    \t%5d", d->PC->experience);
-	    mvprintw(14, 30, "Next level at %d exp", d->PC->level * d->PC->level * COST_BASE);
+	    mvprintw(11, 30, "Damage: \t%d+%dd%d", d->PC->damage->get_base(), d->PC->damage->get_number(), d->PC->damage->get_sides()); 
+            mvprintw(13, 30, "Gold:   \t%5d", d->PC->gold);
+	    mvprintw(14, 30, "Level:  \t%5d", d->PC->level);
+	    mvprintw(15, 30, "Exp:    \t%5d", d->PC->experience);
+	    mvprintw(16, 30, "Next level at %d exp", d->PC->level * d->PC->level * COST_BASE);
           }
         } else if (objpair(dest)) {
           str = io_object_info(objpair(dest), str);

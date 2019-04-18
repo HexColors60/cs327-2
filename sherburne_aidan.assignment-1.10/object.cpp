@@ -72,6 +72,8 @@ int32_t object::get_speed() { return speed; }
 
 int32_t object::roll_dice() { return damage.roll(); }
 
+uint32_t object::get_attr() { return attribute; }
+
 void destroy_objects(dungeon *d) {
   uint32_t y, x;
 
