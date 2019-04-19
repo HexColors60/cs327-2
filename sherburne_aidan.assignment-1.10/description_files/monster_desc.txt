@@ -485,3 +485,18 @@ HP 500+5d20
 ABIL SMART
 RRTY 60
 END
+
+BEGIN MONSTER
+NAME Big Green Toad
+SYMB T
+COLOR GREEN
+DESC
+Toad said "Croak" and winked an eye when Little Blue Truck
+went rolling by.
+.
+SPEED 40+0d1;
+DAM 300+3d100
+HP 50000+0d1
+ABIL SMART BOSS TELE
+RRTY 100
+END
