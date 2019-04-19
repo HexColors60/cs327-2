@@ -34,3 +34,7 @@ changed include the following:
 One minor bug exists. Upon dying or choosing not to respawn, I was unable to
 come up with an easy way to clear the message queue, so occasionally the user
 must iterate through the message queue before continuing or exiting the game.
+
+Lastly, I updated the monster and object descriptions a bit to make the game
+a little more balanced with my implementations. When testing, using my 
+description files would, ni my opinion, make the game more playable.

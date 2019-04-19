@@ -100,7 +100,7 @@ NAME Software Bug
 DAM 0+0d1
 HP 100+0d1
 ABIL SMART TELE
-RRTY 100
+RRTY 10
 END
 
 BEGIN MONSTER
@@ -289,7 +289,7 @@ NAME River Crab
 DESC
 It's a fresh-water crustacean that just wants everybody to get along.
 .
-RRTY 35
+RRTY 30
 END
 
 BEGIN MONSTER
@@ -330,7 +330,7 @@ SPEED 5+1d5
 DAM 0+3d5
 HP 10+2d5
 ABIL SMART
-RRTY 40
+RRTY 70
 END
 
 BEGIN MONSTER
@@ -345,7 +345,7 @@ SPEED 15+2d5
 DAM 30+3d5
 HP 150+2d50
 ABIL SMART TELE DESTROY
-RRTY 80
+RRTY 15
 END
 
 BEGIN MONSTER
@@ -379,4 +379,109 @@ He doesn't have any shoes, but he'll mess up your holiday plans.  Yippee
 ki-yay, mother trucker.
 .
 RRTY 50
+END
+
+BEGIN MONSTER
+SYMB s
+COLOR MAGENTA
+SPEED 15+0d1
+ABIL TELE SMART
+HP 350+0d1
+DAM 15+3d10
+NAME Siren
+DESC
+She has a beautiful voice, but don't let her lure you in!
+.
+RRTY 65
+END
+
+BEGIN MONSTER
+NAME Hell Hound
+SYMB H
+COLOR YELLOW RED 
+DESC
+Not your common house pet. This pupper has mangled black fur, glowing
+red eyes, super strength and speed, ghostly or phantom characteristics,
+and a foul odor. Certain European legends state that if someone stares
+into a hellhound's eyes three times or more, that person will surely die.
+.
+SPEED 20+2d4
+DAM 5+2d5
+HP 36+2d6
+ABIL SMART ERRATIC
+RRTY 70
+END
+
+BEGIN MONSTER
+NAME Unimplemented Feature
+SYMB u
+COLOR CYAN
+DESC
+//TODO
+.
+SPEED 0+1d4
+DAM 0+1d4
+HP 1+0d1
+ABIL ERRATIC
+RRTY 60
+END
+
+BEGIN MONSTER
+NAME Grim Reaper
+SYMB R
+COLOR WHITE
+DESC
+He's slow, but packs one hell of a punch. If you're reading this, your
+only chance is to hit him and run.
+.
+SPEED 10+0d1
+DAM 100000+0d1
+HP 100000+0d1
+ABIL SMART TELE UNIQ TUNNEL BOSS ERRATIC
+RRTY 1
+END
+
+BEGIN MONSTER
+NAME Mr. Meeseeks
+SYMB m
+COLOR CYAN
+DESC
+I'm Mr. Meeseeks, LOOK AT MEEEEE!
+.
+SPEED 10+10d10
+DAM 60+1d40
+HP 1200+0d1
+ABIL ERRATIC
+RRTY 60
+END
+
+BEGIN MONSTER
+NAME Mr. Incredible
+SYMB I
+COLOR RED
+DESC
+You probably shouldn't have stared at Elastigirl for so long...
+Mr. Incredible is coming for you.
+.
+SPEED 8+2d4
+DAM 100+1d4
+HP 1000+4d50
+ABIL BOSS DESTROY SMART UNIQ
+RRTY 30
+END
+
+BEGIN MONSTER
+NAME 327 TA
+SYMB T
+COLOR WHITE
+DESC
+You're unsure what to do with her. If you let her live, she may be
+lenient with your grading, but if you defeat her she may fail you
+out of spite...
+.
+SPEED 8+3d4;
+DAM 30+3d10
+HP 500+5d20
+ABIL SMART
+RRTY 60
 END

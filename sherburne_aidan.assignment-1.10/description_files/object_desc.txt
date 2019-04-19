@@ -270,6 +270,25 @@ ART FALSE
 END
 
 BEGIN OBJECT
+NAME the Ankh
+TYPE AMULET
+WEIGHT 1+0d1
+COLOR YELLOW
+DODGE 0+0d1
+VAL 2500+0d1
+DAM 50+5d100
+DEF 0+0d1
+HIT 0+0d1
+SPEED 10+0d1
+DESC
+Ooooooo, pretty necklace!
+.
+ATTR 0+0d1
+RRTY 40
+ART TRUE
+END
+
+BEGIN OBJECT
 NAME a ring of damage
 TYPE RING
 WEIGHT 1+0d1
@@ -365,6 +384,45 @@ fantastic magical powers!
 .
 ATTR 0+0d1
 RRTY 80
+ART TRUE
+END
+
+BEGIN OBJECT
+NAME a kerosene lantern
+TYPE LIGHT
+WEIGHT 1+1d2
+COLOR RED
+DODGE 0+0d1
+VAL 49+0d1
+DAM 0+0d1
+DEF 0+0d1
+HIT 0+0d1
+SPEED 0+0d1
+DESC
+Better than a measly torch, just don't drop it!
+.
+ATTR 6+0d1
+RRTY 50
+ART FALSE
+END
+
+BEGIN OBJECT
+NAME the Seven-league boots
+TYPE BOOTS
+WEIGHT 1+0d1
+COLOR CYAN
+DODGE 0+0d1
+VAL 1000+0d1
+DAM -50+0d1
+DEF 0+0d1
+HIT 0+0d1
+SPEED 100+0d1
+DESC
+Boots said to allow the wearer to make strides of seven leagues in length.
+Beware, though, you will sacrifice damage for speed.
+.
+ATTR 0+0d1
+RRTY 40
 ART TRUE
 END
 
