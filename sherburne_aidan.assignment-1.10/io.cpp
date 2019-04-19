@@ -13,9 +13,9 @@
 #include "pc.h"
 #include "utils.h"
 
-const char *ostrings[]{" WEAPON", "OFFHAND", " RANGED", "  ARMOR",
-                       " HELMET", "  CLOAK", " GLOVES", "  BOOTS",
-                       " AMULET", "  LIGHT", "  LRING", "  RRING"};
+const char *ostrings[]{" WEAPON", "OFFHAND", " RANGED", "  LIGHT",
+                       "  ARMOR", " HELMET", "  CLOAK", " GLOVES",
+                       "  BOOTS", " AMULET", "  LRING", "  RRING"};
 
 /* Same ugly hack we did in path.c */
 static dungeon *thedungeon;
