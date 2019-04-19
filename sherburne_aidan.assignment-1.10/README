@@ -30,3 +30,7 @@ changed include the following:
 
 	Light		I implemented lights so that LIGHT items now increase
 			the visual range of the player.
+
+One minor bug exists. Upon dying or choosing not to respawn, I was unable to
+come up with an easy way to clear the message queue, so occasionally the user
+must iterate through the message queue before continuing or exiting the game.

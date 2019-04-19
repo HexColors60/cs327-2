@@ -1,3 +1,95 @@
+commit a57a72f8764c3e9c0ad0825226d6f614abc83898
+Merge: 3306ef3 7ec3d4f
+Author: root <=>
+Date:   Thu Apr 18 13:30:33 2019 -0500
+
+    Merge branch 'master' of https://github.com/0xDECEA5ED/cs327
+
+commit 3306ef38af4e5a1dea76fbc49cf381d380de0b25
+Author: root <=>
+Date:   Thu Apr 18 13:29:41 2019 -0500
+
+    Update README and implement lights
+
+commit 7ec3d4f80a98227642df7528a9fd128c524ee578
+Merge: c0d1e7e 0be5e4a
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Apr 17 20:42:29 2019 -0500
+
+    Merge branch 'master' of https://github.com/0xDECEA5ED/cs327
+
+commit c0d1e7e1fe06db6ef233c9730e546bb5693308c3
+Author: aidans <aidans@iastate.edu>
+Date:   Wed Apr 17 20:37:19 2019 -0500
+
+    Delete accidental copy of changelog in root directory
+
+commit 0be5e4a470b6e56c936e3550794f186a48be4549
+Author: root <=>
+Date:   Wed Apr 17 15:56:12 2019 -0500
+
+    Add experience and player levels
+
+commit f457000ca6a0be7243c977a9aefea51e8394a538
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Apr 15 21:45:06 2019 -0500
+
+    Update monster_desc.txt
+
+commit 85295d64f07e4c01dfee6da65b2551a4841bccad
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Apr 15 21:44:51 2019 -0500
+
+    Update teleporting and add ability to sell items for gold
+
+commit b42350f091792a38fbff2ce81274061b9ce74307
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Apr 15 21:44:24 2019 -0500
+
+    Update respawn
+
+commit 5a44925f2ee9158c36a24de470f9f3ab81b39a8a
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Apr 15 21:43:24 2019 -0500
+
+    Add respawn ability
+
+commit 0c0fdb7c6cfaa95d556762a9ec48ca3261988557
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Apr 15 21:41:28 2019 -0500
+
+    Add gold to PC
+
+commit b2333d7305391d98a4d8c3313ae8725f405e2cfd
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Apr 15 21:40:39 2019 -0500
+
+    Backup monster descriptions
+
+commit 342673815509bba5e3959b43b3b192bbc7f966e0
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Apr 15 21:40:21 2019 -0500
+
+    Update .gitignore
+
+commit c5b72c23548867d548a79a4c74d3952d158402ca
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Apr 15 17:21:37 2019 -0500
+
+    Copy my code from 1.09 to use as a base for 1.10
+
+commit e691d73522821cc71c33277a6bbbe7ed814b4341
+Author: aidans <aidans@iastate.edu>
+Date:   Mon Apr 15 15:35:30 2019 -0500
+
+    fix bugs
+
+commit 1ca487df9cb74b2b8dfb13c0dfd839eb5a770043
+Author: aidans <aidans@iastate.edu>
+Date:   Sat Apr 13 14:15:22 2019 -0500
+
+    Update CHANGELOG
+
 commit c4c4e0d448e0b5f5321aebf1cb71ba42f1d85864
 Author: aidans <aidans@iastate.edu>
 Date:   Sat Apr 13 14:14:52 2019 -0500
